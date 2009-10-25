@@ -26,7 +26,7 @@ import java.util.List;
  * An {@link Entry} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 359 $
  */
 public class Schedule extends Entry {
 
@@ -313,7 +313,7 @@ public class Schedule extends Entry {
         public boolean[] getWeeklyDays()        { return weeklyDays; }
 
         /**
-         * Week in month where the repetition occurs. Counted starting from 0. 5 means
+         * Week in month where the repetition occurs. Counted starting from 0. 4 means
          * "last week of month". Valid for Mode.MONTHLY_BY_DAY only.
          */
         public int getMonthlyWeek()             { return monthlyWeek; }
