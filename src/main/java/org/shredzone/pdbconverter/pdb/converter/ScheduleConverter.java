@@ -31,7 +31,8 @@ import org.shredzone.pdbconverter.pdb.Schedule.Repeat.Mode;
  * An {@link EntryConverter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 358 $
+ * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements EntryConverter<Schedule> {
 
