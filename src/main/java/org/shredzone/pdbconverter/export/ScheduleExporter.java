@@ -20,17 +20,23 @@
 package org.shredzone.pdbconverter.export;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.TimeZone;
 
+import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.CalScale;
@@ -58,14 +64,14 @@ import org.shredzone.pdbconverter.pdb.Schedule.ShortTime;
  * NOTE TO THE READER:
  *   This class uses ical4j for writing iCalendar output. ical4j uses classes that
  *   are named like standard JDK classes, so take care when reading the source code.
- *   For example, "Date" is not what you might expect it to be.
+ *   For example, "Date" and "TimeZone" might not be the class you expected.
  */
 
 /**
  * Writes a {@link Schedule} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 361 $
+ * @version $Revision: 362 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter implements Exporter<Schedule> {
@@ -73,31 +79,56 @@ public class ScheduleExporter implements Exporter<Schedule> {
     private static final WeekDay[] WEEKDAYS = {
         WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA,
     };
+    
+    private TimeZone timeZone = TimeZone.getDefault();
 
     /**
-     * Writes the {@link Schedule} database as iCalendar to the given {@link PrintStream}.
-     * iCalendar support is pretty good! It copes with the entire schedule database.
+     * Sets the {@link TimeZone} to be used for output, if the database's time
+     * zone differs from the system's current time zone.
+     * 
+     * @param timeZone
+     *            {@link TimeZone} to be used, defaults to {@link TimeZone#getDefault()}
+     */
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+    }
+    
+    /**
+     * Writes the {@link Schedule} database as iCalendar to the given
+     * {@link OutputStream}. iCalendar support is pretty good! It copes with the
+     * entire schedule database.
      * 
      * @param database
      *            {@link Schedule} {@link PdbDatabase} to write
      * @param out
-     *            {@link PrintStream} to write to
+     *            {@link OutputStream} to write to
      */
-    public void export(PdbDatabase<Schedule> database, PrintStream out) throws IOException {
+    public void export(PdbDatabase<Schedule> database, OutputStream out) throws IOException {
         UidGenerator uidGenerator = new UidGenerator("uidGen");
+
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        VTimeZone vTimeZone = registry.getTimeZone(timeZone.getID()).getVTimeZone();
 
         net.fortuna.ical4j.model.Calendar calendar = new net.fortuna.ical4j.model.Calendar();
         calendar.getProperties().add(new ProdId("-//Shredzone.org/pdbconverter 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
+        // Too much information?
+        // calendar.getComponents().add(vTimeZone);
 
         for (Schedule schedule : database.getEntries()) {
             VEvent event = createVEvent(schedule);
             event.getProperties().add(uidGenerator.generateUid());
+            event.getProperties().add(vTimeZone.getTimeZoneId());
             calendar.getComponents().add(event);
         }
 
-        out.println(calendar);
+        try {
+            CalendarOutputter co = new CalendarOutputter();
+            co.output(calendar, out);
+        } catch (ValidationException ex) {
+            throw new IOException("Validation error", ex);
+        }
     }
 
     /**
@@ -188,6 +219,7 @@ public class ScheduleExporter implements Exporter<Schedule> {
             
             VAlarm valarm = new VAlarm(dur);
             valarm.getProperties().add(Action.DISPLAY);
+            valarm.getProperties().add(new Description(schedule.getDescription()));
             event.getAlarms().add(valarm);
         }
     }

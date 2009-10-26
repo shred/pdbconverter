@@ -17,30 +17,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.export;
+package org.shredzone.pdbconverter.handler;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 
-import org.shredzone.pdbconverter.pdb.Entry;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
+import org.apache.commons.cli.CommandLine;
 
 /**
- * Generic interface for a database exporter.
+ * Interface for a handler that takes care for reading and exporting.
  *
  * @author Richard "Shred" Körber
  * @version $Revision: 362 $
  */
-public interface Exporter<T extends Entry> {
+public interface ExportHandler {
 
     /**
-     * Exports the database to the given stream.
-     * 
-     * @param database
-     *            {@link PdbDatabase} to be exported
-     * @param out
-     *            {@link OutputStream} to write to.
+     * Gets the name of the handler.
      */
-    void export(PdbDatabase<T> database, OutputStream out) throws IOException;
+    String getName();
+
+    /**
+     * Gets a description about the input and output file format.
+     */
+    String getDescription();
+
+    /**
+     * Exports the given infile to the outfile.
+     * 
+     * @param infile
+     *            input pdb file
+     * @param outfile
+     *            output file name
+     * @param cmd
+     *            {@link CommandLine} with further parameters
+     */
+    void export(File infile, File outfile, CommandLine cmd) throws IOException;
 
 }
