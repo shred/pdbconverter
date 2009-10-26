@@ -31,6 +31,7 @@ import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Categories;
@@ -52,11 +53,18 @@ import org.shredzone.pdbconverter.pdb.Schedule.Repeat;
 import org.shredzone.pdbconverter.pdb.Schedule.ShortDate;
 import org.shredzone.pdbconverter.pdb.Schedule.ShortTime;
 
+/*
+ * NOTE TO THE READER:
+ *   This class uses ical4j for writing iCalendar output. ical4j uses classes that
+ *   are named like standard JDK classes, so take care when reading the source code.
+ *   For example, "Date" is not what you might expect it to be.
+ */
+
 /**
  * Writes a {@link Schedule} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 359 $
+ * @version $Revision: 360 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter implements Exporter<Schedule> {
@@ -245,7 +253,7 @@ public class ScheduleExporter implements Exporter<Schedule> {
             }
             
             event.getProperties().add(new RRule(recur));
-//            setExceptions(event, schedule);
+            setExceptions(event, schedule);
         }
     }
     
@@ -259,10 +267,8 @@ public class ScheduleExporter implements Exporter<Schedule> {
      */
     private void setExceptions(VEvent event, Schedule schedule) {
         if (!schedule.getExceptions().isEmpty()) {
-            DateList datelist = new DateList();
+            DateList datelist = new DateList(Value.DATE);
             for (ShortDate exception : schedule.getExceptions()) {
-                System.err.println(schedule);
-                System.err.println(exception);
                 datelist.add(new Date(convertDate(exception).getTime()));
             }
             event.getProperties().add(new ExDate(datelist));
