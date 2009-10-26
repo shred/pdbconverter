@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Categories;
+import net.fortuna.ical4j.model.property.Clazz;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -64,7 +65,7 @@ import org.shredzone.pdbconverter.pdb.Schedule.ShortTime;
  * Writes a {@link Schedule} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 360 $
+ * @version $Revision: 361 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter implements Exporter<Schedule> {
@@ -124,6 +125,7 @@ public class ScheduleExporter implements Exporter<Schedule> {
         setLocation(result, schedule);
         setNote(result, schedule);
         setCategory(result, schedule);
+        setPrivacy(result, schedule);
         
         return result;
     }
@@ -335,6 +337,20 @@ public class ScheduleExporter implements Exporter<Schedule> {
         }
     }
 
+    /**
+     * Sets the classification to PRIVATE if the schedule is secret.
+     * 
+     * @param event
+     *            {@link VEvent} to write to
+     * @param schedule
+     *            {@link Schedule} to read from
+     */
+    private void setPrivacy(VEvent event, Schedule schedule) {
+        if (schedule.isSecret()) {
+            event.getProperties().add(Clazz.PRIVATE);
+        }
+    }
+    
     /**
      * Converts a {@link ShortDate} to a {@link Calendar} object.
      * 
