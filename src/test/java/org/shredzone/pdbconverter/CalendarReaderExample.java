@@ -22,6 +22,7 @@ package org.shredzone.pdbconverter;
 import java.io.File;
 import java.util.List;
 
+import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.Schedule;
@@ -31,7 +32,7 @@ import org.shredzone.pdbconverter.pdb.converter.ScheduleConverter;
  * An example for reading calendar PDBs.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 364 $
  */
 public class CalendarReaderExample {
 
@@ -46,12 +47,13 @@ public class CalendarReaderExample {
             File file = new File(args[0]);
 
             PdbFile pdb = new PdbFile(file);
-            PdbDatabase<Schedule> database = pdb.readDatabase(new ScheduleConverter());
+            PdbDatabase<Schedule, CategoryAppInfo> database =
+                pdb.readDatabase(new ScheduleConverter());
             pdb.close();
 
             System.out.printf("Name: %s\n", database.getName());
 
-            List<String> cats = database.getCategories();
+            List<String> cats = database.getAppInfo().getCategories();
             for (int ix = 0; ix < cats.size(); ix++) {
                 System.out.printf("Category %d: %s\n", ix, cats.get(ix));
             }
