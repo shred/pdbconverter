@@ -21,6 +21,7 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
+import org.shredzone.pdbconverter.pdb.AppInfo;
 import org.shredzone.pdbconverter.pdb.Entry;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
@@ -29,24 +30,25 @@ import org.shredzone.pdbconverter.pdb.PdbFile;
  * Converts a PDB record into an {@link Entry} object.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 363 $
  */
-public interface EntryConverter<T extends Entry> {
+public interface EntryConverter<T extends Entry, U extends AppInfo> {
 
     /**
      * Checks if this entry converter is able to convert entries for the PdbDatabase.
      * 
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
-     *            database is still being read. The attributes and categories are already
-     *            read and may be used, but the entries are still incomplete. You would
-     *            usually access the database to read the database name or the category
-     *            map.
+     *            database is still being read. The basic attributes are already read and
+     *            may be used, but the appinfo and entries are still incomplete. You would
+     *            usually access the database to read the database name or creator.
      * @return {@code true} if the converter is able to process the database records.
      */
-    boolean isAcceptable(PdbDatabase<T> database);
+    boolean isAcceptable(PdbDatabase<T, U> database);
 
     /**
+     * Converts raw record data to an {@link Entry}.
+     * 
      * @param reader
      *            {@link PdbFile} with the file cursor at the beginning of the record
      * @param size
@@ -55,13 +57,32 @@ public interface EntryConverter<T extends Entry> {
      *            Attributes of this record
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
-     *            database is still being read. The attributes and categories are already
+     *            database is still being read. The attributes and appinfo are already
      *            read and may be used, but the entries are still incomplete. You would
      *            usually access the database to read the database name or the category
      *            map.
      * @return {@link Entry} object containing the data of this record
      */
-    T convert(PdbFile reader, int size, byte attribute, PdbDatabase<T> database)
+    T convert(PdbFile reader, int size, byte attribute, PdbDatabase<T, U> database)
         throws IOException;
 
+    /**
+     * Converts raw application info data to an {@link AppInfo}.
+     * 
+     * @param reader
+     *            {@link PdbFile} with the file cursor at the beginning of the appinfo
+     *            area
+     * @param size
+     *            Estimated size of the appinfo area, in bytes. Note that the actual
+     *            appinfo area might be smaller.
+     * @param database
+     *            The {@link PdbDatabase} that is currently generated. Note that the
+     *            database is still being read. The simple attributes are already read
+     *            and may be used, but the appinfo and entries are still empty. Usually
+     *            you would like to ignore this parameter if possible.
+     * @return {@link AppInfo} object containing the converted appinfo
+     */
+    U convertAppInfo(PdbFile reader, int size, PdbDatabase<T, U> database)
+        throws IOException;
+    
 }

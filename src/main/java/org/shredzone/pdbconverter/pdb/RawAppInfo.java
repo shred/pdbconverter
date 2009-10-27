@@ -17,31 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.export;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.shredzone.pdbconverter.pdb.AppInfo;
-import org.shredzone.pdbconverter.pdb.Entry;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
+package org.shredzone.pdbconverter.pdb;
 
 /**
- * Generic interface for a database exporter.
- *
+ * {@link AppInfo} implementation that stores the raw appinfo area.
+ * 
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 356 $
  */
-public interface Exporter<T extends Entry, U extends AppInfo> {
+public class RawAppInfo extends AppInfo {
+
+    private final byte[] data;
 
     /**
-     * Exports the database to the given stream.
+     * Creates a new {@link RawAppInfo}.
      * 
-     * @param database
-     *            {@link PdbDatabase} to be exported
-     * @param out
-     *            {@link OutputStream} to write to.
+     * @param data
+     *            raw appinfo data to be stored
      */
-    void export(PdbDatabase<T, U> database, OutputStream out) throws IOException;
+    public RawAppInfo(byte[] data) {
+        this.data = data;
+    }
+
+    /**
+     * Gets the raw appinfo.
+     * 
+     * @return raw appinfo
+     */
+    public byte[] getRawAppInfo() {
+        return data;
+    }
 
 }

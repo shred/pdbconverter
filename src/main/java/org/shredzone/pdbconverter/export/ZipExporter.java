@@ -29,15 +29,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
+import org.shredzone.pdbconverter.pdb.RawAppInfo;
 import org.shredzone.pdbconverter.pdb.RawEntry;
 
 /**
  * Writes a {@link RawEntry} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 362 $
+ * @version $Revision: 363 $
  */
-public class ZipExporter implements Exporter<RawEntry> {
+public class ZipExporter implements Exporter<RawEntry, RawAppInfo> {
     
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     
@@ -50,10 +51,13 @@ public class ZipExporter implements Exporter<RawEntry> {
      * "db-info.xml" with generic database information, and a .bin file for each database
      * record.
      */
-    public void export(PdbDatabase<RawEntry> database, OutputStream out) throws IOException {
+    public void export(PdbDatabase<RawEntry, RawAppInfo> database, OutputStream out)
+    throws IOException {
         ZipOutputStream zos = new ZipOutputStream(out);
 
         writeDatabaseInfo(database, zos);
+        
+        writeAppInfo(database, zos);
         
         int counter = 0;
         for (RawEntry entry : database.getEntries()) {
@@ -75,7 +79,8 @@ public class ZipExporter implements Exporter<RawEntry> {
      * @param zos
      *            {@link ZipOutputStream} to write to
      */
-    private void writeDatabaseInfo(PdbDatabase<RawEntry> database, ZipOutputStream zos) throws IOException {
+    private void writeDatabaseInfo(PdbDatabase<RawEntry, RawAppInfo> database, ZipOutputStream zos)
+    throws IOException {
         zos.putNextEntry(new ZipEntry("db-info.xml"));
         PrintStream out = new PrintStream(zos, false, "utf-8");
 
@@ -91,13 +96,6 @@ public class ZipExporter implements Exporter<RawEntry> {
             out.printf("  <backup>%s</backup>", DATE_FMT.format(database.getBackupTime())).println();
         }
 
-        out.println("  <categories>");
-        List<String> categories = database.getCategories();
-        for (int ix = 0; ix < categories.size(); ix++) {
-            out.printf("    <category id=\"%d\">%s</category>", ix, categories.get(ix)).println();
-        }
-        out.println("  </categories>");
-        
         out.println("  <records>");
         List<RawEntry> records = database.getEntries();
         for (int ix = 0; ix < records.size(); ix++) {
@@ -116,6 +114,24 @@ public class ZipExporter implements Exporter<RawEntry> {
         out.flush();
         
         zos.closeEntry();
+    }
+    
+    /**
+     * Creates the "appinfo.bin" file with a dump of the appinfo area.
+     * 
+     * @param database
+     *            {@link PdbDatabase} to be written
+     * @param zos
+     *            {@link ZipOutputStream} to write to
+     */
+    private void writeAppInfo(PdbDatabase<RawEntry, RawAppInfo> database, ZipOutputStream zos)
+    throws IOException {
+        if (database.getAppInfo() != null) {
+            zos.putNextEntry(new ZipEntry("appinfo.bin"));
+            zos.write(database.getAppInfo().getRawAppInfo());
+            zos.flush();
+            zos.closeEntry();
+        }
     }
     
 }

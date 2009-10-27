@@ -17,31 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.export;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.shredzone.pdbconverter.pdb.AppInfo;
-import org.shredzone.pdbconverter.pdb.Entry;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
+package org.shredzone.pdbconverter.pdb;
 
 /**
- * Generic interface for a database exporter.
- *
+ * Superclass for all AppInfo containers.
+ * 
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision:$
  */
-public interface Exporter<T extends Entry, U extends AppInfo> {
-
-    /**
-     * Exports the database to the given stream.
-     * 
-     * @param database
-     *            {@link PdbDatabase} to be exported
-     * @param out
-     *            {@link OutputStream} to write to.
-     */
-    void export(PdbDatabase<T, U> database, OutputStream out) throws IOException;
-
+public abstract class AppInfo {
+    
 }

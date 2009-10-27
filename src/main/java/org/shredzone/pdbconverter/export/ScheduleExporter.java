@@ -53,6 +53,7 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
 
+import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.Schedule;
 import org.shredzone.pdbconverter.pdb.Schedule.Alarm;
@@ -71,10 +72,10 @@ import org.shredzone.pdbconverter.pdb.Schedule.ShortTime;
  * Writes a {@link Schedule} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 362 $
+ * @version $Revision: 363 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
-public class ScheduleExporter implements Exporter<Schedule> {
+public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
     
     private static final WeekDay[] WEEKDAYS = {
         WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA,
@@ -103,7 +104,8 @@ public class ScheduleExporter implements Exporter<Schedule> {
      * @param out
      *            {@link OutputStream} to write to
      */
-    public void export(PdbDatabase<Schedule> database, OutputStream out) throws IOException {
+    public void export(PdbDatabase<Schedule, CategoryAppInfo> database, OutputStream out)
+    throws IOException {
         UidGenerator uidGenerator = new UidGenerator("uidGen");
 
         TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();

@@ -21,6 +21,8 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
+import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.CategoryAppInfoHelper;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.Schedule;
@@ -31,10 +33,10 @@ import org.shredzone.pdbconverter.pdb.Schedule.Repeat.Mode;
  * An {@link EntryConverter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 358 $
+ * @version $Revision: 363 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
-public class ScheduleConverter implements EntryConverter<Schedule> {
+public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppInfo> {
 
     public static final int FLAG_ALARM = 0x4000;
     public static final int FLAG_REPEAT = 0x2000;
@@ -43,15 +45,15 @@ public class ScheduleConverter implements EntryConverter<Schedule> {
     public static final int FLAG_DESCRIPTION = 0x0400;
     public static final int FLAG_LOCATION = 0x0200;  // only if creator is "PDat"
     
-    public boolean isAcceptable(PdbDatabase<Schedule> database) {
+    public boolean isAcceptable(PdbDatabase<Schedule, CategoryAppInfo> database) {
         return "PDat".equals(database.getCreator());
     }
     
     public Schedule convert(PdbFile reader, int size, byte attribute,
-            PdbDatabase<Schedule> database) throws IOException {
+            PdbDatabase<Schedule, CategoryAppInfo> database) throws IOException {
         Schedule result = new Schedule(attribute);
         
-        result.setCategory(database.getCategories().get(result.getCategoryIndex()));
+        result.setCategory(database.getAppInfo().getCategories().get(result.getCategoryIndex()));
         
         byte startHour = reader.readByte();
         byte startMinute = reader.readByte();
@@ -165,6 +167,13 @@ public class ScheduleConverter implements EntryConverter<Schedule> {
             result.setLocation(reader.readTerminatedString());
         }
         
+        return result;
+    }
+    
+    public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
+            PdbDatabase<Schedule, CategoryAppInfo> database) throws IOException {
+        CategoryAppInfo result = new CategoryAppInfo();
+        CategoryAppInfoHelper.readCategories(reader, result);
         return result;
     }
     

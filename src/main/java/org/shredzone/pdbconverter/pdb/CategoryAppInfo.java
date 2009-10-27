@@ -17,31 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.export;
+package org.shredzone.pdbconverter.pdb;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.shredzone.pdbconverter.pdb.AppInfo;
-import org.shredzone.pdbconverter.pdb.Entry;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Generic interface for a database exporter.
- *
+ * A standard AppInfo container that contains a list of category names.
+ * 
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision:$
  */
-public interface Exporter<T extends Entry, U extends AppInfo> {
+public class CategoryAppInfo extends AppInfo {
+
+    private List<String> categories = new ArrayList<String>();
 
     /**
-     * Exports the database to the given stream.
-     * 
-     * @param database
-     *            {@link PdbDatabase} to be exported
-     * @param out
-     *            {@link OutputStream} to write to.
+     * Gets a list of category names.
      */
-    void export(PdbDatabase<T, U> database, OutputStream out) throws IOException;
+    public List<String> getCategories()             { return categories; }
 
 }

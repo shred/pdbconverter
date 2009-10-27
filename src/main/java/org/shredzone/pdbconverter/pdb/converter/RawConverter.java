@@ -23,26 +23,34 @@ import java.io.IOException;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
+import org.shredzone.pdbconverter.pdb.RawAppInfo;
 import org.shredzone.pdbconverter.pdb.RawEntry;
 
 /**
  * An {@link EntryConverter} that handles only the raw content of a record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 363 $
  */
-public class RawConverter implements EntryConverter<RawEntry> {
+public class RawConverter implements EntryConverter<RawEntry, RawAppInfo> {
 
-    public boolean isAcceptable(PdbDatabase<RawEntry> database) {
+    public boolean isAcceptable(PdbDatabase<RawEntry, RawAppInfo> database) {
         // Raw accepts everything
         return true;
     }
     
     public RawEntry convert(PdbFile reader, int size, byte attribute,
-            PdbDatabase<RawEntry> database) throws IOException {
+            PdbDatabase<RawEntry, RawAppInfo> database) throws IOException {
         byte[] data = new byte[size];
         reader.readFully(data);
         return new RawEntry(data, attribute);
     }
 
+    public RawAppInfo convertAppInfo(PdbFile reader, int size,
+            PdbDatabase<RawEntry, RawAppInfo> database) throws IOException {
+        byte[] data = new byte[size];
+        reader.readFully(data);
+        return new RawAppInfo(data);
+    }
+    
 }

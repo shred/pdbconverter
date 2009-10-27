@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 import org.shredzone.pdbconverter.export.ScheduleExporter;
+import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.Schedule;
@@ -33,7 +34,7 @@ import org.shredzone.pdbconverter.pdb.converter.ScheduleConverter;
  * {@link ExportHandler} that reads Calendar pdb and writes an iCalendar file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 362 $
+ * @version $Revision: 363 $
  */
 public class ICalendarHandler implements ExportHandler {
 
@@ -46,7 +47,7 @@ public class ICalendarHandler implements ExportHandler {
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<Schedule> database;
+        PdbDatabase<Schedule, CategoryAppInfo> database;
         
         PdbFile pdb = null;
         try {

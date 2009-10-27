@@ -27,9 +27,9 @@ import java.util.List;
  * Represents the contents of a PDB database file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 363 $
  */
-public class PdbDatabase<T extends Entry> {
+public class PdbDatabase<T extends Entry, U extends AppInfo> {
     public static final int ATTR_RESDB = 0x0001;
     public static final int ATTR_READONLY = 0x0002;
     public static final int ATTR_APPINFODIRTY = 0x0004;
@@ -53,7 +53,7 @@ public class PdbDatabase<T extends Entry> {
     private int modificationNumber;
     private String type;
     private String creator;
-    private List<String> categories = new ArrayList<String>();
+    private U appInfo;
     private List<T> entries = new ArrayList<T>();
 
     /**
@@ -112,9 +112,11 @@ public class PdbDatabase<T extends Entry> {
     public void setCreator(String creator) { this.creator = creator; }
 
     /**
-     * Gets all category names.
+     * Gets the {@link AppInfo} of this database. {@code null} if no appinfo area was
+     * available.
      */
-    public List<String> getCategories() { return categories; }
+    public U getAppInfo()               { return appInfo; }
+    public void setAppInfo(U appInfo)   { this.appInfo = appInfo; }
 
     /**
      * Gets all entries of this database.

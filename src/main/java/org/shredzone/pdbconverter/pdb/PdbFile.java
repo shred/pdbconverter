@@ -33,13 +33,12 @@ import org.shredzone.pdbconverter.pdb.converter.EntryConverter;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 363 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
 
     private static final String CHARSET = "iso-8859-1";
-    private static final int NUM_CATEGORIES = 16;
     private static final long EPOCH;    // Timestamp of PalmOS epoch (1904-01-01)
     
     static {
@@ -75,9 +74,9 @@ public class PdbFile extends RandomAccessFile {
      *             if the file was no valid PDB file or the converter was not able to
      *             convert the file's contents.
      */
-    public <T extends Entry> PdbDatabase<T> readDatabase(EntryConverter<T> converter)
+    public <T extends Entry, U extends AppInfo> PdbDatabase<T, U> readDatabase(EntryConverter<T, U> converter)
     throws IOException {
-        PdbDatabase<T> result = new PdbDatabase<T>();
+        PdbDatabase<T, U> result = new PdbDatabase<T, U>();
     
         // Read the database header
         seek(0);
@@ -89,7 +88,7 @@ public class PdbFile extends RandomAccessFile {
         result.setBackupTime(readDate());
         result.setModificationNumber(readInt());
         int appInfoPos = readInt();
-        readInt();                              // Sort offset, usually skipped
+        int sortInfoPos = readInt();
         result.setType(readFixedString(4));
         result.setCreator(readFixedString(4));
         readInt();                              // Unique ID seed
@@ -106,28 +105,21 @@ public class PdbFile extends RandomAccessFile {
             readShort();
         }
         
-        // Read appInfo if available
-        if (appInfoPos > 0) {
-            seek(appInfoPos);
-            
-            // This is a bitmask about renamed categories. It is ignored for now.
-            readShort();
-            
-            for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
-                String catName = readTerminatedFixedString(16);
-                if (catName.length() > 0) {
-                    result.getCategories().add(catName);
-                }
-            }
-
-            for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
-                readByte(); // Key
-            }
-        }
-        
         // Ask converter if it accepts the content
         if (!converter.isAcceptable(result)) {
             throw new IOException("Wrong database format");
+        }
+        
+        // Read appInfo if available
+        if (appInfoPos > 0) {
+            int endPos = (records > 0) ? offsets[0] : (int) length();
+            if (sortInfoPos > appInfoPos && sortInfoPos < endPos) {
+                endPos = sortInfoPos;
+            }
+            int size = endPos - appInfoPos;
+            
+            seek(appInfoPos);
+            result.setAppInfo(converter.convertAppInfo(this, size, result));
         }
         
         // Read each record
