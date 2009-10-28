@@ -36,7 +36,7 @@ import org.shredzone.pdbconverter.pdb.RawEntry;
  * Writes a {@link RawEntry} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 365 $
  */
 public class ZipExporter implements Exporter<RawEntry, RawAppInfo> {
     
@@ -89,7 +89,7 @@ public class ZipExporter implements Exporter<RawEntry, RawAppInfo> {
         out.println("<dbinfo>");
         out.printf("  <name>%s</name>", database.getName()).println();
         out.printf("  <type>%s</type>", database.getType()).println();
-        out.printf("  <creator>%s</creator>", database.getType()).println();
+        out.printf("  <creator>%s</creator>", database.getCreator()).println();
         out.printf("  <created>%s</created>", DATE_FMT.format(database.getCreationTime())).println();
         out.printf("  <modified>%s</modified>", DATE_FMT.format(database.getModificationTime())).println();
         if (database.getBackupTime() != null) {
