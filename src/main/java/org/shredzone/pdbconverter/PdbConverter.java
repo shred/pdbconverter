@@ -31,13 +31,14 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.shredzone.pdbconverter.handler.ExportHandler;
 import org.shredzone.pdbconverter.handler.ICalendarHandler;
+import org.shredzone.pdbconverter.handler.NotepadHandler;
 import org.shredzone.pdbconverter.handler.ZipHandler;
 
 /**
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 362 $
+ * @version $Revision: 366 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
@@ -45,6 +46,7 @@ public class PdbConverter {
     private static final Options CLI_OPTIONS = new Options();
     private static final ExportHandler[] HANDLERS = {
         new ICalendarHandler(),
+        new NotepadHandler(),
         new ZipHandler(),
     };
     

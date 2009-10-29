@@ -33,7 +33,7 @@ import org.shredzone.pdbconverter.pdb.converter.EntryConverter;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 366 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -215,6 +215,26 @@ public class PdbFile extends RandomAccessFile {
     public Date readDate() throws IOException {
         long date = readUnsignedInt();
         return new Date(EPOCH + (date * 1000));
+    }
+    
+    /**
+     * Reads a PalmOS date and time that is stored in seven words.
+     * 
+     * @return Date and time that was read
+     */
+    public Date readDateTimeWords() throws IOException {
+        int second = readUnsignedShort();
+        int minute = readUnsignedShort();
+        int hour   = readUnsignedShort();
+        int day    = readUnsignedShort();
+        int month  = readUnsignedShort();   // 1..12
+        int year   = readUnsignedShort();   // 4 digits
+        readUnsignedShort();                // day of week, to be ignored...
+        
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(year, month - 1, day, hour, minute, second);
+        return cal.getTime();
     }
 
     /**
