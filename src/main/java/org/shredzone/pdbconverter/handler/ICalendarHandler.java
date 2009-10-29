@@ -28,13 +28,13 @@ import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.ScheduleConverter;
-import org.shredzone.pdbconverter.pdb.record.Schedule;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
 
 /**
  * {@link ExportHandler} that reads Calendar pdb and writes an iCalendar file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
 public class ICalendarHandler implements ExportHandler {
 
@@ -47,7 +47,7 @@ public class ICalendarHandler implements ExportHandler {
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<Schedule, CategoryAppInfo> database;
+        PdbDatabase<ScheduleRecord, CategoryAppInfo> database;
         
         PdbFile pdb = null;
         try {

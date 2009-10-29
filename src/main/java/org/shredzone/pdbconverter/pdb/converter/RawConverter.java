@@ -21,34 +21,33 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.EntryConverter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
-import org.shredzone.pdbconverter.pdb.record.RawEntry;
+import org.shredzone.pdbconverter.pdb.record.RawRecord;
 
 /**
- * An {@link EntryConverter} that handles only the raw content of a record.
+ * An {@link Converter} that handles only the raw content of a record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public class RawConverter implements EntryConverter<RawEntry, RawAppInfo> {
+public class RawConverter implements Converter<RawRecord, RawAppInfo> {
 
-    public boolean isAcceptable(PdbDatabase<RawEntry, RawAppInfo> database) {
+    public boolean isAcceptable(PdbDatabase<RawRecord, RawAppInfo> database) {
         // Raw accepts everything
         return true;
     }
     
-    public RawEntry convert(PdbFile reader, int size, byte attribute,
-            PdbDatabase<RawEntry, RawAppInfo> database) throws IOException {
+    public RawRecord convert(PdbFile reader, int size, byte attribute,
+            PdbDatabase<RawRecord, RawAppInfo> database) throws IOException {
         byte[] data = new byte[size];
         reader.readFully(data);
-        return new RawEntry(data, attribute);
+        return new RawRecord(data, attribute);
     }
 
     public RawAppInfo convertAppInfo(PdbFile reader, int size,
-            PdbDatabase<RawEntry, RawAppInfo> database) throws IOException {
+            PdbDatabase<RawRecord, RawAppInfo> database) throws IOException {
         byte[] data = new byte[size];
         reader.readFully(data);
         return new RawAppInfo(data);

@@ -17,18 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb;
+package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
+
+import org.shredzone.pdbconverter.pdb.PdbDatabase;
+import org.shredzone.pdbconverter.pdb.PdbFile;
+import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
+import org.shredzone.pdbconverter.pdb.record.Record;
 
 
 /**
  * Converts a PDB record into an {@link Record} object.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public interface EntryConverter<T extends Record, U extends AppInfo> {
+public interface Converter <T extends Record, U extends AppInfo> {
 
     /**
      * Checks if this entry converter is able to convert entries for the PdbDatabase.

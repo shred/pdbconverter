@@ -19,7 +19,6 @@
  */
 package org.shredzone.pdbconverter.pdb.appinfo;
 
-import org.shredzone.pdbconverter.pdb.AppInfo;
 
 
 /**

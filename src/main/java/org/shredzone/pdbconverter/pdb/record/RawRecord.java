@@ -19,28 +19,27 @@
  */
 package org.shredzone.pdbconverter.pdb.record;
 
-import org.shredzone.pdbconverter.pdb.Record;
 
 
 /**
  * An {@link Record} implementation that just contains the raw database record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public class RawEntry extends Record {
+public class RawRecord extends Record {
     
     private final byte[] data;
 
     /**
-     * Creates a new {@link RawEntry} for the given data and attribute.
+     * Creates a new {@link RawRecord} for the given data and attribute.
      * 
      * @param data
      *            Record data
      * @param attribute
      *            Record attribute
      */
-    public RawEntry(byte[] data, byte attribute) {
+    public RawRecord(byte[] data, byte attribute) {
         super(attribute);
         this.data = data;
     }

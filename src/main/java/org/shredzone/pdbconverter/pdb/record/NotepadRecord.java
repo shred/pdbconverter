@@ -21,16 +21,15 @@ package org.shredzone.pdbconverter.pdb.record;
 
 import java.util.Date;
 
-import org.shredzone.pdbconverter.pdb.Record;
 
 
 /**
  * An {@link Record} implementation that contains a Notepad entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public class NotepadEntry extends Record {
+public class NotepadRecord extends Record {
 
     private String title;
     private Date created;
@@ -39,12 +38,12 @@ public class NotepadEntry extends Record {
     private byte[] imagePng;
     
     /**
-     * Creates a new {@link NotepadEntry}.
+     * Creates a new {@link NotepadRecord}.
      * 
      * @param attribute
      *            Record attribute
      */
-    public NotepadEntry(byte attribute) {
+    public NotepadRecord(byte attribute) {
         super(attribute);
     }
 

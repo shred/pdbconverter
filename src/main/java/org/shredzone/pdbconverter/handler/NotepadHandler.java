@@ -29,14 +29,14 @@ import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.NotepadConverter;
-import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
+import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
 
 /**
  * {@link ExportHandler} that reads a Notepad pdb file and writes a ZIP file containing a
  * database index xml file and png image files for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
 public class NotepadHandler implements ExportHandler {
     
@@ -49,7 +49,7 @@ public class NotepadHandler implements ExportHandler {
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<NotepadEntry, CategoryAppInfo> database;
+        PdbDatabase<NotepadRecord, CategoryAppInfo> database;
         
         PdbFile pdb = null;
         try {

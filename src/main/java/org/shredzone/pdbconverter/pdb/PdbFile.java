@@ -27,14 +27,17 @@ import java.io.RandomAccessFile;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.converter.Converter;
+import org.shredzone.pdbconverter.pdb.record.Record;
 
 
 /**
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -68,7 +71,7 @@ public class PdbFile extends RandomAccessFile {
      * @param <T>
      *            {@link Record} subclass the database shall consist of
      * @param converter
-     *            {@link EntryConverter} that converts the raw database entries into
+     *            {@link Converter} that converts the raw database entries into
      *            {@link Record} objects
      * @return {@link PdbDatabase} containing the file contents
      * @throws IOException
@@ -76,7 +79,7 @@ public class PdbFile extends RandomAccessFile {
      *             if the file was no valid PDB file or the converter was not able to
      *             convert the file's contents.
      */
-    public <T extends Record, U extends AppInfo> PdbDatabase<T, U> readDatabase(EntryConverter<T, U> converter)
+    public <T extends Record, U extends AppInfo> PdbDatabase<T, U> readDatabase(Converter<T, U> converter)
     throws IOException {
         PdbDatabase<T, U> result = new PdbDatabase<T, U>();
     

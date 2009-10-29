@@ -29,14 +29,14 @@ import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.RawConverter;
-import org.shredzone.pdbconverter.pdb.record.RawEntry;
+import org.shredzone.pdbconverter.pdb.record.RawRecord;
 
 /**
  * {@link ExportHandler} that reads any pdb file and writes a ZIP file containing a
  * database index xml file, an appinfo dump and a binary file for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
 public class ZipHandler implements ExportHandler {
     
@@ -49,7 +49,7 @@ public class ZipHandler implements ExportHandler {
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<RawEntry, RawAppInfo> database;
+        PdbDatabase<RawRecord, RawAppInfo> database;
         
         PdbFile pdb = null;
         try {

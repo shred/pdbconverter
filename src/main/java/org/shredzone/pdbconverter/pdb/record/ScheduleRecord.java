@@ -22,16 +22,15 @@ package org.shredzone.pdbconverter.pdb.record;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.shredzone.pdbconverter.pdb.Record;
 
 
 /**
  * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public class Schedule extends Record {
+public class ScheduleRecord extends Record {
 
     private ShortDate schedule;
     private ShortTime startTime;
@@ -45,12 +44,12 @@ public class Schedule extends Record {
     private String category;
 
     /**
-     * Creates a new {@link Schedule} entry.
+     * Creates a new {@link ScheduleRecord} entry.
      * 
      * @param attribute
      *            Record's attribute
      */
-    public Schedule(byte attribute) {
+    public ScheduleRecord(byte attribute) {
         super(attribute);
     }
     

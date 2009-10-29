@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb;
+package org.shredzone.pdbconverter.pdb.record;
 
 /**
  * Represents a single database entry. Subclasses will give detailed methods for reading
  * the entry's content.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
 public abstract class Record {
     public static final int ATTR_SECRET = 0x10;

@@ -55,11 +55,11 @@ import net.fortuna.ical4j.util.UidGenerator;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.Schedule;
-import org.shredzone.pdbconverter.pdb.record.Schedule.Alarm;
-import org.shredzone.pdbconverter.pdb.record.Schedule.Repeat;
-import org.shredzone.pdbconverter.pdb.record.Schedule.ShortDate;
-import org.shredzone.pdbconverter.pdb.record.Schedule.ShortTime;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Alarm;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortDate;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
 
 /*
  * NOTE TO THE READER:
@@ -69,13 +69,13 @@ import org.shredzone.pdbconverter.pdb.record.Schedule.ShortTime;
  */
 
 /**
- * Writes a {@link Schedule} database as iCalender file.
+ * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
-public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
+public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInfo> {
     
     private static final WeekDay[] WEEKDAYS = {
         WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA,
@@ -95,16 +95,16 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
     }
     
     /**
-     * Writes the {@link Schedule} database as iCalendar to the given
+     * Writes the {@link ScheduleRecord} database as iCalendar to the given
      * {@link OutputStream}. iCalendar support is pretty good! It copes with the
      * entire schedule database.
      * 
      * @param database
-     *            {@link Schedule} {@link PdbDatabase} to write
+     *            {@link ScheduleRecord} {@link PdbDatabase} to write
      * @param out
      *            {@link OutputStream} to write to
      */
-    public void export(PdbDatabase<Schedule, CategoryAppInfo> database, OutputStream out)
+    public void export(PdbDatabase<ScheduleRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
         UidGenerator uidGenerator = new UidGenerator("uidGen");
 
@@ -118,7 +118,7 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
         // Too much information?
         // calendar.getComponents().add(vTimeZone);
 
-        for (Schedule schedule : database.getEntries()) {
+        for (ScheduleRecord schedule : database.getEntries()) {
             VEvent event = createVEvent(schedule);
             event.getProperties().add(uidGenerator.generateUid());
             event.getProperties().add(vTimeZone.getTimeZoneId());
@@ -134,13 +134,13 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
     }
 
     /**
-     * Creates a new {@link VEvent} for a single {@link Schedule}.
+     * Creates a new {@link VEvent} for a single {@link ScheduleRecord}.
      * 
      * @param schedule
-     *            {@link Schedule} to be exported
-     * @return {@link VEvent} containing the {@link Schedule}
+     *            {@link ScheduleRecord} to be exported
+     * @return {@link VEvent} containing the {@link ScheduleRecord}
      */
-    private VEvent createVEvent(Schedule schedule) {
+    private VEvent createVEvent(ScheduleRecord schedule) {
         VEvent result = new VEvent();
 
         if (schedule.getStartTime() == null && schedule.getEndTime() == null) {
@@ -170,9 +170,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setSchedule(VEvent event, Schedule schedule) {
+    private void setSchedule(VEvent event, ScheduleRecord schedule) {
         Calendar startDate = convertDateTime(schedule.getSchedule(), schedule.getStartTime());
         Calendar endDate   = convertDateTime(schedule.getSchedule(), schedule.getEndTime());
         
@@ -191,9 +191,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setAllDaySchedule(VEvent event, Schedule schedule) {
+    private void setAllDaySchedule(VEvent event, ScheduleRecord schedule) {
         Calendar startDate = convertDate(schedule.getSchedule());
         event.getProperties().add(new DtStart(new Date(startDate.getTime())));
     }
@@ -204,9 +204,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setAlarm(VEvent event, Schedule schedule) {
+    private void setAlarm(VEvent event, ScheduleRecord schedule) {
         Alarm alarm = schedule.getAlarm();
         if (alarm != null) {
             int before = -alarm.getValue();
@@ -232,9 +232,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setRepeat(VEvent event, Schedule schedule) {
+    private void setRepeat(VEvent event, ScheduleRecord schedule) {
         Repeat repeat = schedule.getRepeat();
         if (repeat != null) {
             Date until = null;
@@ -299,9 +299,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setExceptions(VEvent event, Schedule schedule) {
+    private void setExceptions(VEvent event, ScheduleRecord schedule) {
         if (!schedule.getExceptions().isEmpty()) {
             DateList datelist = new DateList(Value.DATE);
             for (ShortDate exception : schedule.getExceptions()) {
@@ -317,9 +317,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setDescription(VEvent event, Schedule schedule) {
+    private void setDescription(VEvent event, ScheduleRecord schedule) {
         String summary = schedule.getDescription();
         if (summary != null) {
             event.getProperties().add(new Summary(summary));
@@ -332,9 +332,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setLocation(VEvent event, Schedule schedule) {
+    private void setLocation(VEvent event, ScheduleRecord schedule) {
         String location = schedule.getLocation();
         if (location != null) {
             event.getProperties().add(new Location(location));
@@ -347,9 +347,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setNote(VEvent event, Schedule schedule) {
+    private void setNote(VEvent event, ScheduleRecord schedule) {
         String note = schedule.getNote();
         if (note != null) {
             event.getProperties().add(new Description(note));
@@ -362,9 +362,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setCategory(VEvent event, Schedule schedule) {
+    private void setCategory(VEvent event, ScheduleRecord schedule) {
         String cat = schedule.getCategory();
         if (cat != null) {
             event.getProperties().add(new Categories(cat));
@@ -377,9 +377,9 @@ public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
-     *            {@link Schedule} to read from
+     *            {@link ScheduleRecord} to read from
      */
-    private void setPrivacy(VEvent event, Schedule schedule) {
+    private void setPrivacy(VEvent event, ScheduleRecord schedule) {
         if (schedule.isSecret()) {
             event.getProperties().add(Clazz.PRIVATE);
         }

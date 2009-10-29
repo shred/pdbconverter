@@ -21,11 +21,10 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.EntryConverter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
+import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
 
 /*
  * This code bases on analyzing the hex dump of a single notepad file. The result might
@@ -36,26 +35,26 @@ import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
  */
 
 /**
- * An {@link EntryConverter} that handles notepad entries.
+ * An {@link Converter} that handles notepad entries.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public class NotepadConverter implements EntryConverter<NotepadEntry, CategoryAppInfo> {
+public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInfo> {
 
     private static final int FLAG_TITLE = 0x0002;
     private static final int FLAG_ALARM = 0x0004;
     
-    public boolean isAcceptable(PdbDatabase<NotepadEntry, CategoryAppInfo> database) {
+    public boolean isAcceptable(PdbDatabase<NotepadRecord, CategoryAppInfo> database) {
         return "npadDB".equals(database.getName())
                 && "npad".equals(database.getCreator());
     }
     
-    public NotepadEntry convert(PdbFile reader, int size, byte attribute,
-            PdbDatabase<NotepadEntry, CategoryAppInfo> database) throws IOException {
+    public NotepadRecord convert(PdbFile reader, int size, byte attribute,
+            PdbDatabase<NotepadRecord, CategoryAppInfo> database) throws IOException {
         long current = reader.getFilePointer();
 
-        NotepadEntry result = new NotepadEntry(attribute);
+        NotepadRecord result = new NotepadRecord(attribute);
         
         result.setCreated(reader.readDateTimeWords());
         result.setModified(reader.readDateTimeWords());
@@ -93,7 +92,7 @@ public class NotepadConverter implements EntryConverter<NotepadEntry, CategoryAp
     }
     
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
-            PdbDatabase<NotepadEntry, CategoryAppInfo> database) throws IOException {
+            PdbDatabase<NotepadRecord, CategoryAppInfo> database) throws IOException {
         CategoryAppInfo result = new CategoryAppInfo();
         reader.readCategories(result);
         return result;

@@ -30,15 +30,15 @@ import java.util.zip.ZipOutputStream;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
+import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
 
 /**
- * Writes a {@link NotepadEntry} database as ZIP file.
+ * Writes a {@link NotepadRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
-public class NotepadExporter implements Exporter<NotepadEntry, CategoryAppInfo> {
+public class NotepadExporter implements Exporter<NotepadRecord, CategoryAppInfo> {
     
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     
@@ -47,18 +47,18 @@ public class NotepadExporter implements Exporter<NotepadEntry, CategoryAppInfo> 
     }
     
     /**
-     * Writes a database of {@link NotepadEntry} to a ZIP file. The zip file contains a
+     * Writes a database of {@link NotepadRecord} to a ZIP file. The zip file contains a
      * file "db-info.xml" with generic database information, and a .png file for each
      * database record.
      */
-    public void export(PdbDatabase<NotepadEntry, CategoryAppInfo> database, OutputStream out)
+    public void export(PdbDatabase<NotepadRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
         ZipOutputStream zos = new ZipOutputStream(out);
 
         writeDatabaseInfo(database, zos);
         
         int counter = 0;
-        for (NotepadEntry entry : database.getEntries()) {
+        for (NotepadRecord entry : database.getEntries()) {
             String name = String.format("images/%04d.png", counter++);
             ZipEntry ze = new ZipEntry(name);
             if (entry.getModified() != null) {
@@ -81,7 +81,7 @@ public class NotepadExporter implements Exporter<NotepadEntry, CategoryAppInfo> 
      * @param zos
      *            {@link ZipOutputStream} to write to
      */
-    private void writeDatabaseInfo(PdbDatabase<NotepadEntry, CategoryAppInfo> database, ZipOutputStream zos)
+    private void writeDatabaseInfo(PdbDatabase<NotepadRecord, CategoryAppInfo> database, ZipOutputStream zos)
     throws IOException {
         zos.putNextEntry(new ZipEntry("db-info.xml"));
         PrintStream out = new PrintStream(zos, false, "utf-8");
@@ -106,9 +106,9 @@ public class NotepadExporter implements Exporter<NotepadEntry, CategoryAppInfo> 
         out.println("  </categories>");
         
         out.println("  <records>");
-        List<NotepadEntry> records = database.getEntries();
+        List<NotepadRecord> records = database.getEntries();
         for (int ix = 0; ix < records.size(); ix++) {
-            NotepadEntry record = records.get(ix);
+            NotepadRecord record = records.get(ix);
             out.printf(
                     "      <record id=\"%d\" category=\"%d\"%s>",
                     ix,

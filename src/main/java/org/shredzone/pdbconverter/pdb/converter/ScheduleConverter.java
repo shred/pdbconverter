@@ -21,22 +21,21 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.EntryConverter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.Schedule;
-import org.shredzone.pdbconverter.pdb.record.Schedule.Alarm.Unit;
-import org.shredzone.pdbconverter.pdb.record.Schedule.Repeat.Mode;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Alarm.Unit;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
 
 /**
- * An {@link EntryConverter} that reads Calendar records.
+ * An {@link Converter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
-public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppInfo> {
+public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppInfo> {
 
     public static final int FLAG_ALARM = 0x4000;
     public static final int FLAG_REPEAT = 0x2000;
@@ -45,13 +44,13 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
     public static final int FLAG_DESCRIPTION = 0x0400;
     public static final int FLAG_LOCATION = 0x0200;  // only if creator is "PDat"
     
-    public boolean isAcceptable(PdbDatabase<Schedule, CategoryAppInfo> database) {
+    public boolean isAcceptable(PdbDatabase<ScheduleRecord, CategoryAppInfo> database) {
         return "PDat".equals(database.getCreator());
     }
     
-    public Schedule convert(PdbFile reader, int size, byte attribute,
-            PdbDatabase<Schedule, CategoryAppInfo> database) throws IOException {
-        Schedule result = new Schedule(attribute);
+    public ScheduleRecord convert(PdbFile reader, int size, byte attribute,
+            PdbDatabase<ScheduleRecord, CategoryAppInfo> database) throws IOException {
+        ScheduleRecord result = new ScheduleRecord(attribute);
         
         result.setCategory(database.getAppInfo().getCategories().get(result.getCategoryIndex()));
         
@@ -63,13 +62,13 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
         int flags = reader.readShort();
         
         if (startHour >= 0 && startMinute >= 0) {
-            result.setStartTime(new Schedule.ShortTime(startHour, startMinute));
+            result.setStartTime(new ScheduleRecord.ShortTime(startHour, startMinute));
         }
         if (endHour >= 0 && endMinute >= 0) {
-            result.setEndTime(new Schedule.ShortTime(endHour, endMinute));
+            result.setEndTime(new ScheduleRecord.ShortTime(endHour, endMinute));
         }
         
-        result.setSchedule(new Schedule.ShortDate(
+        result.setSchedule(new ScheduleRecord.ShortDate(
                         ((date >> 9) & 0x007F) + 1904,      // year
                         ((date >> 5) & 0x000F),             // month
                         ((date     ) & 0x001F)              // day
@@ -79,7 +78,7 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
             int advance = reader.readByte();
             int unit = reader.readUnsignedByte();
             
-            Schedule.Alarm.Unit alarmUnit;
+            ScheduleRecord.Alarm.Unit alarmUnit;
             switch (unit) {
                 case 0: alarmUnit = Unit.MINUTES; break;
                 case 1: alarmUnit = Unit.HOURS; break;
@@ -87,14 +86,14 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
                 default: throw new IOException("Unknown alarm unit: " + unit);
             }
             
-            result.setAlarm(new Schedule.Alarm(advance, alarmUnit));
+            result.setAlarm(new ScheduleRecord.Alarm(advance, alarmUnit));
         }
         
         if ((flags & FLAG_REPEAT) != 0) {
             int type = reader.readUnsignedByte();
             reader.readByte();
 
-            Schedule.Repeat.Mode repeatMode;
+            ScheduleRecord.Repeat.Mode repeatMode;
             switch (type) {
                 case 1: repeatMode = Mode.DAILY; break;
                 case 2: repeatMode = Mode.WEEKLY; break;
@@ -104,10 +103,10 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
                 default: throw new IOException("Unknown repeat mode: " + type);
             }
 
-            Schedule.ShortDate endDate = null;
+            ScheduleRecord.ShortDate endDate = null;
             int ending = reader.readUnsignedShort();
             if (ending != 0xFFFF) {
-                endDate = new Schedule.ShortDate(
+                endDate = new ScheduleRecord.ShortDate(
                         ((ending >> 9) & 0x007F) + 1904,      // year
                         ((ending >> 5) & 0x000F),             // month
                         ((ending     ) & 0x001F)              // day
@@ -133,7 +132,7 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
                 monthlyDay = repeatOn % 7;
             }
             
-            result.setRepeat(new Schedule.Repeat(
+            result.setRepeat(new ScheduleRecord.Repeat(
                             repeatMode,
                             frequency,
                             endDate,
@@ -147,7 +146,7 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
             int numExceptions = reader.readUnsignedShort();
             for (int ix = 0; ix < numExceptions; ix++) {
                 int excDate = reader.readUnsignedShort();
-                result.getExceptions().add(new Schedule.ShortDate(
+                result.getExceptions().add(new ScheduleRecord.ShortDate(
                         ((excDate >> 9) & 0x007F) + 1904,      // year
                         ((excDate >> 5) & 0x000F),             // month
                         ((excDate     ) & 0x001F)              // day
@@ -171,7 +170,7 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
     }
     
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
-            PdbDatabase<Schedule, CategoryAppInfo> database) throws IOException {
+            PdbDatabase<ScheduleRecord, CategoryAppInfo> database) throws IOException {
         CategoryAppInfo result = new CategoryAppInfo();
         reader.readCategories(result);
         return result;

@@ -22,7 +22,6 @@ package org.shredzone.pdbconverter.pdb.appinfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.shredzone.pdbconverter.pdb.AppInfo;
 
 
 /**

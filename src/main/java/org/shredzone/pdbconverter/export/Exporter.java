@@ -22,15 +22,15 @@ package org.shredzone.pdbconverter.export;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.shredzone.pdbconverter.pdb.AppInfo;
-import org.shredzone.pdbconverter.pdb.Record;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
+import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
+import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
  * Generic interface for a database exporter.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 367 $
+ * @version $Revision: 368 $
  */
 public interface Exporter<T extends Record, U extends AppInfo> {
 
