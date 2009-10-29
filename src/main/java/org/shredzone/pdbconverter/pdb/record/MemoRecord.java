@@ -17,35 +17,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb.appinfo;
+package org.shredzone.pdbconverter.pdb.record;
 
 /**
- * {@link AppInfo} implementation that stores the raw appinfo area.
- * 
+ * A {@link Record} implementation that contains a Memo record.
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 369 $
  */
-public class RawAppInfo extends AppInfo {
+public class MemoRecord extends Record {
 
-    private final byte[] data;
-
+    private String memo;
+    
     /**
-     * Creates a new {@link RawAppInfo}.
+     * Creates a new {@link MemoRecord}.
      * 
-     * @param data
-     *            raw appinfo data to be stored
+     * @param attribute
+     *            Record attribute
      */
-    public RawAppInfo(byte[] data) {
-        this.data = data;
+    public MemoRecord(byte attribute) {
+        super(attribute);
     }
 
     /**
-     * Gets the raw appinfo.
-     * 
-     * @return raw appinfo
+     * Gets the memo message.
      */
-    public byte[] getRawAppInfo() {
-        return data;
+    public String getMemo()                     { return memo; }
+    public void setMemo(String memo)            { this.memo = memo; }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Memo:[").append(memo).append(']');
+        return sb.toString();
     }
-
+    
 }

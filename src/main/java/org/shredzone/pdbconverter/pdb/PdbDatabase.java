@@ -26,12 +26,11 @@ import java.util.List;
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
-
 /**
  * Represents the contents of a PDB database file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 369 $
  */
 public class PdbDatabase<T extends Record, U extends AppInfo> {
     public static final int ATTR_RESDB = 0x0001;
@@ -58,7 +57,7 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
     private String type;
     private String creator;
     private U appInfo;
-    private List<T> entries = new ArrayList<T>();
+    private List<T> records = new ArrayList<T>();
 
     /**
      * Gets the database name (for example "CalendarDB-PDat").
@@ -123,8 +122,8 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
     public void setAppInfo(U appInfo)   { this.appInfo = appInfo; }
 
     /**
-     * Gets all entries of this database.
+     * Gets all records of this database.
      */
-    public List<T> getEntries()         { return entries; }
+    public List<T> getRecords()         { return records; }
         
 }

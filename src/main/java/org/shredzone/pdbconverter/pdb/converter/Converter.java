@@ -26,29 +26,28 @@ import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
-
 /**
  * Converts a PDB record into an {@link Record} object.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 369 $
  */
 public interface Converter <T extends Record, U extends AppInfo> {
 
     /**
-     * Checks if this entry converter is able to convert entries for the PdbDatabase.
+     * Checks if this record converter is able to convert records for the PdbDatabase.
      * 
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
      *            database is still being read. The basic attributes are already read and
-     *            may be used, but the appinfo and entries are still incomplete. You would
+     *            may be used, but the appinfo and records are still incomplete. You would
      *            usually access the database to read the database name or creator.
      * @return {@code true} if the converter is able to process the database records.
      */
     boolean isAcceptable(PdbDatabase<T, U> database);
 
     /**
-     * Converts raw record data to an {@link Record}.
+     * Converts raw record data to a {@link Record} object.
      * 
      * @param reader
      *            {@link PdbFile} with the file cursor at the beginning of the record
@@ -59,7 +58,7 @@ public interface Converter <T extends Record, U extends AppInfo> {
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
      *            database is still being read. The attributes and appinfo are already
-     *            read and may be used, but the entries are still incomplete. You would
+     *            read and may be used, but the records are still incomplete. You would
      *            usually access the database to read the database name or the category
      *            map.
      * @return {@link Record} object containing the data of this record
@@ -79,7 +78,7 @@ public interface Converter <T extends Record, U extends AppInfo> {
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
      *            database is still being read. The simple attributes are already read
-     *            and may be used, but the appinfo and entries are still empty. Usually
+     *            and may be used, but the appinfo and records are still empty. Usually
      *            you would like to ignore this parameter if possible.
      * @return {@link AppInfo} object containing the converted appinfo
      */

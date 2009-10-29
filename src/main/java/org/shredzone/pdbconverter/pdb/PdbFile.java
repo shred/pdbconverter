@@ -29,6 +29,7 @@ import java.util.Date;
 
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
 import org.shredzone.pdbconverter.pdb.converter.Converter;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
@@ -37,7 +38,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 369 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -143,7 +144,7 @@ public class PdbFile extends RandomAccessFile {
 
             seek(offsets[ix]);
             T entry = converter.convert(this, size, attributes[ix], result);
-            result.getEntries().add(entry);
+            result.getRecords().add(entry);
         }
         
         return result;
@@ -215,11 +216,15 @@ public class PdbFile extends RandomAccessFile {
     /**
      * Reads a PalmOS date.
      * 
-     * @return Date that was read
+     * @return Date that was read. May be {@code null} if no date was set.
      */
     public Date readDate() throws IOException {
         long date = readUnsignedInt();
-        return new Date(EPOCH + (date * 1000));
+        if (date != 0) {
+            return new Date(EPOCH + (date * 1000));
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -257,21 +262,36 @@ public class PdbFile extends RandomAccessFile {
     throws IOException {
         long startPos = getFilePointer();
         
-        // This is a bitmask about renamed categories. It is ignored for now.
-        readShort();
-        
+        // Read the rename flags
+        int renamed = readShort();
+
+        // Read the category names
+        String[] catNames = new String[NUM_CATEGORIES];
         for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
             String catName = readTerminatedFixedString(16);
             if (catName.length() > 0) {
-                appInfo.getCategories().add(catName);
+                catNames[ix] = catName;
             }
         }
 
         // Read the category keys
         for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
-            readByte();
+            int key = readByte();
+            
+            if (catNames[ix] != null) {
+                appInfo.getCategories().add(new Category(
+                    catNames[ix],
+                    key,
+                    (renamed & (1 << ix)) != 0
+                ));
+            } else {
+                appInfo.getCategories().add(null);
+            }
         }
 
+        readByte();     // last unique ID
+        readByte();     // padding
+        
         long endPos = getFilePointer();
         
         return (int) (endPos - startPos);
@@ -281,7 +301,7 @@ public class PdbFile extends RandomAccessFile {
      * Converts special PalmOS characters into their unicode equivalents. The string
      * methods of {@link PdbFile} will invoke this method by itself, so you usually do not
      * need to invoke it. Note that some very special PalmOS characters cannot be
-     * converted and will be kept unchanged.
+     * converted (as there are no unicode equivalents) and will be kept unchanged.
      * 
      * @param str
      *            String to be converted

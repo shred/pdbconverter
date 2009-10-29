@@ -21,7 +21,6 @@ package org.shredzone.pdbconverter.export;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
@@ -36,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * Writes a {@link RawRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 369 $
  */
 public class ZipExporter implements Exporter<RawRecord, RawAppInfo> {
     
@@ -60,7 +59,7 @@ public class ZipExporter implements Exporter<RawRecord, RawAppInfo> {
         writeAppInfo(database, zos);
         
         int counter = 0;
-        for (RawRecord entry : database.getEntries()) {
+        for (RawRecord entry : database.getRecords()) {
             String name = String.format("records/%04d.bin", counter++);
             zos.putNextEntry(new ZipEntry(name));
             zos.write(entry.getRaw());
@@ -82,37 +81,30 @@ public class ZipExporter implements Exporter<RawRecord, RawAppInfo> {
     private void writeDatabaseInfo(PdbDatabase<RawRecord, RawAppInfo> database, ZipOutputStream zos)
     throws IOException {
         zos.putNextEntry(new ZipEntry("db-info.xml"));
-        PrintStream out = new PrintStream(zos, false, "utf-8");
+        
+        XmlHelper xh = new XmlHelper();
+        xh.openXmlWriter(zos, "dbinfo");
+        xh.writeDatabase(database);
 
-        // TODO: This is just a quick hack. Use a real XML writer.
-        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        out.println("<dbinfo>");
-        out.printf("  <name>%s</name>", database.getName()).println();
-        out.printf("  <type>%s</type>", database.getType()).println();
-        out.printf("  <creator>%s</creator>", database.getCreator()).println();
-        out.printf("  <created>%s</created>", DATE_FMT.format(database.getCreationTime())).println();
-        out.printf("  <modified>%s</modified>", DATE_FMT.format(database.getModificationTime())).println();
-        if (database.getBackupTime() != null) {
-            out.printf("  <backup>%s</backup>", DATE_FMT.format(database.getBackupTime())).println();
-        }
+        xh.startElement("records");
 
-        out.println("  <records>");
-        List<RawRecord> records = database.getEntries();
+        List<RawRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             RawRecord record = records.get(ix);
-            out.printf(
-                    "    <record id=\"%d\" category=\"%d\"%s>records/%04d.bin</record>",
-                    ix,
-                    record.getCategoryIndex(),
-                    record.isSecret() ? " secret=\"true\"" : "",
-                    ix
-            ).println();
+
+            xh.startElement(
+                    "record",
+                    "id", ix,
+                    "category", record.getCategoryIndex(),
+                    "secret", record.isSecret()
+            );
+            xh.writeFormatted("file", "records/%04d.bin", ix);
+            xh.endElement();
         }
-        out.println("  </records>");
         
-        out.println("</dbinfo>");
-        out.flush();
+        xh.endElement();
         
+        xh.closeXmlWriter();
         zos.closeEntry();
     }
     

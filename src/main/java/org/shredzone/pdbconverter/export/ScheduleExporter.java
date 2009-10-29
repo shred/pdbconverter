@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 369 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInfo> {
@@ -118,7 +118,7 @@ public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInf
         // Too much information?
         // calendar.getComponents().add(vTimeZone);
 
-        for (ScheduleRecord schedule : database.getEntries()) {
+        for (ScheduleRecord schedule : database.getRecords()) {
             VEvent event = createVEvent(schedule);
             event.getProperties().add(uidGenerator.generateUid());
             event.getProperties().add(vTimeZone.getTimeZoneId());

@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Alarm.Unit;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
@@ -32,7 +33,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
  * An {@link Converter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 369 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppInfo> {
@@ -52,7 +53,10 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             PdbDatabase<ScheduleRecord, CategoryAppInfo> database) throws IOException {
         ScheduleRecord result = new ScheduleRecord(attribute);
         
-        result.setCategory(database.getAppInfo().getCategories().get(result.getCategoryIndex()));
+        Category cat = database.getAppInfo().getCategoryByIndex(result.getCategoryIndex());
+        if (cat != null) {
+            result.setCategory(cat.getName());
+        }
         
         byte startHour = reader.readByte();
         byte startMinute = reader.readByte();
@@ -64,6 +68,7 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
         if (startHour >= 0 && startMinute >= 0) {
             result.setStartTime(new ScheduleRecord.ShortTime(startHour, startMinute));
         }
+        
         if (endHour >= 0 && endMinute >= 0) {
             result.setEndTime(new ScheduleRecord.ShortTime(endHour, endMinute));
         }

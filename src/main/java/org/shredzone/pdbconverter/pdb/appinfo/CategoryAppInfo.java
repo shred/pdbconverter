@@ -22,21 +22,70 @@ package org.shredzone.pdbconverter.pdb.appinfo;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
- * A standard AppInfo container that contains a list of category names.
+ * A standard {@link AppInfo} container that contains a list of category names.
  * 
  * @author Richard "Shred" Körber
  * @version $Revision:$
  */
 public class CategoryAppInfo extends AppInfo {
 
-    private List<String> categories = new ArrayList<String>();
+    private List<Category> categories = new ArrayList<Category>();
 
     /**
      * Gets a list of category names.
      */
-    public List<String> getCategories()             { return categories; }
+    public List<Category> getCategories()           { return categories; }
 
+    /**
+     * Finds a {@link Category} by its index.
+     * 
+     * @param index
+     *            Category index
+     * @return {@link Category} or {@code null}
+     */
+    public Category getCategoryByIndex(int index) {
+        return categories.get(index);
+    }
+    
+    /**
+     * Finds a {@link Category} by its key.
+     * 
+     * @param key
+     *            Category key
+     * @return {@link Category} or {@code null}
+     */
+    public Category getCategoryByKey(int key) {
+        for (Category cat : categories) {
+            if (cat != null && cat.getKey() == key) {
+                return cat;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * A single category.
+     */
+    public static class Category {
+        private final String name;
+        private final int key;
+        private final boolean renamed;
+        
+        public Category(String name, int key, boolean renamed) {
+            this.name = name;
+            this.key = key;
+            this.renamed = renamed;
+        }
+        
+        public String getName()                     { return name; }
+        public int getKey()                         { return key; }
+        public boolean isRenamed()                  { return renamed; }
+        
+        @Override
+        public String toString() {
+            return name + " (" + key + ")";
+        }
+    }
+    
 }
