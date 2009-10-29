@@ -17,18 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb;
+package org.shredzone.pdbconverter.pdb.record;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.shredzone.pdbconverter.pdb.Record;
+
+
 /**
- * An {@link Entry} implementation for the Calendar PDB.
+ * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 359 $
+ * @version $Revision: 367 $
  */
-public class Schedule extends Entry {
+public class Schedule extends Record {
 
     private ShortDate schedule;
     private ShortTime startTime;

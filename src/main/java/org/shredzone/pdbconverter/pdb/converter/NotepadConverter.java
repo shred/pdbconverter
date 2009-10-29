@@ -21,11 +21,11 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.CategoryAppInfoHelper;
-import org.shredzone.pdbconverter.pdb.NotepadEntry;
+import org.shredzone.pdbconverter.pdb.EntryConverter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
 
 /*
  * This code bases on analyzing the hex dump of a single notepad file. The result might
@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.PdbFile;
  * An {@link EntryConverter} that handles notepad entries.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 366 $
+ * @version $Revision: 367 $
  */
 public class NotepadConverter implements EntryConverter<NotepadEntry, CategoryAppInfo> {
 
@@ -95,7 +95,7 @@ public class NotepadConverter implements EntryConverter<NotepadEntry, CategoryAp
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<NotepadEntry, CategoryAppInfo> database) throws IOException {
         CategoryAppInfo result = new CategoryAppInfo();
-        CategoryAppInfoHelper.readCategories(reader, result);
+        reader.readCategories(result);
         return result;
     }
 

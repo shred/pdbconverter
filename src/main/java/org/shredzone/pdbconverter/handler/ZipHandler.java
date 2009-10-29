@@ -27,16 +27,16 @@ import org.apache.commons.cli.CommandLine;
 import org.shredzone.pdbconverter.export.ZipExporter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
-import org.shredzone.pdbconverter.pdb.RawAppInfo;
-import org.shredzone.pdbconverter.pdb.RawEntry;
+import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.RawConverter;
+import org.shredzone.pdbconverter.pdb.record.RawEntry;
 
 /**
  * {@link ExportHandler} that reads any pdb file and writes a ZIP file containing a
  * database index xml file, an appinfo dump and a binary file for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 367 $
  */
 public class ZipHandler implements ExportHandler {
     

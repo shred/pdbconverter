@@ -28,15 +28,15 @@ import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.NotepadEntry;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
 
 /**
  * Writes a {@link NotepadEntry} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 366 $
+ * @version $Revision: 367 $
  */
 public class NotepadExporter implements Exporter<NotepadEntry, CategoryAppInfo> {
     

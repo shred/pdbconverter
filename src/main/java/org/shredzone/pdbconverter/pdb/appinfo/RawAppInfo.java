@@ -17,38 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb;
+package org.shredzone.pdbconverter.pdb.appinfo;
+
+import org.shredzone.pdbconverter.pdb.AppInfo;
+
 
 /**
- * An {@link Entry} implementation that just contains the raw database record.
- *
+ * {@link AppInfo} implementation that stores the raw appinfo area.
+ * 
  * @author Richard "Shred" Körber
  * @version $Revision: 356 $
  */
-public class RawEntry extends Entry {
-    
+public class RawAppInfo extends AppInfo {
+
     private final byte[] data;
 
     /**
-     * Creates a new {@link RawEntry} for the given data and attribute.
+     * Creates a new {@link RawAppInfo}.
      * 
      * @param data
-     *            Record data
-     * @param attribute
-     *            Record attribute
+     *            raw appinfo data to be stored
      */
-    public RawEntry(byte[] data, byte attribute) {
-        super(attribute);
+    public RawAppInfo(byte[] data) {
         this.data = data;
     }
 
     /**
-     * Gets the raw content of the record.
+     * Gets the raw appinfo.
      * 
-     * @return Raw content, as byte array
+     * @return raw appinfo
      */
-    public byte[] getRaw() {
+    public byte[] getRawAppInfo() {
         return data;
     }
-    
+
 }

@@ -24,9 +24,9 @@ package org.shredzone.pdbconverter.pdb;
  * the entry's content.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
+ * @version $Revision: 367 $
  */
-public abstract class Entry {
+public abstract class Record {
     public static final int ATTR_SECRET = 0x10;
     public static final int ATTR_BUSY = 0x20;
     public static final int ATTR_DIRTY = 0x40;
@@ -39,7 +39,7 @@ public abstract class Entry {
      * 
      * @param attribute Entry attributes (see ATTR constants)
      */
-    public Entry(byte attribute) {
+    public Record(byte attribute) {
         this.attribute = attribute;
     }
 

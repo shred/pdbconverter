@@ -53,13 +53,13 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
 
-import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.Schedule;
-import org.shredzone.pdbconverter.pdb.Schedule.Alarm;
-import org.shredzone.pdbconverter.pdb.Schedule.Repeat;
-import org.shredzone.pdbconverter.pdb.Schedule.ShortDate;
-import org.shredzone.pdbconverter.pdb.Schedule.ShortTime;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.record.Schedule;
+import org.shredzone.pdbconverter.pdb.record.Schedule.Alarm;
+import org.shredzone.pdbconverter.pdb.record.Schedule.Repeat;
+import org.shredzone.pdbconverter.pdb.record.Schedule.ShortDate;
+import org.shredzone.pdbconverter.pdb.record.Schedule.ShortTime;
 
 /*
  * NOTE TO THE READER:
@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.Schedule.ShortTime;
  * Writes a {@link Schedule} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 367 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter implements Exporter<Schedule, CategoryAppInfo> {

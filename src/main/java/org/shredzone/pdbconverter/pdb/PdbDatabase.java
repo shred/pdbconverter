@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 /**
  * Represents the contents of a PDB database file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 367 $
  */
-public class PdbDatabase<T extends Entry, U extends AppInfo> {
+public class PdbDatabase<T extends Record, U extends AppInfo> {
     public static final int ATTR_RESDB = 0x0001;
     public static final int ATTR_READONLY = 0x0002;
     public static final int ATTR_APPINFODIRTY = 0x0004;

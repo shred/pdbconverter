@@ -22,17 +22,17 @@ package org.shredzone.pdbconverter;
 import java.io.File;
 import java.util.List;
 
-import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
-import org.shredzone.pdbconverter.pdb.Schedule;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.ScheduleConverter;
+import org.shredzone.pdbconverter.pdb.record.Schedule;
 
 /**
  * An example for reading calendar PDBs.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 364 $
+ * @version $Revision: 367 $
  */
 public class CalendarReaderExample {
 

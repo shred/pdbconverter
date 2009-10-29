@@ -17,22 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb.converter;
+package org.shredzone.pdbconverter.pdb;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.AppInfo;
-import org.shredzone.pdbconverter.pdb.Entry;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
 
 /**
- * Converts a PDB record into an {@link Entry} object.
+ * Converts a PDB record into an {@link Record} object.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 367 $
  */
-public interface EntryConverter<T extends Entry, U extends AppInfo> {
+public interface EntryConverter<T extends Record, U extends AppInfo> {
 
     /**
      * Checks if this entry converter is able to convert entries for the PdbDatabase.
@@ -47,7 +43,7 @@ public interface EntryConverter<T extends Entry, U extends AppInfo> {
     boolean isAcceptable(PdbDatabase<T, U> database);
 
     /**
-     * Converts raw record data to an {@link Entry}.
+     * Converts raw record data to an {@link Record}.
      * 
      * @param reader
      *            {@link PdbFile} with the file cursor at the beginning of the record
@@ -61,7 +57,7 @@ public interface EntryConverter<T extends Entry, U extends AppInfo> {
      *            read and may be used, but the entries are still incomplete. You would
      *            usually access the database to read the database name or the category
      *            map.
-     * @return {@link Entry} object containing the data of this record
+     * @return {@link Record} object containing the data of this record
      */
     T convert(PdbFile reader, int size, byte attribute, PdbDatabase<T, U> database)
         throws IOException;

@@ -21,19 +21,19 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.CategoryAppInfoHelper;
+import org.shredzone.pdbconverter.pdb.EntryConverter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
-import org.shredzone.pdbconverter.pdb.Schedule;
-import org.shredzone.pdbconverter.pdb.Schedule.Alarm.Unit;
-import org.shredzone.pdbconverter.pdb.Schedule.Repeat.Mode;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.record.Schedule;
+import org.shredzone.pdbconverter.pdb.record.Schedule.Alarm.Unit;
+import org.shredzone.pdbconverter.pdb.record.Schedule.Repeat.Mode;
 
 /**
  * An {@link EntryConverter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 367 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppInfo> {
@@ -173,7 +173,7 @@ public class ScheduleConverter implements EntryConverter<Schedule, CategoryAppIn
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<Schedule, CategoryAppInfo> database) throws IOException {
         CategoryAppInfo result = new CategoryAppInfo();
-        CategoryAppInfoHelper.readCategories(reader, result);
+        reader.readCategories(result);
         return result;
     }
     

@@ -21,16 +21,17 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 
+import org.shredzone.pdbconverter.pdb.EntryConverter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
-import org.shredzone.pdbconverter.pdb.RawAppInfo;
-import org.shredzone.pdbconverter.pdb.RawEntry;
+import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
+import org.shredzone.pdbconverter.pdb.record.RawEntry;
 
 /**
  * An {@link EntryConverter} that handles only the raw content of a record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 363 $
+ * @version $Revision: 367 $
  */
 public class RawConverter implements EntryConverter<RawEntry, RawAppInfo> {
 

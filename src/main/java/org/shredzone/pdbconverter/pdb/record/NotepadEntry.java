@@ -17,17 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb;
+package org.shredzone.pdbconverter.pdb.record;
 
 import java.util.Date;
 
+import org.shredzone.pdbconverter.pdb.Record;
+
+
 /**
- * An {@link Entry} implementation that contains a Notepad entry.
+ * An {@link Record} implementation that contains a Notepad entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 366 $
+ * @version $Revision: 367 $
  */
-public class NotepadEntry extends Entry {
+public class NotepadEntry extends Record {
 
     private String title;
     private Date created;

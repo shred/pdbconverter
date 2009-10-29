@@ -25,18 +25,18 @@ import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
 import org.shredzone.pdbconverter.export.NotepadExporter;
-import org.shredzone.pdbconverter.pdb.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.NotepadEntry;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.NotepadConverter;
+import org.shredzone.pdbconverter.pdb.record.NotepadEntry;
 
 /**
  * {@link ExportHandler} that reads a Notepad pdb file and writes a ZIP file containing a
  * database index xml file and png image files for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 366 $
+ * @version $Revision: 367 $
  */
 public class NotepadHandler implements ExportHandler {
     

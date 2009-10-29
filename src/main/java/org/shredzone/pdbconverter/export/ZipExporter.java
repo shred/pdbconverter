@@ -29,14 +29,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.RawAppInfo;
-import org.shredzone.pdbconverter.pdb.RawEntry;
+import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
+import org.shredzone.pdbconverter.pdb.record.RawEntry;
 
 /**
  * Writes a {@link RawEntry} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 365 $
+ * @version $Revision: 367 $
  */
 public class ZipExporter implements Exporter<RawEntry, RawAppInfo> {
     

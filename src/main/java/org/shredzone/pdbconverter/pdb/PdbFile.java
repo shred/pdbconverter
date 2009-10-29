@@ -27,18 +27,20 @@ import java.io.RandomAccessFile;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.shredzone.pdbconverter.pdb.converter.EntryConverter;
+import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+
 
 /**
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 366 $
+ * @version $Revision: 367 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
 
     private static final String CHARSET = "iso-8859-1";
+    private static final int NUM_CATEGORIES = 16;
     private static final long EPOCH;    // Timestamp of PalmOS epoch (1904-01-01)
     
     static {
@@ -64,17 +66,17 @@ public class PdbFile extends RandomAccessFile {
      * to invoke this method, as the other methods are just helpers.
      * 
      * @param <T>
-     *            {@link Entry} subclass the database shall consist of
+     *            {@link Record} subclass the database shall consist of
      * @param converter
      *            {@link EntryConverter} that converts the raw database entries into
-     *            {@link Entry} objects
+     *            {@link Record} objects
      * @return {@link PdbDatabase} containing the file contents
      * @throws IOException
      *             The file could not be read. This can have various reasons, for example
      *             if the file was no valid PDB file or the converter was not able to
      *             convert the file's contents.
      */
-    public <T extends Entry, U extends AppInfo> PdbDatabase<T, U> readDatabase(EntryConverter<T, U> converter)
+    public <T extends Record, U extends AppInfo> PdbDatabase<T, U> readDatabase(EntryConverter<T, U> converter)
     throws IOException {
         PdbDatabase<T, U> result = new PdbDatabase<T, U>();
     
@@ -124,7 +126,7 @@ public class PdbFile extends RandomAccessFile {
         
         // Read each record
         for (int ix = 0; ix < records; ix++) {
-            if ((attributes[ix] & Entry.ATTR_DELETE) != 0 && offsets[ix] >= length()) {
+            if ((attributes[ix] & Record.ATTR_DELETE) != 0 && offsets[ix] >= length()) {
                 // Ignore deleted entries
                 continue;
             }
@@ -237,6 +239,41 @@ public class PdbFile extends RandomAccessFile {
         return cal.getTime();
     }
 
+    /**
+     * Reads the categories from a standard appinfo area and fills them into a
+     * {@link CategoryAppInfo} object. After invocation, the file pointer points after the
+     * category part, where further application information may be stored.
+     * 
+     * @param appInfo
+     *            {@link CategoryAppInfo} where the categories are stored.
+     * @return Bytes that were actually read from the appinfo area. The file pointer is
+     *         located at the beginning of the appinfo area plus the result of this
+     *         method.
+     */
+    public int readCategories(CategoryAppInfo appInfo)
+    throws IOException {
+        long startPos = getFilePointer();
+        
+        // This is a bitmask about renamed categories. It is ignored for now.
+        readShort();
+        
+        for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
+            String catName = readTerminatedFixedString(16);
+            if (catName.length() > 0) {
+                appInfo.getCategories().add(catName);
+            }
+        }
+
+        // Read the category keys
+        for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
+            readByte();
+        }
+
+        long endPos = getFilePointer();
+        
+        return (int) (endPos - startPos);
+    }
+    
     /**
      * Converts special PalmOS characters into their unicode equivalents. The string
      * methods of {@link PdbFile} will invoke this method by itself, so you usually do not
