@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
  * any other XML writer.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 370 $
  */
 public class XmlHelper {
     
@@ -209,9 +209,11 @@ public class XmlHelper {
         List<Category> categories = cai.getCategories();
         for (int ix = 0; ix < categories.size(); ix++) {
             Category cat = categories.get(ix);
-            startElement("category", "id", ix, "key", cat.getKey());
-            writeContent(cat.getName());
-            endElement();
+            if (cat != null) {
+                startElement("category", "id", ix, "key", cat.getKey());
+                writeContent(cat.getName());
+                endElement();
+            }
         }
         
         endElement();
