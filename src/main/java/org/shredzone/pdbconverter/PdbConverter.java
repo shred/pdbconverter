@@ -29,35 +29,18 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.shredzone.pdbconverter.handler.AddressXmlHandler;
 import org.shredzone.pdbconverter.handler.ExportHandler;
-import org.shredzone.pdbconverter.handler.ICalendarHandler;
-import org.shredzone.pdbconverter.handler.MemoXmlHandler;
-import org.shredzone.pdbconverter.handler.NotepadHandler;
-import org.shredzone.pdbconverter.handler.TodoXmlHandler;
-import org.shredzone.pdbconverter.handler.VCardHandler;
-import org.shredzone.pdbconverter.handler.ZipHandler;
 
 /**
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 370 $
+ * @version $Revision: 371 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
     
     private static final Options CLI_OPTIONS = new Options();
-    private static final ExportHandler[] HANDLERS = {
-        new AddressXmlHandler(),
-        new ICalendarHandler(),
-        new MemoXmlHandler(),
-        new NotepadHandler(),
-        new TodoXmlHandler(),
-        new VCardHandler(),
-        new ZipHandler(),
-    };
-    
     static {
         CLI_OPTIONS.addOption(OptionBuilder
                 .withArgName("input")
@@ -93,7 +76,7 @@ public class PdbConverter {
             String outfile = cmd.getOptionValue("output");
             String converter = cmd.getOptionValue("converter", "zip");
             
-            ExportHandler handler = findHandler(converter);
+            ExportHandler handler = ConverterRegister.findHandler(converter);
             if (handler == null) {
                 System.err.println("Unknown converter: " + converter);
                 printHelp();
@@ -115,22 +98,6 @@ public class PdbConverter {
     }
 
     /**
-     * Finds the {@link ExportHandler} for the given converter name.
-     * 
-     * @param converter
-     *            Converter name
-     * @return {@link ExportHandler} or {@code null} if there is none.
-     */
-    private static ExportHandler findHandler(String converter) {
-        for (ExportHandler handler : HANDLERS) {
-            if (handler.getName().equalsIgnoreCase(converter)) {
-                return handler;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Outputs a help page.
      */
     private static void printHelp() {
@@ -138,7 +105,7 @@ public class PdbConverter {
         formatter.printHelp("pdbconverter", CLI_OPTIONS);
         System.out.println();
         System.out.println("Available converters:");
-        for (ExportHandler handler : HANDLERS) {
+        for (ExportHandler handler : ConverterRegister.getHandlers()) {
             System.out.printf("  %-20s %s", handler.getName(), handler.getDescription()).println();
         }
     }

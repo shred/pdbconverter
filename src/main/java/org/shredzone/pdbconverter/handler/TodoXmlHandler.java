@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * {@link ExportHandler} that reads a Todo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 371 $
  */
 public class TodoXmlHandler implements ExportHandler {
     
@@ -44,7 +44,7 @@ public class TodoXmlHandler implements ExportHandler {
     }
 
     public String getDescription() {
-        return "todo to XML";
+        return "ToDoDB to XML";
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {

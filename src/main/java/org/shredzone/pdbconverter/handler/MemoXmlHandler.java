@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * {@link ExportHandler} that reads a Memo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 371 $
  */
 public class MemoXmlHandler implements ExportHandler {
     
@@ -44,7 +44,7 @@ public class MemoXmlHandler implements ExportHandler {
     }
 
     public String getDescription() {
-        return "memo to xml";
+        return "MemoDB to XML";
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {

@@ -36,7 +36,7 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * database index xml file, an appinfo dump and a binary file for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 371 $
  */
 public class ZipHandler implements ExportHandler {
     
@@ -45,7 +45,7 @@ public class ZipHandler implements ExportHandler {
     }
 
     public String getDescription() {
-        return "any pdb to a zip file";
+        return "Any PDB to ZIP";
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {

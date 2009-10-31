@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * {@link ExportHandler} that reads an Address pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 370 $
+ * @version $Revision: 371 $
  */
 public class AddressXmlHandler implements ExportHandler {
     
@@ -44,7 +44,7 @@ public class AddressXmlHandler implements ExportHandler {
     }
 
     public String getDescription() {
-        return "address to xml";
+        return "AddressDB to XML";
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {

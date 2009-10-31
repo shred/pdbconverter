@@ -36,7 +36,7 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * database index xml file and png image files for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 371 $
  */
 public class NotepadHandler implements ExportHandler {
     
@@ -45,7 +45,7 @@ public class NotepadHandler implements ExportHandler {
     }
 
     public String getDescription() {
-        return "notepad v2 to a zip file of png";
+        return "Notepad v2 to ZIP/PNG";
     }
 
     public void export(File infile, File outfile, CommandLine cmd) throws IOException {
