@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.shredzone</groupId>
@@ -8,7 +9,7 @@
     <groupId>org.shredzone.pdbconverter</groupId>
     <artifactId>pdbconverter</artifactId>
     <name>PDB Converter</name>
-    <version>1.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <description>Converts PalmOS PDB files into more common file formats</description>
     <inceptionYear>2009</inceptionYear>
     <licenses>
@@ -68,7 +69,8 @@
                         <configuration>
                             <finalName>pdbconverter</finalName>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.shredzone.pdbconverter.PdbConverter</mainClass>
                                 </transformer>
                             </transformers>
