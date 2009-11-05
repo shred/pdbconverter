@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.handler.ExportHandler;
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 382 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
@@ -63,14 +63,41 @@ public class PdbConverter {
                 .hasArg()
                 .create("c"));
     }
-    
+
+    private static final Options GUI_CLI_OPTIONS = new Options();
+    static {
+        GUI_CLI_OPTIONS.addOption(OptionBuilder
+                .withArgName("gui")
+                .withLongOpt("gui")
+                .withDescription("open the GUI")
+                .isRequired()
+                .create());
+    }
+
     /**
      * Main invocation.
      */
     public static void main(String[] args) {
         try {
             CommandLineParser parser = new GnuParser();
+            CommandLine cmd = parser.parse(GUI_CLI_OPTIONS, args);
+            
+            if (cmd.hasOption("gui")) {
+                new PdbConverterGui();
+                return;
+            }
+        } catch (ParseException ex) {
+            // Ignore and attempt to parse CLI_OPTIONS
+        }
+
+        try {
+            CommandLineParser parser = new GnuParser();
             CommandLine cmd = parser.parse(CLI_OPTIONS, args);
+            
+            if (cmd.hasOption("gui")) {
+                new PdbConverterGui();
+                return;
+            }
             
             String infile = cmd.getOptionValue("input");
             String outfile = cmd.getOptionValue("output");
@@ -103,6 +130,8 @@ public class PdbConverter {
     private static void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("pdbconverter", CLI_OPTIONS);
+        System.out.println();
+        formatter.printHelp("pdbconverter", GUI_CLI_OPTIONS);
         System.out.println();
         System.out.println("Available converters:");
         for (ExportHandler handler : ConverterRegister.getHandlers()) {
