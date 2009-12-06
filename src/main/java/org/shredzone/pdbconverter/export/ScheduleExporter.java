@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 392 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInfo> {
@@ -82,6 +82,7 @@ public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInf
     };
     
     private TimeZone timeZone = TimeZone.getDefault();
+    private TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     /**
      * Sets the {@link TimeZone} to be used for output, if the database's time
@@ -108,20 +109,17 @@ public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInf
     throws IOException {
         UidGenerator uidGenerator = new UidGenerator("uidGen");
 
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        VTimeZone vTimeZone = registry.getTimeZone(timeZone.getID()).getVTimeZone();
-
         net.fortuna.ical4j.model.Calendar calendar = new net.fortuna.ical4j.model.Calendar();
         calendar.getProperties().add(new ProdId("-//Shredzone.org/pdbconverter 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
-        // Too much information?
-        // calendar.getComponents().add(vTimeZone);
+        
+        VTimeZone vTimeZone = registry.getTimeZone(timeZone.getID()).getVTimeZone();
+        calendar.getComponents().add(vTimeZone);
 
         for (ScheduleRecord schedule : database.getRecords()) {
             VEvent event = createVEvent(schedule);
             event.getProperties().add(uidGenerator.generateUid());
-            event.getProperties().add(vTimeZone.getTimeZoneId());
             calendar.getComponents().add(event);
         }
 
@@ -181,8 +179,14 @@ public class ScheduleExporter implements Exporter<ScheduleRecord, CategoryAppInf
             endDate.add(Calendar.DAY_OF_MONTH, 1);
         }
         
-        event.getProperties().add(new DtStart(new DateTime(startDate.getTime())));
-        event.getProperties().add(new DtEnd(new DateTime(endDate.getTime())));
+        DateTime startDateTime = new DateTime(startDate.getTime());
+        startDateTime.setTimeZone(registry.getTimeZone(timeZone.getID()));
+        
+        DateTime endDateTime = new DateTime(endDate.getTime());
+        endDateTime.setTimeZone(registry.getTimeZone(timeZone.getID()));
+        
+        event.getProperties().add(new DtStart(startDateTime));
+        event.getProperties().add(new DtEnd(endDateTime));
     }
     
     /**
