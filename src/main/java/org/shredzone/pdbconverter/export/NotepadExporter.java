@@ -35,9 +35,9 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * Writes a {@link NotepadRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 399 $
  */
-public class NotepadExporter implements Exporter<NotepadRecord, CategoryAppInfo> {
+public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryAppInfo> {
     
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     
@@ -56,17 +56,21 @@ public class NotepadExporter implements Exporter<NotepadRecord, CategoryAppInfo>
 
         writeDatabaseInfo(database, zos);
         
-        int counter = 0;
-        for (NotepadRecord entry : database.getRecords()) {
-            String name = String.format("images/%04d.png", counter++);
-            ZipEntry ze = new ZipEntry(name);
-            if (entry.getModified() != null) {
-                ze.setTime(entry.getModified().getTime());
+        List<NotepadRecord> records = database.getRecords();
+        for (int ix = 0; ix < records.size(); ix++) {
+            NotepadRecord record = records.get(ix);
+            
+            if (isAccepted(record)) {
+                String name = String.format("images/%04d.png", ix);
+                ZipEntry ze = new ZipEntry(name);
+                if (record.getModified() != null) {
+                    ze.setTime(record.getModified().getTime());
+                }
+                zos.putNextEntry(ze);
+                zos.write(record.getImagePng());
+                zos.flush();
+                zos.closeEntry();
             }
-            zos.putNextEntry(ze);
-            zos.write(entry.getImagePng());
-            zos.flush();
-            zos.closeEntry();
         }
         
         zos.close();
@@ -95,27 +99,29 @@ public class NotepadExporter implements Exporter<NotepadRecord, CategoryAppInfo>
         for (int ix = 0; ix < records.size(); ix++) {
             NotepadRecord record = records.get(ix);
 
-            xh.startElement(
-                    "record",
-                    "id", ix,
-                    "category", record.getCategoryIndex(),
-                    "secret", record.isSecret()
-            );
-
-            xh.writeDate("created", record.getCreated());
-            if (record.getModified() != null) {
-                xh.writeDate("modified", record.getModified());
+            if (isAccepted(record)) {
+                xh.startElement(
+                        "record",
+                        "id", ix,
+                        "category", record.getCategoryIndex(),
+                        "secret", record.isSecret()
+                );
+    
+                xh.writeDate("created", record.getCreated());
+                if (record.getModified() != null) {
+                    xh.writeDate("modified", record.getModified());
+                }
+                if (record.getAlarm() != null) {
+                    xh.writeDate("alarm", record.getAlarm());
+                }
+                if (record.getTitle() != null) {
+                    xh.writeValue("title", record.getTitle());
+                }
+    
+                xh.writeFormatted("file", "images/%04d.png", ix);
+                
+                xh.endElement();
             }
-            if (record.getAlarm() != null) {
-                xh.writeDate("alarm", record.getAlarm());
-            }
-            if (record.getTitle() != null) {
-                xh.writeValue("title", record.getTitle());
-            }
-
-            xh.writeFormatted("file", "images/%04d.png", ix);
-            
-            xh.endElement();
         }
         
         xh.endElement();

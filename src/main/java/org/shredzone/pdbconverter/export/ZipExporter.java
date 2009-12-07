@@ -35,9 +35,9 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * Writes a {@link RawRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 399 $
  */
-public class ZipExporter implements Exporter<RawRecord, RawAppInfo> {
+public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
     
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     
@@ -58,13 +58,16 @@ public class ZipExporter implements Exporter<RawRecord, RawAppInfo> {
         
         writeAppInfo(database, zos);
         
-        int counter = 0;
-        for (RawRecord entry : database.getRecords()) {
-            String name = String.format("records/%04d.bin", counter++);
-            zos.putNextEntry(new ZipEntry(name));
-            zos.write(entry.getRaw());
-            zos.flush();
-            zos.closeEntry();
+        List<RawRecord> records = database.getRecords();
+        for (int ix = 0; ix < records.size(); ix++) {
+            RawRecord record = records.get(ix);
+            if (isAccepted(record)) {
+                String name = String.format("records/%04d.bin", ix);
+                zos.putNextEntry(new ZipEntry(name));
+                zos.write(record.getRaw());
+                zos.flush();
+                zos.closeEntry();
+            }
         }
         
         zos.close();
@@ -91,15 +94,17 @@ public class ZipExporter implements Exporter<RawRecord, RawAppInfo> {
         List<RawRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             RawRecord record = records.get(ix);
-
-            xh.startElement(
-                    "record",
-                    "id", ix,
-                    "category", record.getCategoryIndex(),
-                    "secret", record.isSecret()
-            );
-            xh.writeFormatted("file", "records/%04d.bin", ix);
-            xh.endElement();
+            
+            if (isAccepted(record)) {
+                xh.startElement(
+                        "record",
+                        "id", ix,
+                        "category", record.getCategoryIndex(),
+                        "secret", record.isSecret()
+                );
+                xh.writeFormatted("file", "records/%04d.bin", ix);
+                xh.endElement();
+            }
         }
         
         xh.endElement();

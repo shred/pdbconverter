@@ -30,9 +30,9 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * Writes a {@link TodoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 399 $
  */
-public class TodoXmlExporter implements Exporter<TodoRecord, CategoryAppInfo> {
+public class TodoXmlExporter extends AbstractExporter<TodoRecord, CategoryAppInfo> {
 
     /**
      * Writes the {@link TodoRecord} database XML to the given {@link OutputStream}.
@@ -54,30 +54,32 @@ public class TodoXmlExporter implements Exporter<TodoRecord, CategoryAppInfo> {
         List<TodoRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             TodoRecord record = records.get(ix);
-            xh.startElement("todo",
-                    "id", ix,
-                    "category", record.getCategoryIndex(),
-                    "secret", record.isSecret()
-            );
-
-            if (record.isCompleted()) {
-                xh.startElement("completed");
+            if (isAccepted(record)) {
+                xh.startElement("todo",
+                        "id", ix,
+                        "category", record.getCategoryIndex(),
+                        "secret", record.isSecret()
+                );
+    
+                if (record.isCompleted()) {
+                    xh.startElement("completed");
+                    xh.endElement();
+                }
+                
+                xh.writeValue("priority", record.getPriority());
+    
+                if (record.getDate() != null) {
+                    xh.writeDate("date", record.getDate());
+                }
+                
+                xh.writeValue("description", record.getDescription());
+    
+                if (record.getNote() != null) {
+                    xh.writeValue("note", record.getNote());
+                }
+                
                 xh.endElement();
             }
-            
-            xh.writeValue("priority", record.getPriority());
-
-            if (record.getDate() != null) {
-                xh.writeDate("date", record.getDate());
-            }
-            
-            xh.writeValue("description", record.getDescription());
-
-            if (record.getNote() != null) {
-                xh.writeValue("note", record.getNote());
-            }
-            
-            xh.endElement();
         }
         xh.endElement();
         

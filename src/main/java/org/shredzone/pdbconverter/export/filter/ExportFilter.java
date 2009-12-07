@@ -17,39 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.export;
+package org.shredzone.pdbconverter.export.filter;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.shredzone.pdbconverter.export.filter.ExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
- * Generic interface for a database exporter.
+ * A filter tells if a {@link Record} is accepted.
  *
  * @author Richard "Shred" Körber
  * @version $Revision: 399 $
  */
-public interface Exporter<T extends Record, U extends AppInfo> {
+public interface ExportFilter<T extends Record> {
+
+    /**
+     * Checks if the filter accepts the {@link Record}.
+     * 
+     * @param record
+     *            {@link Record} that is checked
+     * @return {@code true}: Filter accepts this {@link Record}
+     */
+    boolean accepts(T record);
     
-    /**
-     * Sets a filter to only export certain records.
-     * 
-     * @param filter ExportFilter to be used. {@code null} means to use no filter.
-     */
-    void setFilter(ExportFilter<T> filter);
-
-    /**
-     * Exports the database to the given stream.
-     * 
-     * @param database
-     *            {@link PdbDatabase} to be exported
-     * @param out
-     *            {@link OutputStream} to write to.
-     */
-    void export(PdbDatabase<T, U> database, OutputStream out) throws IOException;
-
 }

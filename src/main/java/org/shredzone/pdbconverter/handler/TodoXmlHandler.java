@@ -24,7 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
+import org.shredzone.pdbconverter.PdbConverter;
 import org.shredzone.pdbconverter.export.TodoXmlExporter;
+import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -35,7 +37,7 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * {@link ExportHandler} that reads a Todo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 399 $
  */
 public class TodoXmlHandler implements ExportHandler {
     
@@ -58,10 +60,17 @@ public class TodoXmlHandler implements ExportHandler {
             if (pdb != null) pdb.close();
         }
 
+        CategoryExportFilter<TodoRecord> filter = null;
+        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
+            filter = new CategoryExportFilter<TodoRecord>(
+                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
+        }
+        
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(outfile);
             TodoXmlExporter exporter = new TodoXmlExporter();
+            exporter.setFilter(filter);
             exporter.export(database, fos);
         } finally {
             if (fos != null) fos.close();

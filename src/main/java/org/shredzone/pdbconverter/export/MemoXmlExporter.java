@@ -30,9 +30,9 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * Writes a {@link MemoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 399 $
  */
-public class MemoXmlExporter implements Exporter<MemoRecord, CategoryAppInfo> {
+public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInfo> {
 
     /**
      * Writes the {@link MemoRecord} database XML to the given {@link OutputStream}.
@@ -54,13 +54,15 @@ public class MemoXmlExporter implements Exporter<MemoRecord, CategoryAppInfo> {
         List<MemoRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             MemoRecord record = records.get(ix);
-            xh.startElement("memo",
-                    "id", ix,
-                    "category", record.getCategoryIndex(),
-                    "secret", record.isSecret()
-            );
-            xh.writeContent(record.getMemo());
-            xh.endElement();
+            if (isAccepted(record)) {
+                xh.startElement("memo",
+                        "id", ix,
+                        "category", record.getCategoryIndex(),
+                        "secret", record.isSecret()
+                );
+                xh.writeContent(record.getMemo());
+                xh.endElement();
+            }
         }
         xh.endElement();
         

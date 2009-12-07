@@ -41,10 +41,10 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * result may be invalid and data is lost.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 399 $
  * @see http://tools.ietf.org/html/rfc2426
  */
-public class VCardExporter implements Exporter<AddressRecord, AddressAppInfo> {
+public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
 
     private static final int MAX_LINE_LENGTH = 73;
     
@@ -111,7 +111,9 @@ public class VCardExporter implements Exporter<AddressRecord, AddressAppInfo> {
         PrintStream ps = new PrintStream(out, false, "UTF-8");
         
         for (AddressRecord address : database.getRecords()) {
-            writeVCard(address, appInfo, ps);
+            if (isAccepted(address)) {
+                writeVCard(address, appInfo, ps);
+            }
         }
         
         ps.flush();

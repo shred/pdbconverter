@@ -63,6 +63,24 @@ public class CategoryAppInfo extends AppInfo {
         }
         return null;
     }
+    
+    /**
+     * Finds a {@link Category} index by the category name.
+     * 
+     * @param name
+     *            Category name
+     * @return Index of that category, or -1 if there was none with that name.
+     */
+    public int findCategoryByName(String name) {
+        for (int ix = 0; ix < categories.size(); ix++) {
+            Category cat = categories.get(ix);
+            if (cat != null && cat.getName().equals(name)) {
+                return ix;
+            }
+        }
+        
+        return -1;
+    }
 
     /**
      * A single category.

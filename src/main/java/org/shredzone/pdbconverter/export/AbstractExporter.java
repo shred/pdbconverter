@@ -19,37 +19,34 @@
  */
 package org.shredzone.pdbconverter.export;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.shredzone.pdbconverter.export.filter.ExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
- * Generic interface for a database exporter.
+ * An abstract implementation of {@link Exporter} that handles filtering.
  *
  * @author Richard "Shred" Körber
  * @version $Revision: 399 $
  */
-public interface Exporter<T extends Record, U extends AppInfo> {
+public abstract class AbstractExporter<T extends Record, U extends AppInfo> implements Exporter<T, U> {
     
-    /**
-     * Sets a filter to only export certain records.
-     * 
-     * @param filter ExportFilter to be used. {@code null} means to use no filter.
-     */
-    void setFilter(ExportFilter<T> filter);
+    private ExportFilter<T> filter;
+
+    @Override
+    public void setFilter(ExportFilter<T> filter) {
+        this.filter = filter;
+    }
 
     /**
-     * Exports the database to the given stream.
+     * Checks if the current filter accepts the given record.
      * 
-     * @param database
-     *            {@link PdbDatabase} to be exported
-     * @param out
-     *            {@link OutputStream} to write to.
+     * @param record
+     *            {@link Record} to test
+     * @return {@code true} if the record is accepted
      */
-    void export(PdbDatabase<T, U> database, OutputStream out) throws IOException;
-
+    protected boolean isAccepted(T record) {
+        return (filter == null || filter.accepts(record));
+    }
+    
 }

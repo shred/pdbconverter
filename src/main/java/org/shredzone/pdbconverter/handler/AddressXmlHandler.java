@@ -24,7 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
+import org.shredzone.pdbconverter.PdbConverter;
 import org.shredzone.pdbconverter.export.AddressXmlExporter;
+import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.AddressAppInfo;
@@ -35,7 +37,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * {@link ExportHandler} that reads an Address pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 399 $
  */
 public class AddressXmlHandler implements ExportHandler {
     
@@ -58,10 +60,17 @@ public class AddressXmlHandler implements ExportHandler {
             if (pdb != null) pdb.close();
         }
 
+        CategoryExportFilter<AddressRecord> filter = null;
+        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
+            filter = new CategoryExportFilter<AddressRecord>(
+                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
+        }
+
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(outfile);
             AddressXmlExporter exporter = new AddressXmlExporter();
+            exporter.setFilter(filter);
             exporter.export(database, fos);
         } finally {
             if (fos != null) fos.close();

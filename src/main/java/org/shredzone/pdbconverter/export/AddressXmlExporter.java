@@ -33,9 +33,9 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * Writes a {@link AddressRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 370 $
+ * @version $Revision: 399 $
  */
-public class AddressXmlExporter implements Exporter<AddressRecord, AddressAppInfo> {
+public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
 
     /**
      * Writes the {@link AddressRecord} database XML to the given {@link OutputStream}.
@@ -60,13 +60,15 @@ public class AddressXmlExporter implements Exporter<AddressRecord, AddressAppInf
         List<AddressRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             AddressRecord record = records.get(ix);
-            xh.startElement("address",
-                    "id", ix,
-                    "category", record.getCategoryIndex(),
-                    "secret", record.isSecret()
-            );
-            writeAddress(record, xh);
-            xh.endElement();
+            if (isAccepted(record)) {
+                xh.startElement("address",
+                        "id", ix,
+                        "category", record.getCategoryIndex(),
+                        "secret", record.isSecret()
+                );
+                writeAddress(record, xh);
+                xh.endElement();
+            }
         }
         xh.endElement();
         

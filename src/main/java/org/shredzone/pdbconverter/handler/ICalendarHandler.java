@@ -22,8 +22,11 @@ package org.shredzone.pdbconverter.handler;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.apache.commons.cli.CommandLine;
+import org.shredzone.pdbconverter.PdbConverter;
 import org.shredzone.pdbconverter.export.ScheduleExporter;
+import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -34,7 +37,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
  * {@link ExportHandler} that reads Calendar pdb and writes an iCalendar file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 399 $
  */
 public class ICalendarHandler implements ExportHandler {
 
@@ -57,10 +60,17 @@ public class ICalendarHandler implements ExportHandler {
             if (pdb != null) pdb.close();
         }
 
+        CategoryExportFilter<ScheduleRecord> filter = null;
+        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
+            filter = new CategoryExportFilter<ScheduleRecord>(
+                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
+        }
+
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(outfile);
             ScheduleExporter exporter = new ScheduleExporter();
+            exporter.setFilter(filter);
             exporter.export(database, fos);
         } finally {
             if (fos != null) fos.close();

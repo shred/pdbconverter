@@ -24,7 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
+import org.shredzone.pdbconverter.PdbConverter;
 import org.shredzone.pdbconverter.export.NotepadExporter;
+import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -36,7 +38,7 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * database index xml file and png image files for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 399 $
  */
 public class NotepadHandler implements ExportHandler {
     
@@ -59,10 +61,17 @@ public class NotepadHandler implements ExportHandler {
             if (pdb != null) pdb.close();
         }
 
+        CategoryExportFilter<NotepadRecord> filter = null;
+        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
+            filter = new CategoryExportFilter<NotepadRecord>(
+                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
+        }
+        
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(outfile);
             NotepadExporter exporter = new NotepadExporter();
+            exporter.setFilter(filter);
             exporter.export(database, fos);
         } finally {
             if (fos != null) fos.close();
