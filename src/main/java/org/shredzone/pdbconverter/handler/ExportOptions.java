@@ -19,37 +19,27 @@
  */
 package org.shredzone.pdbconverter.handler;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
- * Interface for a handler that takes care for reading and exporting.
+ * Data transport object for export parameters.
  *
  * @author Richard "Shred" Körber
  * @version $Revision: 401 $
  */
-public interface ExportHandler {
+public class ExportOptions {
+    
+    private boolean split;
+    private String category;
 
     /**
-     * Gets the name of the handler.
+     * Write categories into separate files?
      */
-    String getName();
+    public boolean isSplit()                { return split; }
+    public void setSplit(boolean split)     { this.split = split; }
 
     /**
-     * Gets a description about the input and output file format.
+     * Category name to be exported only. {@code null} exports all categories.
      */
-    String getDescription();
-
-    /**
-     * Exports the given infile to the outfile.
-     * 
-     * @param infile
-     *            input pdb file
-     * @param outfile
-     *            output file name
-     * @param options
-     *            {@link ExportOptions} with further parameters
-     */
-    void export(File infile, File outfile, ExportOptions options) throws IOException;
+    public String getCategory()             { return category; }
+    public void setCategory(String category) { this.category = category; }
 
 }

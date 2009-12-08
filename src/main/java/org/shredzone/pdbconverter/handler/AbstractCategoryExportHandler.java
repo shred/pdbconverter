@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.cli.CommandLine;
-import org.shredzone.pdbconverter.PdbConverter;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
 import org.shredzone.pdbconverter.export.filter.ExportFilter;
@@ -42,13 +40,13 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Abstract superclass for {@link Category} exporters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 401 $
  */
 public abstract class AbstractCategoryExportHandler<T extends Record, U extends CategoryAppInfo>
 implements ExportHandler {
 
     @Override
-    public void export(File infile, File outfile, CommandLine cmd) throws IOException {
+    public void export(File infile, File outfile, ExportOptions options) throws IOException {
         PdbDatabase<T, U> database;
         
         PdbFile pdb = null;
@@ -60,12 +58,12 @@ implements ExportHandler {
         }
         
         CategoryExportFilter<T> filter = null;
-        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
+        if (options.getCategory() != null) {
             filter = new CategoryExportFilter<T>(
-                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
+                            database.getAppInfo(), options.getCategory());
         }
         
-        if (cmd.hasOption(PdbConverter.OPT_SPLIT)) {
+        if (options.isSplit()) {
             if (filter != null) {
                 throw new IllegalArgumentException("split and category options are mutually exclusive");
             }

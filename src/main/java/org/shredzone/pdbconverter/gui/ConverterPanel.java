@@ -33,6 +33,7 @@ import java.util.Set;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -44,13 +45,14 @@ import javax.swing.filechooser.FileFilter;
 
 import org.shredzone.pdbconverter.ConverterRegister;
 import org.shredzone.pdbconverter.handler.ExportHandler;
+import org.shredzone.pdbconverter.handler.ExportOptions;
 
 /**
  * A very simple Swing panel for file conversion. It allows the selection of the converter
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 401 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
@@ -60,6 +62,7 @@ public class ConverterPanel extends JPanel {
     private JComboBox jcbMode;
     private JTextField jtInfile;
     private JTextField jtOutfile;
+    private JCheckBox jcSplit;
     private JButton jbConvert;
     private Set<JLabel> labels = new HashSet<JLabel>();
  
@@ -80,6 +83,18 @@ public class ConverterPanel extends JPanel {
         jtInfile = buildFileSelector(this, RESOURCE.getString("label.infile"), false);
         jtOutfile = buildFileSelector(this, RESOURCE.getString("label.outfile"), true);
 
+        JPanel jpSplit = new JPanel(new BorderLayout());
+        {
+            JLabel jlSplit = new JLabel(" ");
+            jpSplit.add(jlSplit, BorderLayout.LINE_START);
+            labels.add(jlSplit);
+            
+            jcSplit = new JCheckBox(RESOURCE.getString("label.split"));
+            jcSplit.setToolTipText(RESOURCE.getString("label.split.tt"));
+            jpSplit.add(jcSplit, BorderLayout.CENTER);
+        }
+        add(jpSplit);
+        
         jbConvert = new JButton(RESOURCE.getString("label.convert"));
         jbConvert.addActionListener(new ConvertActionListener());
         add(jbConvert);
@@ -180,7 +195,11 @@ public class ConverterPanel extends JPanel {
                 try {
                     File infile = new File(jtInfile.getText());
                     File outfile = new File(jtOutfile.getText());
-                    handler.export(infile, outfile, null);
+                    
+                    ExportOptions options = new ExportOptions();
+                    options.setSplit(jcSplit.isSelected());
+                    
+                    handler.export(infile, outfile, options);
                     
                     JOptionPane.showMessageDialog(
                             ConverterPanel.this,

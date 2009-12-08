@@ -30,20 +30,19 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.shredzone.pdbconverter.handler.ExportHandler;
+import org.shredzone.pdbconverter.handler.ExportOptions;
 
 /**
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 401 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
     
-    public static final String OPT_CATEGORY = "category";
-    
-    public static final String OPT_SPLIT = "split";
-
+    private static final String OPT_CATEGORY = "category";
+    private static final String OPT_SPLIT = "split";
     
     private static final Options CLI_OPTIONS = new Options();
     static {
@@ -131,7 +130,11 @@ public class PdbConverter {
             File in = new File(infile);
             File out = new File(outfile);
             
-            handler.export(in, out, cmd);
+            ExportOptions options = new ExportOptions();
+            options.setSplit(cmd.hasOption(OPT_SPLIT));
+            options.setCategory(cmd.getOptionValue(OPT_CATEGORY));
+            
+            handler.export(in, out, options);
             
         } catch (IOException ex) {
             System.err.println("Could not convert: " + ex.getMessage());

@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.apache.commons.cli.CommandLine;
 import org.shredzone.pdbconverter.export.ZipExporter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
@@ -36,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * database index xml file, an appinfo dump and a binary file for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 401 $
  */
 public class ZipHandler implements ExportHandler {
     
@@ -48,7 +47,7 @@ public class ZipHandler implements ExportHandler {
         return "Any PDB to ZIP";
     }
 
-    public void export(File infile, File outfile, CommandLine cmd) throws IOException {
+    public void export(File infile, File outfile, ExportOptions options) throws IOException {
         PdbDatabase<RawRecord, RawAppInfo> database;
         
         PdbFile pdb = null;
