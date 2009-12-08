@@ -19,17 +19,10 @@
  */
 package org.shredzone.pdbconverter.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.commons.cli.CommandLine;
-import org.shredzone.pdbconverter.PdbConverter;
+import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.TodoXmlExporter;
-import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.converter.Converter;
 import org.shredzone.pdbconverter.pdb.converter.TodoConverter;
 import org.shredzone.pdbconverter.pdb.record.TodoRecord;
 
@@ -37,9 +30,9 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * {@link ExportHandler} that reads a Todo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 400 $
  */
-public class TodoXmlHandler implements ExportHandler {
+public class TodoXmlHandler extends AbstractCategoryExportHandler<TodoRecord, CategoryAppInfo> {
     
     public String getName() {
         return "todo";
@@ -49,32 +42,14 @@ public class TodoXmlHandler implements ExportHandler {
         return "ToDoDB to XML";
     }
 
-    public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<TodoRecord, CategoryAppInfo> database;
-        
-        PdbFile pdb = null;
-        try {
-            pdb = new PdbFile(infile);
-            database = pdb.readDatabase(new TodoConverter());
-        } finally {
-            if (pdb != null) pdb.close();
-        }
+    @Override
+    protected Converter<TodoRecord, CategoryAppInfo> createConverter() {
+        return new TodoConverter();
+    }
 
-        CategoryExportFilter<TodoRecord> filter = null;
-        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
-            filter = new CategoryExportFilter<TodoRecord>(
-                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
-        }
-        
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outfile);
-            TodoXmlExporter exporter = new TodoXmlExporter();
-            exporter.setFilter(filter);
-            exporter.export(database, fos);
-        } finally {
-            if (fos != null) fos.close();
-        }
+    @Override
+    protected Exporter<TodoRecord, CategoryAppInfo> createExporter() {
+        return new TodoXmlExporter();
     }
 
 }

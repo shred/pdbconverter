@@ -35,12 +35,15 @@ import org.shredzone.pdbconverter.handler.ExportHandler;
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 400 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
     
     public static final String OPT_CATEGORY = "category";
+    
+    public static final String OPT_SPLIT = "split";
+
     
     private static final Options CLI_OPTIONS = new Options();
     static {
@@ -71,6 +74,12 @@ public class PdbConverter {
                 .withDescription("only output records of this category")
                 .hasArg()
                 .create("t"));
+        
+        CLI_OPTIONS.addOption(OptionBuilder
+                .withArgName(OPT_SPLIT)
+                .withLongOpt("split")
+                .withDescription("write each category into a separate file")
+                .create("s"));
     }
 
     private static final Options GUI_CLI_OPTIONS = new Options();

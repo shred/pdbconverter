@@ -19,17 +19,10 @@
  */
 package org.shredzone.pdbconverter.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.commons.cli.CommandLine;
-import org.shredzone.pdbconverter.PdbConverter;
+import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.NotepadExporter;
-import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.converter.Converter;
 import org.shredzone.pdbconverter.pdb.converter.NotepadConverter;
 import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
 
@@ -38,9 +31,9 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * database index xml file and png image files for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 400 $
  */
-public class NotepadHandler implements ExportHandler {
+public class NotepadHandler extends AbstractCategoryExportHandler<NotepadRecord, CategoryAppInfo> {
     
     public String getName() {
         return "notepad";
@@ -50,32 +43,14 @@ public class NotepadHandler implements ExportHandler {
         return "Notepad v2 to ZIP/PNG";
     }
 
-    public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<NotepadRecord, CategoryAppInfo> database;
-        
-        PdbFile pdb = null;
-        try {
-            pdb = new PdbFile(infile);
-            database = pdb.readDatabase(new NotepadConverter());
-        } finally {
-            if (pdb != null) pdb.close();
-        }
+    @Override
+    protected Converter<NotepadRecord, CategoryAppInfo> createConverter() {
+        return new NotepadConverter();
+    }
 
-        CategoryExportFilter<NotepadRecord> filter = null;
-        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
-            filter = new CategoryExportFilter<NotepadRecord>(
-                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
-        }
-        
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outfile);
-            NotepadExporter exporter = new NotepadExporter();
-            exporter.setFilter(filter);
-            exporter.export(database, fos);
-        } finally {
-            if (fos != null) fos.close();
-        }
+    @Override
+    protected Exporter<NotepadRecord, CategoryAppInfo> createExporter() {
+        return new NotepadExporter();
     }
 
 }

@@ -19,27 +19,20 @@
  */
 package org.shredzone.pdbconverter.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.commons.cli.CommandLine;
-import org.shredzone.pdbconverter.PdbConverter;
+import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.VCardExporter;
-import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.AddressAppInfo;
 import org.shredzone.pdbconverter.pdb.converter.AddressConverter;
+import org.shredzone.pdbconverter.pdb.converter.Converter;
 import org.shredzone.pdbconverter.pdb.record.AddressRecord;
 
 /**
  * {@link ExportHandler} that reads Address pdb and writes a vCard file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 400 $
  */
-public class VCardHandler implements ExportHandler {
+public class VCardHandler extends AbstractCategoryExportHandler<AddressRecord, AddressAppInfo> {
 
     public String getName() {
         return "vCard";
@@ -49,32 +42,14 @@ public class VCardHandler implements ExportHandler {
         return "AddressDB to vCard";
     }
 
-    public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<AddressRecord, AddressAppInfo> database;
-        
-        PdbFile pdb = null;
-        try {
-            pdb = new PdbFile(infile);
-            database = pdb.readDatabase(new AddressConverter());
-        } finally {
-            if (pdb != null) pdb.close();
-        }
+    @Override
+    protected Converter<AddressRecord, AddressAppInfo> createConverter() {
+        return new AddressConverter();
+    }
 
-        CategoryExportFilter<AddressRecord> filter = null;
-        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
-            filter = new CategoryExportFilter<AddressRecord>(
-                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
-        }
-        
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outfile);
-            VCardExporter exporter = new VCardExporter();
-            exporter.setFilter(filter);
-            exporter.export(database, fos);
-        } finally {
-            if (fos != null) fos.close();
-        }
+    @Override
+    protected Exporter<AddressRecord, AddressAppInfo> createExporter() {
+        return new VCardExporter();
     }
 
 }

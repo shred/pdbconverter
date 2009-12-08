@@ -19,17 +19,10 @@
  */
 package org.shredzone.pdbconverter.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.commons.cli.CommandLine;
-import org.shredzone.pdbconverter.PdbConverter;
+import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.MemoXmlExporter;
-import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.pdbconverter.pdb.converter.Converter;
 import org.shredzone.pdbconverter.pdb.converter.MemoConverter;
 import org.shredzone.pdbconverter.pdb.record.MemoRecord;
 
@@ -37,9 +30,9 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * {@link ExportHandler} that reads a Memo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 400 $
  */
-public class MemoXmlHandler implements ExportHandler {
+public class MemoXmlHandler extends AbstractCategoryExportHandler<MemoRecord, CategoryAppInfo> {
     
     public String getName() {
         return "memo";
@@ -49,32 +42,14 @@ public class MemoXmlHandler implements ExportHandler {
         return "MemoDB to XML";
     }
 
-    public void export(File infile, File outfile, CommandLine cmd) throws IOException {
-        PdbDatabase<MemoRecord, CategoryAppInfo> database;
-        
-        PdbFile pdb = null;
-        try {
-            pdb = new PdbFile(infile);
-            database = pdb.readDatabase(new MemoConverter());
-        } finally {
-            if (pdb != null) pdb.close();
-        }
+    @Override
+    protected Converter<MemoRecord, CategoryAppInfo> createConverter() {
+        return new MemoConverter();
+    }
 
-        CategoryExportFilter<MemoRecord> filter = null;
-        if (cmd.hasOption(PdbConverter.OPT_CATEGORY)) {
-            filter = new CategoryExportFilter<MemoRecord>(
-                            database.getAppInfo(), cmd.getOptionValue(PdbConverter.OPT_CATEGORY));
-        }
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outfile);
-            MemoXmlExporter exporter = new MemoXmlExporter();
-            exporter.setFilter(filter);
-            exporter.export(database, fos);
-        } finally {
-            if (fos != null) fos.close();
-        }
+    @Override
+    protected Exporter<MemoRecord, CategoryAppInfo> createExporter() {
+        return new MemoXmlExporter();
     }
 
 }
