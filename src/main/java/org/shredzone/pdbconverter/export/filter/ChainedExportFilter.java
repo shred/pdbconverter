@@ -17,39 +17,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.shredzone.pdbconverter.pdb.record;
+package org.shredzone.pdbconverter.export.filter;
+
+import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
- * A {@link Record} implementation that contains a Memo record.
- *
+ * An {@link ExportFilter} that consists of a chain of other
+ * {@link ExportFilter}. This filter only accepts a record if all the chained
+ * {@link ExportFilter} accepted the record.
+ * 
  * @author Richard "Shred" Körber
  * @version $Revision: 405 $
  */
-public class MemoRecord extends AbstractRecord {
+public class ChainedExportFilter<T extends Record> implements ExportFilter<T> {
 
-    private String memo;
-    
+    private final ExportFilter<T>[] filterList;
+
     /**
-     * Creates a new {@link MemoRecord}.
+     * Creates a new {@link ChainedExportFilter}.
      * 
-     * @param attribute
-     *            Record attribute
+     * @param filter
+     *            Filter chain
      */
-    public MemoRecord(byte attribute) {
-        super(attribute);
+    public ChainedExportFilter(ExportFilter<T>[] filter) {
+        this.filterList = filter;
     }
-
-    /**
-     * Gets the memo message.
-     */
-    public String getMemo()                     { return memo; }
-    public void setMemo(String memo)            { this.memo = memo; }
     
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Memo:[").append(memo).append(']');
-        return sb.toString();
+    public boolean accepts(T record) {
+        for (ExportFilter<T> filter : filterList) {
+            if (!filter.accepts(record)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
-    
+
 }

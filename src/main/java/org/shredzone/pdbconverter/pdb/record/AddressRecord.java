@@ -25,9 +25,9 @@ import java.util.EnumMap;
  * A {@link Record} implementation that contains an Address record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 405 $
  */
-public class AddressRecord extends Record {
+public class AddressRecord extends AbstractRecord {
     
     private EnumMap<Field, Label> labels = new EnumMap<Field, Label>(Field.class);
     private EnumMap<Field, String> fields = new EnumMap<Field, String>(Field.class);

@@ -25,9 +25,9 @@ import java.util.Date;
  * A {@link Record} implementation that contains a Todo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 405 $
  */
-public class TodoRecord extends Record {
+public class TodoRecord extends AbstractRecord implements DatedRecord {
 
     private Date date;
     private int priority;
@@ -75,6 +75,11 @@ public class TodoRecord extends Record {
     public String getNote()                     { return note; }
     public void setNote(String note)            { this.note = note; }
 
+    @Override
+    public Date getRecordDate() {
+        return getDate();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

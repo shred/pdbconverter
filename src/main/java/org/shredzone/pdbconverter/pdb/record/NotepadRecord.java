@@ -27,9 +27,9 @@ import java.util.Date;
  * An {@link Record} implementation that contains a Notepad entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 405 $
  */
-public class NotepadRecord extends Record {
+public class NotepadRecord extends AbstractRecord implements DatedRecord {
 
     private String title;
     private Date created;
@@ -76,6 +76,11 @@ public class NotepadRecord extends Record {
      */
     public byte[] getImagePng()                 { return imagePng; }
     public void setImagePng(byte[] imagePng)    { this.imagePng = imagePng; }
+    
+    @Override
+    public Date getRecordDate() {
+        return getModified();
+    }
     
     @Override
     public String toString() {

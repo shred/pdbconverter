@@ -21,6 +21,9 @@ package org.shredzone.pdbconverter;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -36,13 +39,24 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 401 $
+ * @version $Revision: 405 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
     
     private static final String OPT_CATEGORY = "category";
     private static final String OPT_SPLIT = "split";
+    private static final String OPT_FROM = "from";
+    private static final String OPT_UNTIL = "until";
+    
+    private static final DateFormat yearDateFmt = new SimpleDateFormat("yyyy");
+    private static final DateFormat monthDateFmt = new SimpleDateFormat("yyyy-MM");
+    private static final DateFormat dayDateFmt = new SimpleDateFormat("yyyy-MM-dd");
+    static {
+        yearDateFmt.setLenient(true);
+        monthDateFmt.setLenient(true);
+        dayDateFmt.setLenient(true);
+    }
     
     private static final Options CLI_OPTIONS = new Options();
     static {
@@ -79,6 +93,20 @@ public class PdbConverter {
                 .withLongOpt("split")
                 .withDescription("write each category into a separate file")
                 .create("s"));
+
+        CLI_OPTIONS.addOption(OptionBuilder
+                .withArgName(OPT_FROM)
+                .withLongOpt("from")
+                .withDescription("only output records starting from this date")
+                .hasArg()
+                .create("f"));
+
+        CLI_OPTIONS.addOption(OptionBuilder
+                .withArgName(OPT_UNTIL)
+                .withLongOpt("until")
+                .withDescription("only output records until this date (exclusive)")
+                .hasArg()
+                .create("u"));
     }
 
     private static final Options GUI_CLI_OPTIONS = new Options();
@@ -133,6 +161,8 @@ public class PdbConverter {
             ExportOptions options = new ExportOptions();
             options.setSplit(cmd.hasOption(OPT_SPLIT));
             options.setCategory(cmd.getOptionValue(OPT_CATEGORY));
+            options.setFrom(parseDate(cmd.getOptionValue(OPT_FROM)));
+            options.setUntil(parseDate(cmd.getOptionValue(OPT_UNTIL)));
             
             handler.export(in, out, options);
             
@@ -145,6 +175,33 @@ public class PdbConverter {
         }
     }
 
+    /**
+     * Parses a date string.
+     * 
+     * @param str
+     *            Date string to be parsed. May be {@code null}.
+     * @return {@link Date} object, or {@code null} if a null was passed in.
+     * @throws ParseException
+     *             The date string could not be parsed
+     */
+    private static Date parseDate(String str) throws ParseException {
+        if (str == null) return null;
+
+        try {
+            return dayDateFmt.parse(str);
+        } catch (java.text.ParseException ex) {
+            try {
+                return monthDateFmt.parse(str);
+            } catch (java.text.ParseException ex2) {
+                try {
+                    return yearDateFmt.parse(str);
+                } catch (java.text.ParseException ex3) {
+                    throw new ParseException("Bad date format: " + str);
+                }
+            }
+        }
+    }
+    
     /**
      * Outputs a help page.
      */

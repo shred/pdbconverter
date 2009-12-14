@@ -19,37 +19,23 @@
  */
 package org.shredzone.pdbconverter.pdb.record;
 
+import java.util.Date;
+
 /**
- * A {@link Record} implementation that contains a Memo record.
- *
+ * This interface marks records that contain a date. Record classes must
+ * implement this interface if they want to be filtered by date range.
+ * 
  * @author Richard "Shred" Körber
  * @version $Revision: 405 $
  */
-public class MemoRecord extends AbstractRecord {
+public interface DatedRecord extends Record {
 
-    private String memo;
-    
     /**
-     * Creates a new {@link MemoRecord}.
+     * Gets the date of this record. Usually this is the creation date. For
+     * schedules this is the date of the schedule.
      * 
-     * @param attribute
-     *            Record attribute
+     * @return {@link Date}, or {@code null} if this record has no date set.
      */
-    public MemoRecord(byte attribute) {
-        super(attribute);
-    }
+    Date getRecordDate();
 
-    /**
-     * Gets the memo message.
-     */
-    public String getMemo()                     { return memo; }
-    public void setMemo(String memo)            { this.memo = memo; }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Memo:[").append(memo).append(']');
-        return sb.toString();
-    }
-    
 }

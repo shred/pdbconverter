@@ -31,6 +31,7 @@ import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
 import org.shredzone.pdbconverter.pdb.converter.Converter;
+import org.shredzone.pdbconverter.pdb.record.AbstractRecord;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
 
@@ -38,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 405 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -130,7 +131,7 @@ public class PdbFile extends RandomAccessFile {
         
         // Read each record
         for (int ix = 0; ix < records; ix++) {
-            if ((attributes[ix] & Record.ATTR_DELETE) != 0 && offsets[ix] >= length()) {
+            if ((attributes[ix] & AbstractRecord.ATTR_DELETE) != 0 && offsets[ix] >= length()) {
                 // Ignore deleted entries
                 continue;
             }

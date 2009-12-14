@@ -22,12 +22,15 @@ package org.shredzone.pdbconverter.handler;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
+import org.shredzone.pdbconverter.export.filter.ChainedExportFilter;
+import org.shredzone.pdbconverter.export.filter.DatedExportFilter;
 import org.shredzone.pdbconverter.export.filter.ExportFilter;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
@@ -40,11 +43,12 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Abstract superclass for {@link Category} exporters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 401 $
+ * @version $Revision: 405 $
  */
 public abstract class AbstractCategoryExportHandler<T extends Record, U extends CategoryAppInfo>
 implements ExportHandler {
 
+    @SuppressWarnings("unchecked")
     @Override
     public void export(File infile, File outfile, ExportOptions options) throws IOException {
         PdbDatabase<T, U> database;
@@ -57,28 +61,28 @@ implements ExportHandler {
             if (pdb != null) pdb.close();
         }
         
-        CategoryExportFilter<T> filter = null;
-        if (options.getCategory() != null) {
-            filter = new CategoryExportFilter<T>(
-                            database.getAppInfo(), options.getCategory());
-        }
+        ExportFilter<T> filter = createExportFilter(database, options);
         
         if (options.isSplit()) {
-            if (filter != null) {
-                throw new IllegalArgumentException("split and category options are mutually exclusive");
-            }
-        
             Set<String> catnameSet = new HashSet<String>();
             
             List<Category> categories = database.getAppInfo().getCategories();
             for (int ix = 0; ix < categories.size(); ix++) {
                 Category cat = categories.get(ix);
                 if (cat == null) continue;
-
-                filter = new CategoryExportFilter<T>(ix);
+                
+                ExportFilter<T> catFilter;
+                if (filter != null) {
+                    ExportFilter<T>[] filterChain = new ExportFilter[2];
+                    filterChain[0] = new CategoryExportFilter<T>(ix);
+                    filterChain[1] = filter;
+                    catFilter = new ChainedExportFilter<T>(filterChain);
+                } else {
+                    catFilter = new CategoryExportFilter<T>(ix);
+                }
                 
                 File catfile = computeFilename(outfile, cat, catnameSet);
-                writeOutputFile(catfile, database, filter);
+                writeOutputFile(catfile, database, catFilter);
             }
 
         } else {
@@ -87,6 +91,31 @@ implements ExportHandler {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private ExportFilter<T> createExportFilter(PdbDatabase<T, U> database, ExportOptions options)
+    throws IOException {
+        List<ExportFilter<T>> filterList = new ArrayList<ExportFilter<T>>();
+
+        if (options.getCategory() != null) {
+            filterList.add(new CategoryExportFilter<T>(database.getAppInfo(), options.getCategory()));
+        }
+        
+        if (options.getFrom() != null || options.getUntil() != null) {
+            // This is a little ugly since DatedExportFilter only accepts DatedRecords.
+            // Anyhow this cannot be checked at compile time in this generic class.
+            // We will rely on a ClassCastException at runtime.
+            filterList.add(new DatedExportFilter(options.getFrom(), options.getUntil()));
+        }
+        
+        if (filterList.isEmpty()) {
+            return null;
+        } else if (filterList.size() == 1) {
+            return filterList.get(0);
+        } else {
+            return new ChainedExportFilter<T>(filterList.toArray(new ExportFilter[filterList.size()]));
+        }
+    }
+    
     /**
      * Computes a single file name for the split option. It appends the category name to
      * the file name, after escaping characters that should not occur in file names. If

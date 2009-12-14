@@ -20,64 +20,38 @@
 package org.shredzone.pdbconverter.pdb.record;
 
 /**
- * Represents a single database entry. Subclasses will give detailed methods for reading
- * the entry's content.
+ * Represents a single database entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 405 $
  */
-public abstract class Record {
-    public static final int ATTR_SECRET = 0x10;
-    public static final int ATTR_BUSY = 0x20;
-    public static final int ATTR_DIRTY = 0x40;
-    public static final int ATTR_DELETE = 0x80;
+public interface Record {
     
-    private final byte attribute;
-    
-    /**
-     * Create a new Entry.
-     * 
-     * @param attribute Entry attributes (see ATTR constants)
-     */
-    public Record(byte attribute) {
-        this.attribute = attribute;
-    }
-
     /**
      * Is this entry secret?
      */
-    public boolean isSecret() {
-        return (attribute & ATTR_SECRET) != 0;
-    }
+    boolean isSecret();
 
     /**
      * Is this entry busy?
      */
-    public boolean isBusy() {
-        return (attribute & ATTR_BUSY) != 0;
-    }
+    boolean isBusy();
 
     /**
      * Is this entry dirty?
      */
-    public boolean isDirty() {
-        return (attribute & ATTR_DIRTY) != 0;
-    }
+    boolean isDirty();
 
     /**
      * Is this entry deleted?
      */
-    public boolean isDelete() {
-        return (attribute & ATTR_DELETE) != 0;
-    }
+    boolean isDelete();
 
     /**
      * Returns the category index of this entry.
      * 
      * @return Category index
      */
-    public int getCategoryIndex() {
-        return attribute & 0x0F;
-    }
+    int getCategoryIndex();
     
 }
