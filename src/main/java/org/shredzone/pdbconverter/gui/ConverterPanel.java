@@ -27,10 +27,12 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -43,6 +45,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
+import org.jdesktop.swingx.JXDatePicker;
 import org.shredzone.pdbconverter.ConverterRegister;
 import org.shredzone.pdbconverter.handler.ExportHandler;
 import org.shredzone.pdbconverter.handler.ExportOptions;
@@ -52,7 +55,7 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 401 $
+ * @version $Revision: 406 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
@@ -63,6 +66,8 @@ public class ConverterPanel extends JPanel {
     private JTextField jtInfile;
     private JTextField jtOutfile;
     private JCheckBox jcSplit;
+    private JXDatePicker jxdpFrom;
+    private JXDatePicker jxdpThru;
     private JButton jbConvert;
     private Set<JLabel> labels = new HashSet<JLabel>();
  
@@ -78,6 +83,7 @@ public class ConverterPanel extends JPanel {
      */
     private void build() {
         setLayout(new GridLayout(0, 1, 0, 2));
+        setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         
         jcbMode = buildModeSelector(this, RESOURCE.getString("label.converter"));
         jtInfile = buildFileSelector(this, RESOURCE.getString("label.infile"), false);
@@ -95,6 +101,30 @@ public class ConverterPanel extends JPanel {
         }
         add(jpSplit);
         
+        JPanel jpFrom = new JPanel(new BorderLayout());
+        {
+            JLabel jlFrom = new JLabel(RESOURCE.getString("label.from"));
+            jpFrom.add(jlFrom, BorderLayout.LINE_START);
+            labels.add(jlFrom);
+            
+            jxdpFrom = new JXDatePicker();
+            jxdpFrom.setToolTipText(RESOURCE.getString("label.from.tt"));
+            jpFrom.add(jxdpFrom, BorderLayout.CENTER);
+        }
+        add(jpFrom);
+
+        JPanel jpThru = new JPanel(new BorderLayout());
+        {
+            JLabel jlThru = new JLabel(RESOURCE.getString("label.thru"));
+            jpThru.add(jlThru, BorderLayout.LINE_START);
+            labels.add(jlThru);
+            
+            jxdpThru = new JXDatePicker();
+            jxdpThru.setToolTipText(RESOURCE.getString("label.thru.tt"));
+            jpThru.add(jxdpThru, BorderLayout.CENTER);
+        }
+        add(jpThru);
+
         jbConvert = new JButton(RESOURCE.getString("label.convert"));
         jbConvert.addActionListener(new ConvertActionListener());
         add(jbConvert);
@@ -198,6 +228,16 @@ public class ConverterPanel extends JPanel {
                     
                     ExportOptions options = new ExportOptions();
                     options.setSplit(jcSplit.isSelected());
+                    options.setFrom(jxdpFrom.getDate());
+                    
+                    if (jxdpThru.getDate() != null) {
+                        // Option value is exclusive, so add 1 day!
+                        long thruTime = jxdpThru.getDate().getTime();
+                        thruTime += 24 * 60 * 60 * 1000;
+                        options.setUntil(new Date(thruTime));
+                    } else {
+                        options.setUntil(null);
+                    }
                     
                     handler.export(infile, outfile, options);
                     
