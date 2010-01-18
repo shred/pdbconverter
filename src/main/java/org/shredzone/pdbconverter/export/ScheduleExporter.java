@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 410 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
@@ -202,6 +202,8 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
     private void setAllDaySchedule(VEvent event, ScheduleRecord schedule) {
         Calendar startDate = convertDate(schedule.getSchedule());
         event.getProperties().add(new DtStart(new Date(startDate.getTime())));
+        startDate.add(Calendar.DATE, 1);
+        event.getProperties().add(new DtEnd(new Date(startDate.getTime())));
     }
 
     /**
@@ -309,10 +311,22 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
      */
     private void setExceptions(VEvent event, ScheduleRecord schedule) {
         if (!schedule.getExceptions().isEmpty()) {
-            DateList datelist = new DateList(Value.DATE);
-            for (ShortDate exception : schedule.getExceptions()) {
-                datelist.add(new Date(convertDate(exception).getTime()));
+            DateList datelist;
+            
+            if (schedule.getStartTime() != null) {
+                ShortTime time = schedule.getStartTime();
+                datelist = new DateList(Value.DATE_TIME);
+                for (ShortDate exception : schedule.getExceptions()) {
+                    datelist.add(new DateTime(convertDateTime(exception, time).getTime()));
+                }
+                
+            } else {
+                datelist = new DateList(Value.DATE);
+                for (ShortDate exception : schedule.getExceptions()) {
+                    datelist.add(new Date(convertDate(exception).getTime()));
+                }
             }
+            
             event.getProperties().add(new ExDate(datelist));
         }
     }
