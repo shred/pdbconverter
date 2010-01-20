@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 410 $
+ * @version $Revision: 411 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
@@ -178,7 +178,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         
         // If ending time is before starting time, add one day to make it end tomorrow
         if (endDate.before(startDate)) {
-            endDate.add(Calendar.DAY_OF_MONTH, 1);
+            endDate.add(Calendar.DATE, 1);
         }
         
         DateTime startDateTime = new DateTime(startDate.getTime());
@@ -245,9 +245,17 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
     private void setRepeat(VEvent event, ScheduleRecord schedule) {
         Repeat repeat = schedule.getRepeat();
         if (repeat != null) {
-            Date until = null;
+            DateTime until = null;
             if (repeat.getUntil() != null) {
-                until = new Date(convertDate(repeat.getUntil()).getTime());
+                ShortTime endTime = schedule.getEndTime();
+                if (endTime != null) {
+                    until = new DateTime(convertDateTime(repeat.getUntil(), endTime).getTime());
+                } else {
+                    Calendar calUntil = convertDate(repeat.getUntil());
+                    calUntil.add(Calendar.DATE, 1);
+                    until = new DateTime(calUntil.getTime());
+                }
+                until.setUtc(true);
             }
 
             Recur recur = null;
@@ -317,7 +325,9 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
                 ShortTime time = schedule.getStartTime();
                 datelist = new DateList(Value.DATE_TIME);
                 for (ShortDate exception : schedule.getExceptions()) {
-                    datelist.add(new DateTime(convertDateTime(exception, time).getTime()));
+                    DateTime exDate = new DateTime(convertDateTime(exception, time).getTime());
+                    exDate.setUtc(true);
+                    datelist.add(exDate);
                 }
                 
             } else {
@@ -406,7 +416,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
     }
     
     /**
-     * Converts a {@link ShortDate} to a {@link Calendar} object.
+     * Converts a {@link ShortDate} to a {@link Calendar} object. Time is set to midnight.
      * 
      * @param date
      *            {@link ShortDate} to be converted
