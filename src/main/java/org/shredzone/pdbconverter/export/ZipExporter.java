@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * Writes a {@link RawRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 490 $
  */
 public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
     
@@ -50,6 +50,7 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
      * "db-info.xml" with generic database information, and a .bin file for each database
      * record.
      */
+    @Override
     public void export(PdbDatabase<RawRecord, RawAppInfo> database, OutputStream out)
     throws IOException {
         ZipOutputStream zos = new ZipOutputStream(out);

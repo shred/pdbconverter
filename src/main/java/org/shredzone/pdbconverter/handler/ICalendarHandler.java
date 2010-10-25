@@ -30,14 +30,16 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
  * {@link ExportHandler} that reads Calendar pdb and writes an iCalendar file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 490 $
  */
 public class ICalendarHandler extends AbstractCategoryExportHandler<ScheduleRecord, CategoryAppInfo> {
 
+    @Override
     public String getName() {
         return "iCalendar";
     }
 
+    @Override
     public String getDescription() {
         return "CalendarDB to iCalendar";
     }

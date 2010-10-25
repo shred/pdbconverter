@@ -30,14 +30,16 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * {@link ExportHandler} that reads a Memo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 490 $
  */
 public class MemoXmlHandler extends AbstractCategoryExportHandler<MemoRecord, CategoryAppInfo> {
     
+    @Override
     public String getName() {
         return "memo";
     }
 
+    @Override
     public String getDescription() {
         return "MemoDB to XML";
     }

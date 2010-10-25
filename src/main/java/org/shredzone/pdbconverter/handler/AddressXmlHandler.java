@@ -30,14 +30,16 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * {@link ExportHandler} that reads an Address pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 490 $
  */
 public class AddressXmlHandler extends AbstractCategoryExportHandler<AddressRecord, AddressAppInfo> {
     
+    @Override
     public String getName() {
         return "address";
     }
 
+    @Override
     public String getDescription() {
         return "AddressDB to XML";
     }

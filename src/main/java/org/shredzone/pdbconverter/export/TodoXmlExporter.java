@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * Writes a {@link TodoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 490 $
  */
 public class TodoXmlExporter extends AbstractExporter<TodoRecord, CategoryAppInfo> {
 
@@ -42,6 +42,7 @@ public class TodoXmlExporter extends AbstractExporter<TodoRecord, CategoryAppInf
      * @param out
      *            {@link OutputStream} to write to
      */
+    @Override
     public void export(PdbDatabase<TodoRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
         XmlHelper xh = new XmlHelper();

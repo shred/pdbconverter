@@ -55,7 +55,7 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 406 $
+ * @version $Revision: 490 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
@@ -218,6 +218,7 @@ public class ConverterPanel extends JPanel {
      * and informs the user about the result.
      */
     public class ConvertActionListener implements ActionListener {
+        @Override
         @SuppressWarnings("synthetic-access")
         public void actionPerformed(ActionEvent e) {
             ExportHandler handler = (ExportHandler) jcbMode.getSelectedItem();
@@ -278,6 +279,7 @@ public class ConverterPanel extends JPanel {
             this.saveMode = saveMode;
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             Component src = (Component) e.getSource();
             

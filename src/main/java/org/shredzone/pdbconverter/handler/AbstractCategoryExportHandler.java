@@ -43,7 +43,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Abstract superclass for {@link Category} exporters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 490 $
  */
 public abstract class AbstractCategoryExportHandler<T extends Record, U extends CategoryAppInfo>
 implements ExportHandler {
@@ -91,7 +91,7 @@ implements ExportHandler {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private ExportFilter<T> createExportFilter(PdbDatabase<T, U> database, ExportOptions options)
     throws IOException {
         List<ExportFilter<T>> filterList = new ArrayList<ExportFilter<T>>();

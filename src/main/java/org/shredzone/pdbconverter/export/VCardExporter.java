@@ -41,7 +41,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * result may be invalid and data is lost.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 490 $
  * @see http://tools.ietf.org/html/rfc2426
  */
 public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
@@ -104,6 +104,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
      * @param out
      *            {@link OutputStream} to write to
      */
+    @Override
     public void export(PdbDatabase<AddressRecord, AddressAppInfo> database, OutputStream out)
     throws IOException {
         AddressAppInfo appInfo = database.getAppInfo();

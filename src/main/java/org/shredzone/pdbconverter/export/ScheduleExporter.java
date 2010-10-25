@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 411 $
+ * @version $Revision: 490 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
@@ -105,6 +105,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
      * @param out
      *            {@link OutputStream} to write to
      */
+    @Override
     public void export(PdbDatabase<ScheduleRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
         UidGenerator uidGenerator = new UidGenerator("uidGen");

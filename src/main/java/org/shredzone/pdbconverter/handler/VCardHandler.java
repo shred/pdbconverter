@@ -30,14 +30,16 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * {@link ExportHandler} that reads Address pdb and writes a vCard file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 490 $
  */
 public class VCardHandler extends AbstractCategoryExportHandler<AddressRecord, AddressAppInfo> {
 
+    @Override
     public String getName() {
         return "vCard";
     }
 
+    @Override
     public String getDescription() {
         return "AddressDB to vCard";
     }

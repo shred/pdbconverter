@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * Writes a {@link NotepadRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 490 $
  */
 public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryAppInfo> {
     
@@ -50,6 +50,7 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
      * file "db-info.xml" with generic database information, and a .png file for each
      * database record.
      */
+    @Override
     public void export(PdbDatabase<NotepadRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
         ZipOutputStream zos = new ZipOutputStream(out);

@@ -30,14 +30,16 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * {@link ExportHandler} that reads a Todo pdb file and writes an XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 490 $
  */
 public class TodoXmlHandler extends AbstractCategoryExportHandler<TodoRecord, CategoryAppInfo> {
     
+    @Override
     public String getName() {
         return "todo";
     }
 
+    @Override
     public String getDescription() {
         return "ToDoDB to XML";
     }

@@ -31,14 +31,16 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * database index xml file and png image files for each record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 400 $
+ * @version $Revision: 490 $
  */
 public class NotepadHandler extends AbstractCategoryExportHandler<NotepadRecord, CategoryAppInfo> {
     
+    @Override
     public String getName() {
         return "notepad";
     }
 
+    @Override
     public String getDescription() {
         return "Notepad v2 to ZIP/PNG";
     }

@@ -33,7 +33,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * Writes a {@link AddressRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 490 $
  */
 public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
 
@@ -45,6 +45,7 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
      * @param out
      *            {@link OutputStream} to write to
      */
+    @Override
     public void export(PdbDatabase<AddressRecord, AddressAppInfo> database, OutputStream out)
     throws IOException {
         XmlHelper xh = new XmlHelper();

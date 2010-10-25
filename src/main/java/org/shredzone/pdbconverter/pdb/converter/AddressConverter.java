@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * A {@link Converter} that reads Address records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 490 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Address.pm
  */
 public class AddressConverter implements Converter<AddressRecord, AddressAppInfo> {
@@ -48,12 +48,14 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
 
     private static final int LABEL_LENGTH = 16;
     
+    @Override
     public boolean isAcceptable(
             PdbDatabase<AddressRecord, AddressAppInfo> database) {
         return "AddressDB".equals(database.getName())
         && "addr".equals(database.getCreator());
     }
 
+    @Override
     public AddressRecord convert(PdbFile reader, int size, byte attribute,
             PdbDatabase<AddressRecord, AddressAppInfo> database)
             throws IOException {
@@ -105,6 +107,7 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
         }
     }
 
+    @Override
     public AddressAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<AddressRecord, AddressAppInfo> database)
             throws IOException {

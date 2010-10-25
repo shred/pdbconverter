@@ -30,15 +30,17 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * An {@link Converter} that handles only the raw content of a record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 490 $
  */
 public class RawConverter implements Converter<RawRecord, RawAppInfo> {
 
+    @Override
     public boolean isAcceptable(PdbDatabase<RawRecord, RawAppInfo> database) {
         // Raw accepts everything
         return true;
     }
     
+    @Override
     public RawRecord convert(PdbFile reader, int size, byte attribute,
             PdbDatabase<RawRecord, RawAppInfo> database) throws IOException {
         byte[] data = new byte[size];
@@ -46,6 +48,7 @@ public class RawConverter implements Converter<RawRecord, RawAppInfo> {
         return new RawRecord(data, attribute);
     }
 
+    @Override
     public RawAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<RawRecord, RawAppInfo> database) throws IOException {
         byte[] data = new byte[size];

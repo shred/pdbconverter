@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * Writes a {@link MemoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
+ * @version $Revision: 490 $
  */
 public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInfo> {
 
@@ -42,6 +42,7 @@ public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInf
      * @param out
      *            {@link OutputStream} to write to
      */
+    @Override
     public void export(PdbDatabase<MemoRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
         XmlHelper xh = new XmlHelper();

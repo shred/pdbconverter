@@ -38,18 +38,20 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * An {@link Converter} that handles notepad entries.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 368 $
+ * @version $Revision: 490 $
  */
 public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInfo> {
 
     private static final int FLAG_TITLE = 0x0002;
     private static final int FLAG_ALARM = 0x0004;
     
+    @Override
     public boolean isAcceptable(PdbDatabase<NotepadRecord, CategoryAppInfo> database) {
         return "npadDB".equals(database.getName())
                 && "npad".equals(database.getCreator());
     }
     
+    @Override
     public NotepadRecord convert(PdbFile reader, int size, byte attribute,
             PdbDatabase<NotepadRecord, CategoryAppInfo> database) throws IOException {
         long current = reader.getFilePointer();
@@ -91,6 +93,7 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
         return result;
     }
     
+    @Override
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<NotepadRecord, CategoryAppInfo> database) throws IOException {
         CategoryAppInfo result = new CategoryAppInfo();
