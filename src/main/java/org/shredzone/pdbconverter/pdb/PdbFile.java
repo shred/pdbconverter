@@ -39,19 +39,20 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 491 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
 
     private static final String CHARSET = "iso-8859-1";
     private static final int NUM_CATEGORIES = 16;
+    private static final int EPOCH_YEAR = 1904;
     private static final long EPOCH;    // Timestamp of PalmOS epoch (1904-01-01)
     
     static {
         Calendar cal = Calendar.getInstance();
         cal.clear();
-        cal.set(1904, 0, 1, 0, 0, 0);
+        cal.set(EPOCH_YEAR, 0, 1, 0, 0, 0);
         EPOCH = cal.getTimeInMillis();
     }
     
@@ -226,6 +227,29 @@ public class PdbFile extends RandomAccessFile {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Reads a packed PalmOS date.
+     *
+     * @return Date containing the date read. May be {@code null} if no date was set.
+     * The time part is always midnight local time.
+     */
+    public Date readPackedDate() throws IOException {
+        int packed = readUnsignedShort();
+
+        if (packed == 0xFFFF) {
+            return null;
+        }
+
+        int year  = ((packed >> 9) & 0x007F) + EPOCH_YEAR;  // year
+        int month = ((packed >> 5) & 0x000F);               // month
+        int day   = ((packed     ) & 0x001F);               // day
+
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(year, month - 1, day);
+        return cal.getTime();
     }
     
     /**

@@ -25,7 +25,7 @@ import java.util.Date;
  * A {@link Record} implementation that contains a Todo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 491 $
  */
 public class TodoRecord extends AbstractRecord implements DatedRecord {
 
@@ -46,7 +46,7 @@ public class TodoRecord extends AbstractRecord implements DatedRecord {
     }
     
     /**
-     * Gets the due date.
+     * Gets the due date. The time part is always set to midnight local time.
      */
     public Date getDate()                       { return date; }
     public void setDate(Date date)              { this.date = date; }

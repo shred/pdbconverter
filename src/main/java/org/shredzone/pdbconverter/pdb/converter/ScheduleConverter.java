@@ -20,6 +20,7 @@
 package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
@@ -33,7 +34,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
  * An {@link Converter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 491 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppInfo> {
@@ -64,7 +65,7 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
         byte startMinute = reader.readByte();
         byte endHour = reader.readByte();
         byte endMinute = reader.readByte();
-        int date = reader.readShort();
+        Date date = reader.readPackedDate();
         int flags = reader.readShort();
         
         if (startHour >= 0 && startMinute >= 0) {
@@ -75,11 +76,7 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             result.setEndTime(new ScheduleRecord.ShortTime(endHour, endMinute));
         }
         
-        result.setSchedule(new ScheduleRecord.ShortDate(
-                        ((date >> 9) & 0x007F) + 1904,      // year
-                        ((date >> 5) & 0x000F),             // month
-                        ((date     ) & 0x001F)              // day
-        ));
+        result.setSchedule(new ScheduleRecord.ShortDate(date));
         
         if ((flags & FLAG_ALARM) != 0) {
             int advance = reader.readByte();
@@ -111,13 +108,9 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             }
 
             ScheduleRecord.ShortDate endDate = null;
-            int ending = reader.readUnsignedShort();
-            if (ending != 0xFFFF) {
-                endDate = new ScheduleRecord.ShortDate(
-                        ((ending >> 9) & 0x007F) + 1904,      // year
-                        ((ending >> 5) & 0x000F),             // month
-                        ((ending     ) & 0x001F)              // day
-                );
+            Date ending = reader.readPackedDate();
+            if (ending != null) {
+                endDate = new ScheduleRecord.ShortDate(ending);
             }
             
             int frequency = reader.readUnsignedByte();
@@ -152,12 +145,8 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
         if ((flags & FLAG_EXCEPTIONS) != 0) {
             int numExceptions = reader.readUnsignedShort();
             for (int ix = 0; ix < numExceptions; ix++) {
-                int excDate = reader.readUnsignedShort();
-                result.getExceptions().add(new ScheduleRecord.ShortDate(
-                        ((excDate >> 9) & 0x007F) + 1904,      // year
-                        ((excDate >> 5) & 0x000F),             // month
-                        ((excDate     ) & 0x001F)              // day
-                ));
+                Date excDate = reader.readPackedDate();
+                result.getExceptions().add(new ScheduleRecord.ShortDate(excDate));
             }
         }
         

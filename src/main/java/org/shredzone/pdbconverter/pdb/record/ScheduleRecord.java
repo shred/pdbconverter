@@ -30,7 +30,7 @@ import java.util.List;
  * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 491 $
  */
 public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
@@ -187,7 +187,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         private final int day;
 
         /**
-         * Create a new {@link ShortDate}.
+         * Creates a new {@link ShortDate}.
          * 
          * @param year
          *            Year (fully, this is all four digits)
@@ -200,6 +200,20 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
             this.year = year;
             this.month = month;
             this.day = day;
+        }
+
+        /**
+         * Creates a new {@link ShortDate}.
+         *
+         * @param date
+         *            {@link Date} to read the date from
+         */
+        public ShortDate(Date date) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            this.year = cal.get(Calendar.YEAR);
+            this.month = cal.get(Calendar.MONTH) + 1;
+            this.day = cal.get(Calendar.DAY_OF_MONTH);
         }
         
         public int getYear()                { return year; }
