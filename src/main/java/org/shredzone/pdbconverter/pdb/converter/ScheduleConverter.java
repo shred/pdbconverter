@@ -34,7 +34,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
  * An {@link Converter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 491 $
+ * @version $Revision: 497 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppInfo> {
@@ -52,7 +52,7 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
     }
     
     @Override
-    public ScheduleRecord convert(PdbFile reader, int size, byte attribute,
+    public ScheduleRecord convert(PdbFile reader, int record, int size, byte attribute,
             PdbDatabase<ScheduleRecord, CategoryAppInfo> database) throws IOException {
         ScheduleRecord result = new ScheduleRecord(attribute);
         

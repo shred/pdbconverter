@@ -38,7 +38,7 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * An {@link Converter} that handles notepad entries.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 497 $
  */
 public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInfo> {
 
@@ -52,7 +52,7 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
     }
     
     @Override
-    public NotepadRecord convert(PdbFile reader, int size, byte attribute,
+    public NotepadRecord convert(PdbFile reader, int record, int size, byte attribute,
             PdbDatabase<NotepadRecord, CategoryAppInfo> database) throws IOException {
         long current = reader.getFilePointer();
 

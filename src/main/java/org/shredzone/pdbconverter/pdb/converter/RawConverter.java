@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * An {@link Converter} that handles only the raw content of a record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 497 $
  */
 public class RawConverter implements Converter<RawRecord, RawAppInfo> {
 
@@ -41,7 +41,7 @@ public class RawConverter implements Converter<RawRecord, RawAppInfo> {
     }
     
     @Override
-    public RawRecord convert(PdbFile reader, int size, byte attribute,
+    public RawRecord convert(PdbFile reader, int record, int size, byte attribute,
             PdbDatabase<RawRecord, RawAppInfo> database) throws IOException {
         byte[] data = new byte[size];
         reader.readFully(data);

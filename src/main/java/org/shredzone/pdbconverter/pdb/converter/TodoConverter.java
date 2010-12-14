@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * A {@link Converter} that handles todo records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 491 $
+ * @version $Revision: 497 $
  */
 public class TodoConverter implements Converter<TodoRecord, CategoryAppInfo> {
 
@@ -41,7 +41,7 @@ public class TodoConverter implements Converter<TodoRecord, CategoryAppInfo> {
     }
     
     @Override
-    public TodoRecord convert(PdbFile reader, int size, byte attribute,
+    public TodoRecord convert(PdbFile reader, int record, int size, byte attribute,
             PdbDatabase<TodoRecord, CategoryAppInfo> database) throws IOException {
         TodoRecord result = new TodoRecord(attribute);
         

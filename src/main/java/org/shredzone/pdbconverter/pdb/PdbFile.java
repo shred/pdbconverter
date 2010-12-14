@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 491 $
+ * @version $Revision: 497 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -145,7 +145,7 @@ public class PdbFile extends RandomAccessFile {
             }
 
             seek(offsets[ix]);
-            T entry = converter.convert(this, size, attributes[ix], result);
+            T entry = converter.convert(this, ix, size, attributes[ix], result);
             result.getRecords().add(entry);
         }
         
