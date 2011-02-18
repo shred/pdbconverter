@@ -20,6 +20,7 @@
 package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
@@ -34,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
  * An {@link Converter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 497 $
+ * @version $Revision: 523 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppInfo> {
@@ -75,8 +76,10 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
         if (endHour >= 0 && endMinute >= 0) {
             result.setEndTime(new ScheduleRecord.ShortTime(endHour, endMinute));
         }
-        
-        result.setSchedule(new ScheduleRecord.ShortDate(date));
+
+        Calendar dateCal = Calendar.getInstance();
+        dateCal.setTime(date);
+        result.setSchedule(new ScheduleRecord.ShortDate(dateCal));
         
         if ((flags & FLAG_ALARM) != 0) {
             int advance = reader.readByte();
@@ -110,7 +113,9 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             ScheduleRecord.ShortDate endDate = null;
             Date ending = reader.readPackedDate();
             if (ending != null) {
-                endDate = new ScheduleRecord.ShortDate(ending);
+                Calendar endingCal = Calendar.getInstance();
+                endingCal.setTime(ending);
+                endDate = new ScheduleRecord.ShortDate(endingCal);
             }
             
             int frequency = reader.readUnsignedByte();
@@ -146,7 +151,9 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             int numExceptions = reader.readUnsignedShort();
             for (int ix = 0; ix < numExceptions; ix++) {
                 Date excDate = reader.readPackedDate();
-                result.getExceptions().add(new ScheduleRecord.ShortDate(excDate));
+                Calendar excCal = Calendar.getInstance();
+                excCal.setTime(excDate);
+                result.getExceptions().add(new ScheduleRecord.ShortDate(excCal));
             }
         }
         

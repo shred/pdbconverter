@@ -22,6 +22,7 @@ package org.shredzone.pdbconverter;
 import org.shredzone.pdbconverter.handler.AddressXmlHandler;
 import org.shredzone.pdbconverter.handler.ExportHandler;
 import org.shredzone.pdbconverter.handler.ICalendarHandler;
+import org.shredzone.pdbconverter.handler.MdbICalendarHandler;
 import org.shredzone.pdbconverter.handler.MemoXmlHandler;
 import org.shredzone.pdbconverter.handler.NotepadHandler;
 import org.shredzone.pdbconverter.handler.TodoXmlHandler;
@@ -32,13 +33,14 @@ import org.shredzone.pdbconverter.handler.ZipHandler;
  * A register of all available {@link ExportHandler}.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 371 $
+ * @version $Revision: 523 $
  */
 public final class ConverterRegister {
     
     private static final ExportHandler[] HANDLERS = {
         new AddressXmlHandler(),
         new ICalendarHandler(),
+        new MdbICalendarHandler(),
         new MemoXmlHandler(),
         new NotepadHandler(),
         new TodoXmlHandler(),

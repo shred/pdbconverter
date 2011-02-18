@@ -43,7 +43,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Abstract superclass for {@link Category} exporters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 523 $
  */
 public abstract class AbstractCategoryExportHandler<T extends Record, U extends CategoryAppInfo>
 implements ExportHandler {
@@ -51,15 +51,7 @@ implements ExportHandler {
     @SuppressWarnings("unchecked")
     @Override
     public void export(File infile, File outfile, ExportOptions options) throws IOException {
-        PdbDatabase<T, U> database;
-        
-        PdbFile pdb = null;
-        try {
-            pdb = new PdbFile(infile);
-            database = pdb.readDatabase(createConverter());
-        } finally {
-            if (pdb != null) pdb.close();
-        }
+        PdbDatabase<T, U> database = readDatabase(infile);
         
         ExportFilter<T> filter = createExportFilter(database, options);
         
@@ -176,6 +168,23 @@ implements ExportHandler {
         }
     }
 
+    /**
+     * Reads the PdbDatabase from the given infile.
+     * 
+     * @param infile
+     *            Infile
+     * @return PdbDatabase that was read
+     */
+    protected PdbDatabase<T, U> readDatabase(File infile) throws IOException {
+        PdbFile pdb = null;
+        try {
+            pdb = new PdbFile(infile);
+            return pdb.readDatabase(createConverter());
+        } finally {
+            if (pdb != null) pdb.close();
+        }
+    }
+    
     /**
      * Creates the {@link Converter} that converts the database file.
      * 

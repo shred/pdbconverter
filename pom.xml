@@ -112,5 +112,10 @@
             <artifactId>swingx</artifactId>
             <version>1.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.healthmarketscience.jackcess</groupId>
+            <artifactId>jackcess</artifactId>
+            <version>1.1.18</version>
+        </dependency>
     </dependencies>
 </project>

@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 523 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
@@ -63,7 +63,7 @@ public class PdbConverter {
         CLI_OPTIONS.addOption(OptionBuilder
                 .withArgName("input")
                 .withLongOpt("input")
-                .withDescription("input pdb file")
+                .withDescription("input pdb/mdb file")
                 .isRequired().hasArg()
                 .create("i"));
 

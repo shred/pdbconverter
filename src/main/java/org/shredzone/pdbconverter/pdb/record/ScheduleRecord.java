@@ -24,13 +24,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
-
 /**
  * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 491 $
+ * @version $Revision: 523 $
  */
 public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
@@ -205,17 +203,15 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         /**
          * Creates a new {@link ShortDate}.
          *
-         * @param date
-         *            {@link Date} to read the date from
+         * @param calendar
+         *            {@link Calendar} to read the date from
          */
-        public ShortDate(Date date) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            this.year = cal.get(Calendar.YEAR);
-            this.month = cal.get(Calendar.MONTH) + 1;
-            this.day = cal.get(Calendar.DAY_OF_MONTH);
+        public ShortDate(Calendar calendar) {
+            this.year = calendar.get(Calendar.YEAR);
+            this.month = calendar.get(Calendar.MONTH) + 1;
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
         }
-        
+
         public int getYear()                { return year; }
         public int getMonth()               { return month; }
         public int getDay()                 { return day; }
@@ -245,7 +241,18 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
             this.hour = hour;
             this.minute = minute;
         }
-   
+
+        /**
+         * Creates a new {@link ShortTime}.
+         *
+         * @param calendar
+         *            {@link Calendar} to read the time from
+         */
+        public ShortTime(Calendar calendar) {
+            this.hour = calendar.get(Calendar.HOUR_OF_DAY);
+            this.minute = calendar.get(Calendar.MINUTE);
+        }
+
         public int getHour()                { return hour; }
         public int getMinute()              { return minute; }
 

@@ -55,7 +55,7 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 523 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
@@ -299,6 +299,7 @@ public class ConverterPanel extends JPanel {
                         if (f.isHidden()) return false;
                         if (f.isDirectory()) return true;
                         if (f.getName().toLowerCase().endsWith(".pdb")) return true;
+                        if (f.getName().toLowerCase().endsWith(".mdb")) return true;
                         return false;
                     }
                 });

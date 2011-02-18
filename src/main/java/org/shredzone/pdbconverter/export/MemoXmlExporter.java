@@ -22,6 +22,7 @@ package org.shredzone.pdbconverter.export;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.record.MemoRecord;
@@ -30,7 +31,7 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * Writes a {@link MemoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 523 $
  */
 public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInfo> {
 

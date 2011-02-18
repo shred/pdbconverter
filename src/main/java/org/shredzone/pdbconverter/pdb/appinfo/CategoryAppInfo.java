@@ -63,7 +63,25 @@ public class CategoryAppInfo extends AppInfo {
         }
         return null;
     }
-    
+
+    /**
+     * Finds a {@link Category} index by the category key.
+     * 
+     * @param key
+     *            Category key
+     * @return Index of that category, or -1 if there was none with that key.
+     */
+    public int findCategoryByKey(int key) {
+        for (int ix = 0; ix < categories.size(); ix++) {
+            Category cat = categories.get(ix);
+            if (cat != null && cat.getKey() == key) {
+                return ix;
+            }
+        }
+        
+        return -1;
+    }
+
     /**
      * Finds a {@link Category} index by the category name.
      * 
