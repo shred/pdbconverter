@@ -19,20 +19,20 @@
  */
 package org.shredzone.pdbconverter.handler;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Data transport object for export parameters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 524 $
  */
 public class ExportOptions {
     
     private boolean split;
     private String category;
-    private Date from;
-    private Date until;
+    private Calendar from;
+    private Calendar until;
 
     /**
      * Write categories into separate files?
@@ -49,13 +49,13 @@ public class ExportOptions {
     /**
      * Date range, starting from. {@code null} means there is no date set.
      */
-    public Date getFrom()                   { return from; }
-    public void setFrom(Date from)          { this.from = from; }
+    public Calendar getFrom()               { return from; }
+    public void setFrom(Calendar from)      { this.from = from; }
     
     /**
      * Date range, ending at (exclusive). {@code null} means there is no date set.
      */
-    public Date getUntil()                  { return until; }
-    public void setUntil(Date until)        { this.until = until; }
+    public Calendar getUntil()              { return until; }
+    public void setUntil(Calendar until)    { this.until = until; }
     
 }

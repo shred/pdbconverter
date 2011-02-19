@@ -19,14 +19,14 @@
  */
 package org.shredzone.pdbconverter.pdb.record;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * This interface marks records that contain a date. Record classes must
  * implement this interface if they want to be filtered by date range.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 524 $
  */
 public interface DatedRecord extends Record {
 
@@ -34,8 +34,8 @@ public interface DatedRecord extends Record {
      * Gets the date of this record. Usually this is the creation date. For
      * schedules this is the date of the schedule.
      * 
-     * @return {@link Date}, or {@code null} if this record has no date set.
+     * @return {@link Calendar}, or {@code null} if this record has no date set.
      */
-    Date getRecordDate();
+    Calendar getRecordDate();
 
 }

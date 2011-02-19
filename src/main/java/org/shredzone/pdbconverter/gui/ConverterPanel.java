@@ -27,7 +27,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -46,6 +46,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 import org.jdesktop.swingx.JXDatePicker;
+import org.shredzone.pdbconverter.CalendarFactory;
 import org.shredzone.pdbconverter.ConverterRegister;
 import org.shredzone.pdbconverter.handler.ExportHandler;
 import org.shredzone.pdbconverter.handler.ExportOptions;
@@ -55,13 +56,14 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 524 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
 
     private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("messages");
     
+    private CalendarFactory cf = CalendarFactory.getInstance();
     private JComboBox jcbMode;
     private JTextField jtInfile;
     private JTextField jtOutfile;
@@ -227,15 +229,19 @@ public class ConverterPanel extends JPanel {
                     File infile = new File(jtInfile.getText());
                     File outfile = new File(jtOutfile.getText());
                     
+                    Calendar fromCal = cf.create();
+                    fromCal.setTime(jxdpFrom.getDate());
+                    
                     ExportOptions options = new ExportOptions();
                     options.setSplit(jcSplit.isSelected());
-                    options.setFrom(jxdpFrom.getDate());
+                    options.setFrom(fromCal);
                     
                     if (jxdpThru.getDate() != null) {
                         // Option value is exclusive, so add 1 day!
-                        long thruTime = jxdpThru.getDate().getTime();
-                        thruTime += 24 * 60 * 60 * 1000;
-                        options.setUntil(new Date(thruTime));
+                        Calendar thruCal = cf.create();
+                        thruCal.setTime(jxdpThru.getDate());
+                        thruCal.add(Calendar.DAY_OF_YEAR, 1);
+                        options.setUntil(thruCal);
                     } else {
                         options.setUntil(null);
                     }
@@ -246,6 +252,7 @@ public class ConverterPanel extends JPanel {
                             ConverterPanel.this,
                             RESOURCE.getString("convert.success"));
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     JOptionPane.showMessageDialog(
                             ConverterPanel.this,
                             RESOURCE.getString("convert.failed") + "\n" + ex.getMessage(),

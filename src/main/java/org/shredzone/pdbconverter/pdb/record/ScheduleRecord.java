@@ -21,17 +21,18 @@ package org.shredzone.pdbconverter.pdb.record;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import org.shredzone.pdbconverter.CalendarFactory;
 
 /**
  * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 524 $
  */
 public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
+    private CalendarFactory cf = CalendarFactory.getInstance();
     private ShortDate schedule;
     private ShortTime startTime;
     private ShortTime endTime;
@@ -117,15 +118,15 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
     public void setCategory(String category)    { this.category = category; }
 
     @Override
-    public Date getRecordDate() {
-        Calendar result = Calendar.getInstance();
+    public Calendar getRecordDate() {
+        Calendar result = cf.create();
         result.clear();
         result.set(schedule.getYear(), schedule.getMonth() - 1, schedule.getDay());
         if (startTime != null) {
             result.set(Calendar.HOUR_OF_DAY, startTime.getHour());
             result.set(Calendar.MINUTE, startTime.getMinute());
         }
-        return result.getTime();
+        return result;
     }
     
     @Override

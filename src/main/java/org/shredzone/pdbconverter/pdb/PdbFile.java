@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
-import java.util.Date;
+import org.shredzone.pdbconverter.CalendarFactory;
 
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -39,22 +39,15 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 497 $
+ * @version $Revision: 524 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
 
     private static final String CHARSET = "iso-8859-1";
     private static final int NUM_CATEGORIES = 16;
-    private static final int EPOCH_YEAR = 1904;
-    private static final long EPOCH;    // Timestamp of PalmOS epoch (1904-01-01)
     
-    static {
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(EPOCH_YEAR, 0, 1, 0, 0, 0);
-        EPOCH = cal.getTimeInMillis();
-    }
+    private CalendarFactory cf = CalendarFactory.getInstance();
     
     /**
      * Creates a new {@link PdbFile} for the given {@link File}.
@@ -218,12 +211,14 @@ public class PdbFile extends RandomAccessFile {
     /**
      * Reads a PalmOS date.
      * 
-     * @return Date that was read. May be {@code null} if no date was set.
+     * @return Calendar that was read. May be {@code null} if no date was set.
      */
-    public Date readDate() throws IOException {
+    public Calendar readDate() throws IOException {
         long date = readUnsignedInt();
         if (date != 0) {
-            return new Date(EPOCH + (date * 1000));
+            Calendar result = cf.createPalmEpoch();
+            result.add(Calendar.SECOND, (int) date);    // TODO: Safe cast
+            return result;
         } else {
             return null;
         }
@@ -232,32 +227,32 @@ public class PdbFile extends RandomAccessFile {
     /**
      * Reads a packed PalmOS date.
      *
-     * @return Date containing the date read. May be {@code null} if no date was set.
-     * The time part is always midnight local time.
+     * @return Calendar containing the date read. May be {@code null} if no date
+     * was set. The time part is always midnight local time.
      */
-    public Date readPackedDate() throws IOException {
+    public Calendar readPackedDate() throws IOException {
         int packed = readUnsignedShort();
 
         if (packed == 0xFFFF) {
             return null;
         }
 
-        int year  = ((packed >> 9) & 0x007F) + EPOCH_YEAR;  // year
-        int month = ((packed >> 5) & 0x000F);               // month
-        int day   = ((packed     ) & 0x001F);               // day
+        int year  = ((packed >> 9) & 0x007F) + CalendarFactory.EPOCH_YEAR;
+        int month = ((packed >> 5) & 0x000F);
+        int day   = ((packed     ) & 0x001F);
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = cf.create();
         cal.clear();
         cal.set(year, month - 1, day);
-        return cal.getTime();
+        return cal;
     }
     
     /**
      * Reads a PalmOS date and time that is stored in seven words.
      * 
-     * @return Date and time that was read
+     * @return Calendar that was read
      */
-    public Date readDateTimeWords() throws IOException {
+    public Calendar readDateTimeWords() throws IOException {
         int second = readUnsignedShort();
         int minute = readUnsignedShort();
         int hour   = readUnsignedShort();
@@ -266,10 +261,10 @@ public class PdbFile extends RandomAccessFile {
         int year   = readUnsignedShort();   // 4 digits
         readUnsignedShort();                // day of week, to be ignored...
         
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = cf.create();
         cal.clear();
         cal.set(year, month - 1, day, hour, minute, second);
-        return cal.getTime();
+        return cal;
     }
 
     /**

@@ -19,17 +19,17 @@
  */
 package org.shredzone.pdbconverter.pdb.record;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * A {@link Record} implementation that contains a Todo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 491 $
+ * @version $Revision: 524 $
  */
 public class TodoRecord extends AbstractRecord implements DatedRecord {
 
-    private Date date;
+    private Calendar date;
     private int priority;
     private boolean completed;
     private String description;
@@ -48,8 +48,8 @@ public class TodoRecord extends AbstractRecord implements DatedRecord {
     /**
      * Gets the due date. The time part is always set to midnight local time.
      */
-    public Date getDate()                       { return date; }
-    public void setDate(Date date)              { this.date = date; }
+    public Calendar getDate()                   { return date; }
+    public void setDate(Calendar date)          { this.date = date; }
 
     /**
      * Gets the priority.
@@ -76,7 +76,7 @@ public class TodoRecord extends AbstractRecord implements DatedRecord {
     public void setNote(String note)            { this.note = note; }
 
     @Override
-    public Date getRecordDate() {
+    public Calendar getRecordDate() {
         return getDate();
     }
     

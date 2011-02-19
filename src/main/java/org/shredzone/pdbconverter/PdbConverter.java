@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.cli.CommandLine;
@@ -39,7 +40,7 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 524 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
@@ -180,26 +181,31 @@ public class PdbConverter {
      * 
      * @param str
      *            Date string to be parsed. May be {@code null}.
-     * @return {@link Date} object, or {@code null} if a null was passed in.
+     * @return {@link Calendar} object, or {@code null} if a null was passed in.
      * @throws ParseException
      *             The date string could not be parsed
      */
-    private static Date parseDate(String str) throws ParseException {
+    private static Calendar parseDate(String str) throws ParseException {
         if (str == null) return null;
 
+        Date result;
         try {
-            return dayDateFmt.parse(str);
+            result = dayDateFmt.parse(str);
         } catch (java.text.ParseException ex) {
             try {
-                return monthDateFmt.parse(str);
+                result = monthDateFmt.parse(str);
             } catch (java.text.ParseException ex2) {
                 try {
-                    return yearDateFmt.parse(str);
+                    result = yearDateFmt.parse(str);
                 } catch (java.text.ParseException ex3) {
                     throw new ParseException("Bad date format: " + str);
                 }
             }
         }
+        
+        Calendar cal = CalendarFactory.getInstance().create();
+        cal.setTime(result);
+        return cal;
     }
     
     /**

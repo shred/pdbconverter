@@ -22,8 +22,9 @@ package org.shredzone.pdbconverter.mdb;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
+import org.shredzone.pdbconverter.CalendarFactory;
 
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
@@ -33,22 +34,13 @@ import com.healthmarketscience.jackcess.Table;
 
 /**
  * An abstract implementation for reading MDB databases files.
- *
+ * 
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 524 $
  */
 public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> implements MdbReader<T, U> {
 
-    private static final int EPOCH_YEAR = 1970;
-    private static final long EPOCH;    // Timestamp of MDB epoch (1904-01-01)
-    
-    static {
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(EPOCH_YEAR, 0, 1, 0, 0, 0);
-        EPOCH = cal.getTimeInMillis();
-    }
-
+    private CalendarFactory cf = CalendarFactory.getInstance();
     private Database db;
     
     @Override
@@ -100,19 +92,21 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
     }
 
     /**
-     * Reads a column as {@link Date}.
+     * Reads a column as {@link Calendar}.
      * 
      * @param row
      *            Row that was read
      * @param column
      *            Column name
-     * @return {@link Date} that was read
+     * @return {@link Calendar} that was read
      */
-    protected Date getDateColumn(Map<String, Object> row, String column) throws IOException {
+    protected Calendar getDateColumn(Map<String, Object> row, String column, TimeZone tz) throws IOException {
         String value = getColumn(row, column);
         
         if (value != null) {
-            return new Date(EPOCH + (Long.parseLong(value) * 1000));
+            Calendar cal = cf.createWithTimeZone(tz);
+            cal.setTimeInMillis(Long.parseLong(value) * 1000L);
+            return cal;
         } else {
             return null;
         }

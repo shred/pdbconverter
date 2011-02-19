@@ -21,9 +21,10 @@ package org.shredzone.pdbconverter.mdb;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -32,6 +33,8 @@ import org.shredzone.pdbconverter.pdb.record.AbstractRecord;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Alarm;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Alarm.Unit;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat;
+import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortDate;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
 
@@ -41,10 +44,19 @@ import com.healthmarketscience.jackcess.Table;
  * This class reads a DateBook.mdb file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 524 $
  */
 public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, CategoryAppInfo> {
-    
+
+    private static final Pattern P_DAILY = Pattern.compile("D(\\d+)\\s(.*)");
+    private static final Pattern P_WEEKLY = Pattern.compile("W(\\d+)\\s(\\S+)\\s(.*)");
+    private static final Pattern P_MONTHLY = Pattern.compile("M(\\d+)\\s(.*)");
+    private static final Pattern P_MD = Pattern.compile("MD(\\d+)\\s(\\d+)\\s(.*)");
+    private static final Pattern P_MP = Pattern.compile("MP(\\d+)\\s(\\d)\\+\\s(\\S+)\\s(.*)");
+    private static final Pattern P_YEARLY = Pattern.compile("YM(\\d+)\\s(\\d+)\\s(.*)");
+    private static final Pattern P_TS = Pattern.compile("(\\d{4})(\\d{2})(\\d{2})T\\d{6}Z");
+    private static final String[] WEEKDAYS = { "SU", "MO", "TU", "WE", "TH", "FR", "SA" };
+
     @Override
     public PdbDatabase<ScheduleRecord, CategoryAppInfo> read() throws IOException {
         PdbDatabase<ScheduleRecord, CategoryAppInfo> result = new PdbDatabase<ScheduleRecord, CategoryAppInfo>();
@@ -86,7 +98,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
     private Category createCategory(Map<String, Object> row) throws IOException {
         Integer id = getColumn(row, "ID");
         String name = getColumn(row, "Name");
-
+        
         return new Category(name, id.intValue(), false);
     }
     
@@ -119,10 +131,12 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         if (!note.isEmpty()) {
             record.setNote(note);
         }
+        
         String summary = getColumn(row, "Summary");
         if (!summary.isEmpty()) {
             record.setDescription(summary);
         }
+        
         String location = getColumn(row, "Location");
         if (!location.isEmpty()) {
             record.setLocation(location);
@@ -144,24 +158,18 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      *            {@link ScheduleRecord} to be filled
      */
     private void convertSchedule(Map<String, Object> row, ScheduleRecord record) throws IOException {
-        Date startTime = getDateColumn(row, "Start Time");
-        Date endTime = getDateColumn(row, "End Time");
-        Boolean untimed = getColumn(row, "Untimed");
         String timeZone = getColumn(row, "Time Zone");
-        
         TimeZone tz = TimeZone.getTimeZone(timeZone);
+
+        Calendar startTime = getDateColumn(row, "Start Time", tz);
+        Calendar endTime = getDateColumn(row, "End Time", tz);
+        Boolean untimed = getColumn(row, "Untimed");
         
-        Calendar start = Calendar.getInstance(tz);
-        start.setTime(startTime);
-        
-        Calendar end = Calendar.getInstance(tz);
-        end.setTime(endTime);
-        
-        record.setSchedule(new ShortDate(start));
+        record.setSchedule(new ShortDate(startTime));
         
         if (!untimed) {
-            record.setStartTime(new ShortTime(start));
-            record.setEndTime(new ShortTime(end));
+            record.setStartTime(new ShortTime(startTime));
+            record.setEndTime(new ShortTime(endTime));
         }
     }
     
@@ -190,7 +198,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
             record.setAlarm(new Alarm(advance, alarmUnit));
         }
     }
-
+    
     /**
      * Converts a repetition and sets the ScheduleRecord accordingly.
      * 
@@ -201,15 +209,123 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      */
     private void convertRepeat(Map<String, Object> row, ScheduleRecord record) throws IOException {
         String event = getColumn(row, "Repeated Event");
+        if (event.isEmpty()) {
+            return;
+        }
         
-        if (!event.isEmpty()) {
-            System.out.println("EVENT = " + event); // DEBUG
+        Mode mode = null;
+        int frequency = 0;
+        boolean[] weeklyDays = null;
+        int monthlyWeek = 0;
+        int monthlyDay = 0;
+        String repeat = null;
+        
+        Matcher m;
+        m = P_DAILY.matcher(event);
+        if (m.matches()) {
+            mode = Mode.DAILY;
+            frequency = Integer.parseInt(m.group(1));
+            repeat = m.group(2);
+        }
+        
+        m = P_WEEKLY.matcher(event);
+        if (m.matches()) {
+            mode = Mode.WEEKLY;
+            frequency = Integer.parseInt(m.group(1));
+            weeklyDays = convertWeeklyDays(m.group(2));
+            repeat = m.group(3);
+        }
+        
+        m = P_MONTHLY.matcher(event);
+        if (m.matches()) {
+            mode = Mode.MONTHLY;
+            frequency = Integer.parseInt(m.group(1));
+            repeat = m.group(2);
+        }
+        
+        m = P_MD.matcher(event);
+        if (m.matches()) {
+            mode = Mode.MONTHLY;
+            frequency = Integer.parseInt(m.group(1));
+            // m.group(2); // Day of the month, can be ignored
+            repeat = m.group(3);
+        }
+        
+        m = P_MP.matcher(event);
+        if (m.matches()) {
+            mode = Mode.MONTHLY_BY_DAY;
+            frequency = Integer.parseInt(m.group(1));
+            monthlyWeek = Integer.parseInt(m.group(2)) - 1;
+            monthlyDay = convertMonthlyDay(m.group(3));
+            repeat = m.group(4);
+        }
+        
+        m = P_YEARLY.matcher(event);
+        if (m.matches()) {
+            mode = Mode.YEARLY;
+            frequency = Integer.parseInt(m.group(1));
+            // m.group(2); // Month of the year, can be ignored
+            repeat = m.group(3);
         }
 
-        // TODO: Convert
-        //    private Repeat repeat;
-        //    private List<ShortDate> exceptions = new ArrayList<ShortDate>();
+        ShortDate until = null;
+
+        if (!repeat.isEmpty() && !"#0".equals(repeat)) {
+            String[] parts = repeat.split("[;,]");
+            until = convertDate(parts[0]);
+            for (int ix = 1; ix < parts.length; ix++) {
+                record.getExceptions().add(convertDate(parts[ix]));
+            }
+        }
         
+        record.setRepeat(new Repeat(mode, frequency, until, weeklyDays, monthlyWeek, monthlyDay));
+    }
+
+    /**
+     * Converts a date string to a ShortDate object. Only day, month and year is used.
+     * 
+     * @param date
+     *            Date String
+     * @return {@link ShortDate} with the given date
+     */
+    private ShortDate convertDate(String date) {
+        Matcher m = P_TS.matcher(date);
+        if (!m.matches()) {
+            return null;
+        }
+        
+        return new ShortDate(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)));
+    }
+
+    /**
+     * Convert a string of weekly days to an appropriate array.
+     * 
+     * @param days
+     *            String containing weekly days.
+     * @return Array with the bits set accordingly
+     */
+    private boolean[] convertWeeklyDays(String days) {
+        boolean[] result = new boolean[7];
+        for (int ix = 0; ix < 7; ix++) {
+            result[ix] = days.contains(WEEKDAYS[ix]);
+        }
+        return result;
+    }
+
+    /**
+     * Converts a monthly weekday to its index.
+     * 
+     * @param day
+     *            Monthly weekday
+     * @return Weekday index
+     */
+    private int convertMonthlyDay(String day) {
+        for (int ix = 0; ix < 7; ix++) {
+            if (day.contains(WEEKDAYS[ix])) {
+                return ix;
+            }
+        }
+        return -1;
     }
 
 }

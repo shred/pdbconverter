@@ -22,7 +22,7 @@ package org.shredzone.pdbconverter.export;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -39,17 +39,17 @@ import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
  * any other XML writer.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 370 $
+ * @version $Revision: 524 $
  */
 public class XmlHelper {
     
-    private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    
-    static {
-        DATE_FMT.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
-
+    private final SimpleDateFormat dateFmt;
     private XMLWriter xw;
+    
+    public XmlHelper() {
+        dateFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        dateFmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
     
     /**
      * Opens the XML writer for the given output stream. UTF-8 is used.
@@ -145,13 +145,13 @@ public class XmlHelper {
      * @param key
      *            Container key
      * @param date
-     *            Date to be written
+     *            Calendar date to be written
      * @return {@code this}
      * @see http://www.ietf.org/rfc/rfc3339.txt
      */
-    public XmlHelper writeDate(String key, Date date) throws IOException {
+    public XmlHelper writeDate(String key, Calendar date) throws IOException {
         startElement(key);
-        writeContent(DATE_FMT.format(date));
+        writeContent(dateFmt.format(date));
         endElement();
         return this;
     }

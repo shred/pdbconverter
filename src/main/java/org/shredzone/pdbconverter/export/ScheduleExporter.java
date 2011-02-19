@@ -22,7 +22,6 @@ package org.shredzone.pdbconverter.export;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Date;
@@ -52,6 +51,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
+import org.shredzone.pdbconverter.CalendarFactory;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -65,14 +65,14 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * NOTE TO THE READER:
  *   This class uses ical4j for writing iCalendar output. ical4j uses classes that
  *   are named like standard JDK classes, so take care when reading the source code.
- *   For example, "Date" and "TimeZone" might not be the class you expected.
+ *   For example, "Date" and "TimeZone" may not be the classes you expect.
  */
 
 /**
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 524 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
@@ -80,21 +80,10 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
     private static final WeekDay[] WEEKDAYS = {
         WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA,
     };
-    
-    private TimeZone timeZone = TimeZone.getDefault();
+
+    private CalendarFactory cf = CalendarFactory.getInstance();
     private TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
-    /**
-     * Sets the {@link TimeZone} to be used for output, if the database's time
-     * zone differs from the system's current time zone.
-     * 
-     * @param timeZone
-     *            {@link TimeZone} to be used, defaults to {@link TimeZone#getDefault()}
-     */
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
-    }
-    
     /**
      * Writes the {@link ScheduleRecord} database as iCalendar to the given
      * {@link OutputStream}. iCalendar support is pretty good! It copes with the
@@ -115,7 +104,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
         
-        VTimeZone vTimeZone = registry.getTimeZone(timeZone.getID()).getVTimeZone();
+        VTimeZone vTimeZone = registry.getTimeZone(cf.getTimeZone().getID()).getVTimeZone();
         calendar.getComponents().add(vTimeZone);
 
         for (ScheduleRecord schedule : database.getRecords()) {
@@ -183,10 +172,10 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         }
         
         DateTime startDateTime = new DateTime(startDate.getTime());
-        startDateTime.setTimeZone(registry.getTimeZone(timeZone.getID()));
+        startDateTime.setTimeZone(registry.getTimeZone(cf.getTimeZone().getID()));
         
         DateTime endDateTime = new DateTime(endDate.getTime());
-        endDateTime.setTimeZone(registry.getTimeZone(timeZone.getID()));
+        endDateTime.setTimeZone(registry.getTimeZone(cf.getTimeZone().getID()));
         
         event.getProperties().add(new DtStart(startDateTime));
         event.getProperties().add(new DtEnd(endDateTime));
@@ -424,7 +413,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
      * @return {@link Calendar} containing the date only
      */
     private Calendar convertDate(ShortDate date) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = cf.create();
         cal.clear();
         cal.set(date.getYear(), date.getMonth() - 1, date.getDay());
         return cal;
@@ -440,7 +429,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
      * @return {@link Calendar} containing the date and time
      */
     private Calendar convertDateTime(ShortDate date, ShortTime time) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = cf.create();
         cal.clear();
         cal.set(date.getYear(), date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
         return cal;

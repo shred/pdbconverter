@@ -20,7 +20,7 @@
 package org.shredzone.pdbconverter.export.filter;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.Calendar;
 
 import org.shredzone.pdbconverter.pdb.record.DatedRecord;
 
@@ -29,12 +29,12 @@ import org.shredzone.pdbconverter.pdb.record.DatedRecord;
  * given time range.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 524 $
  */
 public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T> {
 
-    private final Date from;
-    private final Date until;
+    private final Calendar from;
+    private final Calendar until;
 
     /**
      * Creates a new {@link DatedExportFilter} for the given time range. Undated
@@ -49,7 +49,7 @@ public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T>
      * @throws IOException
      *             if the date range was not acceptable
      */
-    public DatedExportFilter(Date from, Date until)
+    public DatedExportFilter(Calendar from, Calendar until)
     throws IOException {
         if (from == null && until == null) {
             throw new IOException("No date range set");
@@ -65,7 +65,7 @@ public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T>
 
     @Override
     public boolean accepts(T record) {
-        Date date = record.getRecordDate();
+        Calendar date = record.getRecordDate();
         
         if (date == null) {
             return (until == null);

@@ -20,7 +20,7 @@
 package org.shredzone.pdbconverter.pdb;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Represents the contents of a PDB database file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 524 $
  */
 public class PdbDatabase<T extends Record, U extends AppInfo> {
     public static final int ATTR_RESDB = 0x0001;
@@ -50,9 +50,9 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
     private String name;
     private int attributes;
     private int version;
-    private Date creationTime;
-    private Date modificationTime;
-    private Date backupTime;
+    private Calendar creationTime;
+    private Calendar modificationTime;
+    private Calendar backupTime;
     private int modificationNumber;
     private String type;
     private String creator;
@@ -80,21 +80,21 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
     /**
      * Gets the creation time of the database. Should not be {@code null}.
      */
-    public Date getCreationTime()       { return creationTime; }
-    public void setCreationTime(Date creationTime) { this.creationTime = creationTime; }
+    public Calendar getCreationTime()   { return creationTime; }
+    public void setCreationTime(Calendar creationTime) { this.creationTime = creationTime; }
 
     /**
      * Gets the modification time of the database. Should not be {@code null}.
      */
-    public Date getModificationTime()   { return modificationTime; }
-    public void setModificationTime(Date modificationTime) { this.modificationTime = modificationTime; }
+    public Calendar getModificationTime() { return modificationTime; }
+    public void setModificationTime(Calendar modificationTime) { this.modificationTime = modificationTime; }
 
     /**
      * Gets the backup time of the database. Is {@code null} if the database has not
      * been backed up yet.
      */
-    public Date getBackupTime()         { return backupTime; }
-    public void setBackupTime(Date backupTime) { this.backupTime = backupTime; }
+    public Calendar getBackupTime()     { return backupTime; }
+    public void setBackupTime(Calendar backupTime) { this.backupTime = backupTime; }
     
     /**
      * Gets the modification number.

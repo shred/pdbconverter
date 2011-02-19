@@ -21,7 +21,6 @@ package org.shredzone.pdbconverter.pdb.converter;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
@@ -35,7 +34,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
  * An {@link Converter} that reads Calendar records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 524 $
  * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Datebook.pm
  */
 public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppInfo> {
@@ -66,7 +65,7 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
         byte startMinute = reader.readByte();
         byte endHour = reader.readByte();
         byte endMinute = reader.readByte();
-        Date date = reader.readPackedDate();
+        Calendar date = reader.readPackedDate();
         int flags = reader.readShort();
         
         if (startHour >= 0 && startMinute >= 0) {
@@ -77,9 +76,7 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             result.setEndTime(new ScheduleRecord.ShortTime(endHour, endMinute));
         }
 
-        Calendar dateCal = Calendar.getInstance();
-        dateCal.setTime(date);
-        result.setSchedule(new ScheduleRecord.ShortDate(dateCal));
+        result.setSchedule(new ScheduleRecord.ShortDate(date));
         
         if ((flags & FLAG_ALARM) != 0) {
             int advance = reader.readByte();
@@ -111,11 +108,9 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
             }
 
             ScheduleRecord.ShortDate endDate = null;
-            Date ending = reader.readPackedDate();
+            Calendar ending = reader.readPackedDate();
             if (ending != null) {
-                Calendar endingCal = Calendar.getInstance();
-                endingCal.setTime(ending);
-                endDate = new ScheduleRecord.ShortDate(endingCal);
+                endDate = new ScheduleRecord.ShortDate(ending);
             }
             
             int frequency = reader.readUnsignedByte();
@@ -150,10 +145,8 @@ public class ScheduleConverter implements Converter<ScheduleRecord, CategoryAppI
         if ((flags & FLAG_EXCEPTIONS) != 0) {
             int numExceptions = reader.readUnsignedShort();
             for (int ix = 0; ix < numExceptions; ix++) {
-                Date excDate = reader.readPackedDate();
-                Calendar excCal = Calendar.getInstance();
-                excCal.setTime(excDate);
-                result.getExceptions().add(new ScheduleRecord.ShortDate(excCal));
+                Calendar excDate = reader.readPackedDate();
+                result.getExceptions().add(new ScheduleRecord.ShortDate(excDate));
             }
         }
         

@@ -19,22 +19,20 @@
  */
 package org.shredzone.pdbconverter.pdb.record;
 
-import java.util.Date;
-
-
+import java.util.Calendar;
 
 /**
  * An {@link Record} implementation that contains a Notepad entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 524 $
  */
 public class NotepadRecord extends AbstractRecord implements DatedRecord {
 
     private String title;
-    private Date created;
-    private Date modified;
-    private Date alarm;
+    private Calendar created;
+    private Calendar modified;
+    private Calendar alarm;
     private byte[] imagePng;
     
     /**
@@ -56,20 +54,20 @@ public class NotepadRecord extends AbstractRecord implements DatedRecord {
     /**
      * Get the date and time when the note was created.
      */
-    public Date getCreated()                    { return created; }
-    public void setCreated(Date created)        { this.created = created; }
+    public Calendar getCreated()                { return created; }
+    public void setCreated(Calendar created)    { this.created = created; }
 
     /**
      * Get the date and time when the note was modified. May be {@code null}.
      */
-    public Date getModified()                   { return modified; }
-    public void setModified(Date modified)      { this.modified = modified; }
+    public Calendar getModified()               { return modified; }
+    public void setModified(Calendar modified)  { this.modified = modified; }
 
     /**
      * Get the date and time of the notepad alarm. {@code null} when no alarm is set.
      */
-    public Date getAlarm()                      { return alarm; }
-    public void setAlarm(Date alarm)            { this.alarm = alarm; }
+    public Calendar getAlarm()                  { return alarm; }
+    public void setAlarm(Calendar alarm)        { this.alarm = alarm; }
     
     /**
      * Gets the image data. This is a PNG file.
@@ -78,7 +76,7 @@ public class NotepadRecord extends AbstractRecord implements DatedRecord {
     public void setImagePng(byte[] imagePng)    { this.imagePng = imagePng; }
     
     @Override
-    public Date getRecordDate() {
+    public Calendar getRecordDate() {
         return getModified();
     }
     

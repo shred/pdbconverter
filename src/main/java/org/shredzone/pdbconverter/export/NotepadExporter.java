@@ -35,7 +35,7 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * Writes a {@link NotepadRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
+ * @version $Revision: 524 $
  */
 public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryAppInfo> {
     
@@ -65,7 +65,7 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
                 String name = String.format("images/%04d.png", ix);
                 ZipEntry ze = new ZipEntry(name);
                 if (record.getModified() != null) {
-                    ze.setTime(record.getModified().getTime());
+                    ze.setTime(record.getModified().getTimeInMillis());
                 }
                 zos.putNextEntry(ze);
                 zos.write(record.getImagePng());
