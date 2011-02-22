@@ -56,7 +56,7 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 529 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
@@ -228,13 +228,15 @@ public class ConverterPanel extends JPanel {
                 try {
                     File infile = new File(jtInfile.getText());
                     File outfile = new File(jtOutfile.getText());
-                    
-                    Calendar fromCal = cf.create();
-                    fromCal.setTime(jxdpFrom.getDate());
-                    
+
                     ExportOptions options = new ExportOptions();
                     options.setSplit(jcSplit.isSelected());
-                    options.setFrom(fromCal);
+
+                    if (jxdpFrom.getDate() != null) {
+                        Calendar fromCal = cf.create();
+                        fromCal.setTime(jxdpFrom.getDate());
+                        options.setFrom(fromCal);
+                    }
                     
                     if (jxdpThru.getDate() != null) {
                         // Option value is exclusive, so add 1 day!
