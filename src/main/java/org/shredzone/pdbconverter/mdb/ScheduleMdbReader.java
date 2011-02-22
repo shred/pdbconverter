@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.shredzone.pdbconverter.CalendarFactory;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
@@ -44,7 +45,7 @@ import com.healthmarketscience.jackcess.Table;
  * This class reads a DateBook.mdb file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 528 $
  */
 public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, CategoryAppInfo> {
 
@@ -96,8 +97,8 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      * @return {@link Category} that was created
      */
     private Category createCategory(Map<String, Object> row) throws IOException {
-        Integer id = getColumn(row, "ID");
-        String name = getColumn(row, "Name");
+        Integer id = getColumnRequired(row, "ID");
+        String name = getColumnRequired(row, "Name");
         
         return new Category(name, id.intValue(), false);
     }
@@ -113,8 +114,8 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      */
     private ScheduleRecord createScheduleRecord(Map<String, Object> row, CategoryAppInfo ai)
     throws IOException {
-        Boolean priv = getColumn(row, "Private");
-        int catKey = Integer.parseInt((String) getColumn(row, "Category"));
+        Boolean priv = getColumn(row, "Private", Boolean.FALSE);
+        int catKey = Integer.parseInt((String) getColumnRequired(row, "Category"));
         int catIx = ai.findCategoryByKey(catKey);
 
         int attribute = priv ? AbstractRecord.ATTR_SECRET : 0;
@@ -127,18 +128,18 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
             record.setCategory(cat.getName());
         }
         
-        String note = getColumn(row, "Note");
-        if (!note.isEmpty()) {
+        String note = getColumn(row, "Note", null);
+        if (note != null && !note.isEmpty()) {
             record.setNote(note);
         }
         
-        String summary = getColumn(row, "Summary");
-        if (!summary.isEmpty()) {
+        String summary = getColumn(row, "Summary", null);
+        if (summary != null && !summary.isEmpty()) {
             record.setDescription(summary);
         }
         
-        String location = getColumn(row, "Location");
-        if (!location.isEmpty()) {
+        String location = getColumn(row, "Location", null);
+        if (location != null && !location.isEmpty()) {
             record.setLocation(location);
         }
 
@@ -158,12 +159,17 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      *            {@link ScheduleRecord} to be filled
      */
     private void convertSchedule(Map<String, Object> row, ScheduleRecord record) throws IOException {
-        String timeZone = getColumn(row, "Time Zone");
-        TimeZone tz = TimeZone.getTimeZone(timeZone);
+        TimeZone tz;
+        String timeZone = getColumn(row, "Time Zone", null);
+        if (timeZone != null) {
+            tz = TimeZone.getTimeZone(timeZone);
+        } else {
+            tz = CalendarFactory.getInstance().getTimeZone();
+        }
 
-        Calendar startTime = getDateColumn(row, "Start Time", tz);
-        Calendar endTime = getDateColumn(row, "End Time", tz);
-        Boolean untimed = getColumn(row, "Untimed");
+        Calendar startTime = getDateColumnRequired(row, "Start Time", tz);
+        Calendar endTime = getDateColumnRequired(row, "End Time", tz);
+        Boolean untimed = getColumnRequired(row, "Untimed");
         
         record.setSchedule(new ShortDate(startTime));
         
@@ -182,10 +188,10 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      *            {@link ScheduleRecord} to be filled
      */
     private void convertAlarm(Map<String, Object> row, ScheduleRecord record) throws IOException {
-        Boolean alarm = getColumn(row, "Alarm");
+        Boolean alarm = getColumn(row, "Alarm", Boolean.FALSE);
         if (alarm) {
-            Integer advance = getColumn(row, "Alarm Advance");
-            Integer unit = getColumn(row, "Alarm Unit");
+            Integer advance = getColumnRequired(row, "Alarm Advance");
+            Integer unit = getColumnRequired(row, "Alarm Unit");
 
             ScheduleRecord.Alarm.Unit alarmUnit;
             switch (unit) {
@@ -208,8 +214,8 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      *            {@link ScheduleRecord} to be filled
      */
     private void convertRepeat(Map<String, Object> row, ScheduleRecord record) throws IOException {
-        String event = getColumn(row, "Repeated Event");
-        if (event.isEmpty()) {
+        String event = getColumn(row, "Repeated Event", null);
+        if (event == null || event.isEmpty()) {
             return;
         }
         

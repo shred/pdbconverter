@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
-import org.shredzone.pdbconverter.CalendarFactory;
 
+import org.shredzone.pdbconverter.CalendarFactory;
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
@@ -36,7 +36,7 @@ import com.healthmarketscience.jackcess.Table;
  * An abstract implementation for reading MDB databases files.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 528 $
  */
 public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> implements MdbReader<T, U> {
 
@@ -73,12 +73,15 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
      *            Row that was read
      * @param column
      *            Column name
+     * @param def
+     *            A default value, may be {@code null}
      * @return Column value
      */
     @SuppressWarnings("unchecked")
-    protected <C> C getColumn(Map<String, Object> row, String column) throws IOException {
+    protected <C> C getColumn(Map<String, Object> row, String column, C def)
+    throws IOException {
         if (!row.containsKey(column)) {
-            throw new IOException("Column " + column + ": undefined");
+            return def;
         }
 
         C value;
@@ -92,7 +95,28 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
     }
 
     /**
-     * Reads a column as {@link Calendar}.
+     * Gets the value of a row's column. Throws an exception if the column did not exist.
+     * 
+     * @param <C>
+     *            expected column type
+     * @param row
+     *            Row that was read
+     * @param column
+     *            Column name
+     * @return Column value
+     */
+    protected <C> C getColumnRequired(Map<String, Object> row, String column)
+    throws IOException {
+        if (!row.containsKey(column)) {
+            throw new IOException("Column " + column + ": undefined");
+        }
+        
+        return getColumn(row, column, null);
+    }
+
+    /**
+     * Reads a column as {@link Calendar}. Throws an exception if the column did not
+     * exist.
      * 
      * @param row
      *            Row that was read
@@ -100,16 +124,13 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
      *            Column name
      * @return {@link Calendar} that was read
      */
-    protected Calendar getDateColumn(Map<String, Object> row, String column, TimeZone tz) throws IOException {
-        String value = getColumn(row, column);
+    protected Calendar getDateColumnRequired(Map<String, Object> row, String column, TimeZone tz)
+    throws IOException {
+        String value = getColumnRequired(row, column);
         
-        if (value != null) {
-            Calendar cal = cf.createWithTimeZone(tz);
-            cal.setTimeInMillis(Long.parseLong(value) * 1000L);
-            return cal;
-        } else {
-            return null;
-        }
+        Calendar cal = cf.createWithTimeZone(tz);
+        cal.setTimeInMillis(Long.parseLong(value) * 1000L);
+        return cal;
     }
 
 }
