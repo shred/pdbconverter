@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 531 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -215,9 +215,9 @@ public class PdbFile extends RandomAccessFile {
      */
     public Calendar readDate() throws IOException {
         long date = readUnsignedInt();
-        if (date != 0) {
+        if (date > 0) {
             Calendar result = cf.createPalmEpoch();
-            result.add(Calendar.SECOND, (int) date);    // TODO: Safe cast
+            result.setTimeInMillis(result.getTimeInMillis() + (date * 1000));
             return result;
         } else {
             return null;

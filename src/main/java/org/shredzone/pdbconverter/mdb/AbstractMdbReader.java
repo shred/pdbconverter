@@ -36,7 +36,7 @@ import com.healthmarketscience.jackcess.Table;
  * An abstract implementation for reading MDB databases files.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 528 $
+ * @version $Revision: 531 $
  */
 public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> implements MdbReader<T, U> {
 
@@ -122,6 +122,8 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
      *            Row that was read
      * @param column
      *            Column name
+     * @param tz
+     *            {@link TimeZone} to be used
      * @return {@link Calendar} that was read
      */
     protected Calendar getDateColumnRequired(Map<String, Object> row, String column, TimeZone tz)
