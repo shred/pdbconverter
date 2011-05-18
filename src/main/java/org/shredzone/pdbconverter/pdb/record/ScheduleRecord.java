@@ -28,7 +28,7 @@ import org.shredzone.pdbconverter.CalendarFactory;
  * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 559 $
  */
 public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
@@ -50,7 +50,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
      * @param attribute
      *            Record's attribute
      */
-    public ScheduleRecord(byte attribute) {
+    public ScheduleRecord(int attribute) {
         super(attribute);
     }
     

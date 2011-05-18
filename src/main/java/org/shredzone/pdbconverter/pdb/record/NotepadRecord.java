@@ -25,7 +25,7 @@ import java.util.Calendar;
  * An {@link Record} implementation that contains a Notepad entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 559 $
  */
 public class NotepadRecord extends AbstractRecord implements DatedRecord {
 
@@ -41,7 +41,7 @@ public class NotepadRecord extends AbstractRecord implements DatedRecord {
      * @param attribute
      *            Record attribute
      */
-    public NotepadRecord(byte attribute) {
+    public NotepadRecord(int attribute) {
         super(attribute);
     }
 

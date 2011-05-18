@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Converts a PDB record into an {@link Record} object.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 497 $
+ * @version $Revision: 559 $
  */
 public interface Converter <T extends Record, U extends AppInfo> {
 
@@ -56,7 +56,7 @@ public interface Converter <T extends Record, U extends AppInfo> {
      * @param size
      *            Size of this record, in bytes
      * @param attribute
-     *            Attributes of this record
+     *            Attributes of this record (unsigned byte)
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
      *            database is still being read. The attributes and appinfo are already
@@ -65,7 +65,7 @@ public interface Converter <T extends Record, U extends AppInfo> {
      *            map.
      * @return {@link Record} object containing the data of this record
      */
-    T convert(PdbFile reader, int record, int size, byte attribute, PdbDatabase<T, U> database)
+    T convert(PdbFile reader, int record, int size, int attribute, PdbDatabase<T, U> database)
         throws IOException;
 
     /**

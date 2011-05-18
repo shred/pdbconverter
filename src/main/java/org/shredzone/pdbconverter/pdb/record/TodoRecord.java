@@ -25,7 +25,7 @@ import java.util.Calendar;
  * A {@link Record} implementation that contains a Todo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 559 $
  */
 public class TodoRecord extends AbstractRecord implements DatedRecord {
 
@@ -41,7 +41,7 @@ public class TodoRecord extends AbstractRecord implements DatedRecord {
      * @param attribute
      *            Record attribute
      */
-    public TodoRecord(byte attribute) {
+    public TodoRecord(int attribute) {
         super(attribute);
     }
     

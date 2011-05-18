@@ -25,7 +25,7 @@ import java.util.EnumMap;
  * A {@link Record} implementation that contains an Address record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 559 $
  */
 public class AddressRecord extends AbstractRecord {
     
@@ -33,7 +33,7 @@ public class AddressRecord extends AbstractRecord {
     private EnumMap<Field, String> fields = new EnumMap<Field, String>(Field.class);
     private int displayPhone;
     
-    public AddressRecord(byte attribute) {
+    public AddressRecord(int attribute) {
         super(attribute);
     }
     

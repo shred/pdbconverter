@@ -24,7 +24,7 @@ package org.shredzone.pdbconverter.pdb.record;
  * entry. Subclasses will give detailed methods for reading the entry's content.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 559 $
  */
 public abstract class AbstractRecord implements Record {
     
@@ -33,14 +33,14 @@ public abstract class AbstractRecord implements Record {
     public static final int ATTR_DIRTY = 0x40;
     public static final int ATTR_DELETE = 0x80;
     
-    private final byte attribute;
+    private final int attribute;
     
     /**
      * Create a new Entry.
      * 
      * @param attribute Entry attributes (see ATTR constants)
      */
-    public AbstractRecord(byte attribute) {
+    public AbstractRecord(int attribute) {
         this.attribute = attribute;
     }
 

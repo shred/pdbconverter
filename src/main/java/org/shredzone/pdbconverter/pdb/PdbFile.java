@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 531 $
+ * @version $Revision: 559 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -98,10 +98,10 @@ public class PdbFile extends RandomAccessFile {
         
         // Read the entire record list
         int[] offsets = new int[records];
-        byte[] attributes = new byte[records];
+        int[] attributes = new int[records];
         for (int ix = 0; ix < records; ix++) {
             offsets[ix] = readInt();
-            attributes[ix] = readByte();
+            attributes[ix] = readUnsignedByte();
             readByte();
             readShort();
         }

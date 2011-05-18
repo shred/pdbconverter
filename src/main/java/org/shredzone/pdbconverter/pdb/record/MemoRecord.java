@@ -23,7 +23,7 @@ package org.shredzone.pdbconverter.pdb.record;
  * A {@link Record} implementation that contains a Memo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
+ * @version $Revision: 559 $
  */
 public class MemoRecord extends AbstractRecord {
 
@@ -35,7 +35,7 @@ public class MemoRecord extends AbstractRecord {
      * @param attribute
      *            Record attribute
      */
-    public MemoRecord(byte attribute) {
+    public MemoRecord(int attribute) {
         super(attribute);
     }
 
