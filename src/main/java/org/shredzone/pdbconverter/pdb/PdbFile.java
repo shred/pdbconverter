@@ -25,13 +25,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
-import org.shredzone.pdbconverter.CalendarFactory;
 
+import org.shredzone.pdbconverter.CalendarFactory;
 import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
 import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.record.AbstractRecord;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
 
@@ -39,7 +38,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
+ * @version $Revision: 563 $
  * @see http://membres.lycos.fr/microfirst/palm/pdb.html
  */
 public class PdbFile extends RandomAccessFile {
@@ -125,8 +124,7 @@ public class PdbFile extends RandomAccessFile {
         
         // Read each record
         for (int ix = 0; ix < records; ix++) {
-            if ((attributes[ix] & AbstractRecord.ATTR_DELETE) != 0 && offsets[ix] >= length()) {
-                // Ignore deleted entries
+            if (offsets[ix] >= length()) {
                 continue;
             }
             
@@ -139,7 +137,9 @@ public class PdbFile extends RandomAccessFile {
 
             seek(offsets[ix]);
             T entry = converter.convert(this, ix, size, attributes[ix], result);
-            result.getRecords().add(entry);
+            if (entry != null) {
+                result.getRecords().add(entry);
+            }
         }
         
         return result;

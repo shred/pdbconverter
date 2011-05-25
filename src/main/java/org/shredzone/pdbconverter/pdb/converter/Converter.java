@@ -30,7 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Converts a PDB record into an {@link Record} object.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
+ * @version $Revision: 563 $
  */
 public interface Converter <T extends Record, U extends AppInfo> {
 
@@ -63,7 +63,8 @@ public interface Converter <T extends Record, U extends AppInfo> {
      *            read and may be used, but the records are still incomplete. You would
      *            usually access the database to read the database name or the category
      *            map.
-     * @return {@link Record} object containing the data of this record
+     * @return {@link Record} object containing the data of this record, or {@code null}
+     *         if the raw data did not result in a record (e.g. because it was deleted).
      */
     T convert(PdbFile reader, int record, int size, int attribute, PdbDatabase<T, U> database)
         throws IOException;

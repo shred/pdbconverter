@@ -38,7 +38,7 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * An {@link Converter} that handles notepad entries.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
+ * @version $Revision: 563 $
  */
 public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInfo> {
 
@@ -57,6 +57,9 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
         long current = reader.getFilePointer();
 
         NotepadRecord result = new NotepadRecord(attribute);
+        if (result.isDelete()) {
+            return null;
+        }
         
         result.setCreated(reader.readDateTimeWords());
         result.setModified(reader.readDateTimeWords());
