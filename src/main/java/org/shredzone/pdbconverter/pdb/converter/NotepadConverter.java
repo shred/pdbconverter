@@ -19,31 +19,32 @@
  */
 package org.shredzone.pdbconverter.pdb.converter;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.PdbFile;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
 
-/*
- * This code bases on analyzing the hex dump of a single notepad file. The result might
- * be utterly broken on other notepad files, so be careful. If you get wrong results,
- * please open a bug ticket!
- * 
- * Notepad v1 files are not supported. If you need it, feel free to send a patch.
- */
-
 /**
  * An {@link Converter} that handles notepad entries.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 563 $
+ * @version $Revision: 564 $
  */
 public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInfo> {
 
     private static final int FLAG_TITLE = 0x0002;
     private static final int FLAG_ALARM = 0x0004;
+    
+    private static final int TYPE_BITMAP = 0; // Raw bitmap
+    private static final int TYPE_RLE    = 1; // Run Length Encoded bitmap
+    private static final int TYPE_PNG    = 2; // PNG file
     
     @Override
     public boolean isAcceptable(PdbDatabase<NotepadRecord, CategoryAppInfo> database) {
@@ -80,17 +81,35 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
             }
         }
         
-        reader.readUnsignedInt();           // Offset to the image's end (?)
-        reader.readUnsignedInt();           // Full image width
-        reader.readUnsignedInt();           // Full image height
-        reader.readUnsignedInt();           // Always 1 (?)
-        reader.readUnsignedInt();           // Always 2 (?)
-        reader.readUnsignedInt();           // Offset to the image's end (?)
+        reader.readUnsignedInt();                       // Offset to the image's end (?)
+        int width = (int) reader.readUnsignedInt();     // Full image width
+        int height = (int) reader.readUnsignedInt();    // Full image height
+        reader.readUnsignedInt();                       // Always 1 (?)
+        int type = (int) reader.readUnsignedInt();      // 0 = bitmap, 1 = RLE, 2 = PNG
+        reader.readUnsignedInt();                       // Offset to the image's end (?)
         
         // Read image data
         int fileSize = size - (int) (reader.getFilePointer() - current);
         byte[] pngData = new byte[fileSize];
         reader.readFully(pngData);
+        
+        // Convert image if necessary
+        switch (type) {
+            case TYPE_RLE:
+                pngData = uncompressRle(pngData);
+                // falls through...
+                
+            case TYPE_BITMAP:
+                pngData = convertToPng(width, height, pngData);
+                // falls through...
+                
+            case TYPE_PNG:
+                break;
+                
+            default:
+                throw new IOException("unable to handle notepad image type " + type + " at record " + record);
+        }
+        
         result.setImagePng(pngData);
         
         return result;
@@ -102,6 +121,71 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
         CategoryAppInfo result = new CategoryAppInfo();
         reader.readCategories(result);
         return result;
+    }
+
+    /**
+     * Uncompresses a Run Length Encoded bitmap. The compression scheme is actually very
+     * simple. The first byte gives the number of times the second byte is written (i.e.
+     * "0x06 0xC0" gives 6 times 0xC0). If the first byte is 0x00, the end of data has
+     * been reached.
+     * 
+     * @param width
+     *            Image width
+     * @param height
+     *            Image height
+     * @param rle
+     *            Run Length Encoded data
+     * @return Uncompressed raw bitmap
+     */
+    private byte[] uncompressRle(byte[] rle) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        for (int ix = 0; ix < rle.length; ix += 2) {
+            int cnt = rle[ix] & 0xFF;
+            if (cnt == 0x00) break;
+            
+            byte data = rle[ix+1];
+            while (cnt-- > 0) {
+                baos.write(data);
+            }
+        }
+        
+        baos.close();
+        return baos.toByteArray();
+    }
+
+    /**
+     * Converts a raw bitmap to a PNG file.
+     * 
+     * @param width
+     *            Image width
+     * @param height
+     *            Image height
+     * @param bitmap
+     *            Raw bitmap to be converted
+     * @return PNG file containing that bitmap
+     */
+    private byte[] convertToPng(int width, int height, byte[] bitmap) throws IOException {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+        WritableRaster raster = image.getRaster();
+        
+        // Make the width a multiple of 16 first
+        int bytesPerRow = ((((width - 1) / 16) + 1) * 16) / 8;
+        
+        for (int w = 0; w < width; w++) {
+            for (int h = 0; h < height; h++) {
+                byte data = bitmap[(h * bytesPerRow) + (w / 8)];
+                if ((data & (0x80 >> (w % 8))) == 0) {
+                    raster.setSample(w,h,0,1); 
+                }
+            }
+        }
+        
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "PNG", baos);
+        baos.close();
+        
+        return baos.toByteArray();
     }
 
 }
