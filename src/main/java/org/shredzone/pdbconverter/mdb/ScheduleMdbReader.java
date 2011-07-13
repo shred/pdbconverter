@@ -45,18 +45,9 @@ import com.healthmarketscience.jackcess.Table;
  * This class reads a DateBook.mdb file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 528 $
+ * @version $Revision: 568 $
  */
 public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, CategoryAppInfo> {
-
-    private static final Pattern P_DAILY = Pattern.compile("D(\\d+)\\s(.*)");
-    private static final Pattern P_WEEKLY = Pattern.compile("W(\\d+)\\s(\\S+)\\s(.*)");
-    private static final Pattern P_MONTHLY = Pattern.compile("M(\\d+)\\s(.*)");
-    private static final Pattern P_MD = Pattern.compile("MD(\\d+)\\s(\\d+)\\s(.*)");
-    private static final Pattern P_MP = Pattern.compile("MP(\\d+)\\s(\\d)\\+\\s(\\S+)\\s(.*)");
-    private static final Pattern P_YEARLY = Pattern.compile("YM(\\d+)\\s(\\d+)\\s(.*)");
-    private static final Pattern P_TS = Pattern.compile("(\\d{4})(\\d{2})(\\d{2})T\\d{6}Z");
-    private static final String[] WEEKDAYS = { "SU", "MO", "TU", "WE", "TH", "FR", "SA" };
 
     @Override
     public PdbDatabase<ScheduleRecord, CategoryAppInfo> read() throws IOException {
@@ -219,119 +210,154 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
             return;
         }
         
-        Mode mode = null;
-        int frequency = 0;
-        boolean[] weeklyDays = null;
-        int monthlyWeek = 0;
-        int monthlyDay = 0;
-        String repeat = null;
-        
-        Matcher m;
-        m = P_DAILY.matcher(event);
-        if (m.matches()) {
-            mode = Mode.DAILY;
-            frequency = Integer.parseInt(m.group(1));
-            repeat = m.group(2);
-        }
-        
-        m = P_WEEKLY.matcher(event);
-        if (m.matches()) {
-            mode = Mode.WEEKLY;
-            frequency = Integer.parseInt(m.group(1));
-            weeklyDays = convertWeeklyDays(m.group(2));
-            repeat = m.group(3);
-        }
-        
-        m = P_MONTHLY.matcher(event);
-        if (m.matches()) {
-            mode = Mode.MONTHLY;
-            frequency = Integer.parseInt(m.group(1));
-            repeat = m.group(2);
-        }
-        
-        m = P_MD.matcher(event);
-        if (m.matches()) {
-            mode = Mode.MONTHLY;
-            frequency = Integer.parseInt(m.group(1));
-            // m.group(2); // Day of the month, can be ignored
-            repeat = m.group(3);
-        }
-        
-        m = P_MP.matcher(event);
-        if (m.matches()) {
-            mode = Mode.MONTHLY_BY_DAY;
-            frequency = Integer.parseInt(m.group(1));
-            monthlyWeek = Integer.parseInt(m.group(2)) - 1;
-            monthlyDay = convertMonthlyDay(m.group(3));
-            repeat = m.group(4);
-        }
-        
-        m = P_YEARLY.matcher(event);
-        if (m.matches()) {
-            mode = Mode.YEARLY;
-            frequency = Integer.parseInt(m.group(1));
-            // m.group(2); // Month of the year, can be ignored
-            repeat = m.group(3);
-        }
+        RepeatConverter.convert(event, record);
+    }
 
-        ShortDate until = null;
+    /**
+     * A utility class for converting a repeating event to a {@link ScheduleRecord} entry.
+     * This class has been separated for unit test purposes.
+     */
+    public static class RepeatConverter {
+        private static final Pattern P_DAILY = Pattern.compile("D(\\d+)\\s(.*)");
+        private static final Pattern P_WEEKLY = Pattern.compile("W(\\d+)\\s(.*?)\\s(\\S+)");
+        private static final Pattern P_MONTHLY = Pattern.compile("M(\\d+)\\s(.*)");
+        private static final Pattern P_MD = Pattern.compile("MD(\\d+)\\s(\\d+)\\s(.*)");
+        private static final Pattern P_MP = Pattern.compile("MP(\\d+)\\s(\\d)\\+\\s(.*?)\\s(\\S+)");
+        private static final Pattern P_YEARLY = Pattern.compile("YM(\\d+)\\s(\\d+)\\s(.*)");
+        private static final Pattern P_TS = Pattern.compile("(\\d{4})(\\d{2})(\\d{2})T\\d{6}Z");
+        private static final String[] WEEKDAYS = { "SU", "MO", "TU", "WE", "TH", "FR", "SA" };
 
-        if (!repeat.isEmpty() && !"#0".equals(repeat)) {
-            String[] parts = repeat.split("[;,]");
-            until = convertDate(parts[0]);
-            for (int ix = 1; ix < parts.length; ix++) {
-                record.getExceptions().add(convertDate(parts[ix]));
+        private RepeatConverter() {
+            // Utility class without constructor
+        }
+        
+        /**
+         * Converts a repetition event and sets the {@link ScheduleRecord} accordingly.
+         * 
+         * @param event
+         *            Repetition event
+         * @param record
+         *            {@link ScheduleRecord} to be filled
+         */
+        public static void convert(String event, ScheduleRecord record) {
+            Mode mode = null;
+            int frequency = 0;
+            boolean[] weeklyDays = null;
+            int monthlyWeek = 0;
+            int monthlyDay = 0;
+            String repeat = null;
+
+            Matcher m;
+            m = P_DAILY.matcher(event);
+            if (m.matches()) {
+                mode = Mode.DAILY;
+                frequency = Integer.parseInt(m.group(1));
+                repeat = m.group(2);
             }
-        }
-        
-        record.setRepeat(new Repeat(mode, frequency, until, weeklyDays, monthlyWeek, monthlyDay));
-    }
 
-    /**
-     * Converts a date string to a ShortDate object. Only day, month and year is used.
-     * 
-     * @param date
-     *            Date String
-     * @return {@link ShortDate} with the given date
-     */
-    private ShortDate convertDate(String date) {
-        Matcher m = P_TS.matcher(date);
-        if (!m.matches()) {
-            return null;
-        }
-        
-        return new ShortDate(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)));
-    }
-
-    /**
-     * Convert a string of weekly days to an appropriate array.
-     * 
-     * @param days
-     *            String containing weekly days.
-     * @return Array with the bits set accordingly
-     */
-    private boolean[] convertWeeklyDays(String days) {
-        boolean[] result = new boolean[7];
-        for (int ix = 0; ix < 7; ix++) {
-            result[ix] = days.contains(WEEKDAYS[ix]);
-        }
-        return result;
-    }
-
-    /**
-     * Converts a monthly weekday to its index.
-     * 
-     * @param day
-     *            Monthly weekday
-     * @return Weekday index
-     */
-    private int convertMonthlyDay(String day) {
-        for (int ix = 0; ix < 7; ix++) {
-            if (day.contains(WEEKDAYS[ix])) {
-                return ix;
+            m = P_WEEKLY.matcher(event);
+            if (m.matches()) {
+                mode = Mode.WEEKLY;
+                frequency = Integer.parseInt(m.group(1));
+                weeklyDays = convertWeeklyDays(m.group(2));
+                repeat = m.group(3);
             }
+
+            m = P_MONTHLY.matcher(event);
+            if (m.matches()) {
+                mode = Mode.MONTHLY;
+                frequency = Integer.parseInt(m.group(1));
+                repeat = m.group(2);
+            }
+
+            m = P_MD.matcher(event);
+            if (m.matches()) {
+                mode = Mode.MONTHLY;
+                frequency = Integer.parseInt(m.group(1));
+                // m.group(2); // Day of the month, can be ignored
+                repeat = m.group(3);
+            }
+
+            m = P_MP.matcher(event);
+            if (m.matches()) {
+                mode = Mode.MONTHLY_BY_DAY;
+                frequency = Integer.parseInt(m.group(1));
+                monthlyWeek = Integer.parseInt(m.group(2)) - 1;
+                monthlyDay = convertMonthlyDay(m.group(3));
+                repeat = m.group(4);
+            }
+
+            m = P_YEARLY.matcher(event);
+            if (m.matches()) {
+                mode = Mode.YEARLY;
+                frequency = Integer.parseInt(m.group(1));
+                // m.group(2); // Month of the year, can be ignored
+                repeat = m.group(3);
+            }
+
+            ShortDate until = null;
+
+            if (!repeat.isEmpty() && !"#0".equals(repeat)) {
+                String[] parts = repeat.split("[;,]");
+                until = convertDate(parts[0]);
+                for (int ix = 1; ix < parts.length; ix++) {
+                    record.getExceptions().add(convertDate(parts[ix]));
+                }
+            }
+
+            record.setRepeat(new Repeat(mode, frequency, until, weeklyDays, monthlyWeek, monthlyDay));
         }
-        return -1;
+        
+        /**
+         * Convert a string of weekly days to an appropriate array.
+         * 
+         * @param days
+         *            String containing weekly days.
+         * @return Array with the bits set accordingly
+         */
+        public static boolean[] convertWeeklyDays(String days) {
+            String daysUc = days.toUpperCase();
+            
+            boolean[] result = new boolean[7];
+            for (int ix = 0; ix < 7; ix++) {
+                result[ix] = daysUc.contains(WEEKDAYS[ix]);
+            }
+            return result;
+        }
+
+        /**
+         * Converts a monthly weekday to its index.
+         * 
+         * @param day
+         *            Monthly weekday
+         * @return Weekday index
+         */
+        public static int convertMonthlyDay(String day) {
+            String dayUc = day.toUpperCase().trim();
+
+            for (int ix = 0; ix < 7; ix++) {
+                if (dayUc.equals(WEEKDAYS[ix])) {
+                    return ix;
+                }
+            }
+            return -1;
+        }
+    
+        /**
+         * Converts a date string to a ShortDate object. Only day, month and year is used.
+         * 
+         * @param date
+         *            Date String
+         * @return {@link ShortDate} with the given date
+         */
+        public static ShortDate convertDate(String date) {
+            Matcher m = P_TS.matcher(date);
+            if (!m.matches()) {
+                return null;
+            }
+
+            return new ShortDate(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)));
+        }
     }
 
 }
