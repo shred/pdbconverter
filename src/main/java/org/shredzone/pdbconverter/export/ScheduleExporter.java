@@ -72,7 +72,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
+ * @version $Revision: 572 $
  * @see http://wiki.modularity.net.au/ical4j/
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
@@ -235,17 +235,18 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
     private void setRepeat(VEvent event, ScheduleRecord schedule) {
         Repeat repeat = schedule.getRepeat();
         if (repeat != null) {
-            DateTime until = null;
+            Date until = null;
             if (repeat.getUntil() != null) {
                 ShortTime endTime = schedule.getEndTime();
                 if (endTime != null) {
-                    until = new DateTime(convertDateTime(repeat.getUntil(), endTime).getTime());
+                    DateTime untilTime = new DateTime(convertDateTime(repeat.getUntil(), endTime).getTime());
+                    untilTime.setUtc(true);
+                    until = untilTime;
                 } else {
                     Calendar calUntil = convertDate(repeat.getUntil());
                     calUntil.add(Calendar.DATE, 1);
-                    until = new DateTime(calUntil.getTime());
+                    until = new Date(calUntil.getTime());
                 }
-                until.setUtc(true);
             }
 
             Recur recur = null;
