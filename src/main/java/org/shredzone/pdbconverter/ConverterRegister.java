@@ -33,7 +33,7 @@ import org.shredzone.pdbconverter.handler.ZipHandler;
  * A register of all available {@link ExportHandler}.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
+ * @version $Revision: 575 $
  */
 public final class ConverterRegister {
     
@@ -65,7 +65,7 @@ public final class ConverterRegister {
     /**
      * Finds the {@link ExportHandler} for the given converter name.
      * 
-     * @param converter
+     * @param name
      *            Converter name
      * @return {@link ExportHandler} or {@code null} if there is none.
      */

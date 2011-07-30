@@ -72,8 +72,8 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 572 $
- * @see http://wiki.modularity.net.au/ical4j/
+ * @version $Revision: 575 $
+ * @see <a href="http://wiki.modularity.net.au/ical4j/">ical4j</a>
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
     

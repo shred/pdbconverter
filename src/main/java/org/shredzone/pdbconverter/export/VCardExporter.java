@@ -41,8 +41,8 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * result may be invalid and data is lost.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
- * @see http://tools.ietf.org/html/rfc2426
+ * @version $Revision: 575 $
+ * @see <a href="http://tools.ietf.org/html/rfc2426">RFC 2426</a>
  */
 public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
 

@@ -30,8 +30,8 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * A {@link Converter} that reads Address records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 563 $
- * @see http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Address.pm
+ * @version $Revision: 575 $
+ * @see <a href="http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Address.pm">Palm::Address</a>
  */
 public class AddressConverter implements Converter<AddressRecord, AddressAppInfo> {
 

@@ -39,7 +39,7 @@
       <item name="Project Management" href="http://www.shredzone.org/projects/show/pdbconverter"/>
     </menu>
     <menu name="Download">
-      <item name="Download" href="http://www.shredzone.org/projects/list_files/pdbconverter"/>
+      <item name="Download" href="http://www.shredzone.org/projects/pdbconverter/files"/>
     </menu>
     <menu ref="reports"/>
   </body>

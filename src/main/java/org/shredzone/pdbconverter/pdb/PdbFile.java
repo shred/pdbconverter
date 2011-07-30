@@ -38,8 +38,8 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Opens a PDB file and gives access to its contents.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 563 $
- * @see http://membres.lycos.fr/microfirst/palm/pdb.html
+ * @version $Revision: 575 $
+ * @see <a href="http://membres.multimania.fr/microfirst/palm/pdb.html">The Pilot Record Database Format</a>
  */
 public class PdbFile extends RandomAccessFile {
 

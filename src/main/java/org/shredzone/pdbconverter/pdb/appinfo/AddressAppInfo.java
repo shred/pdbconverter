@@ -27,7 +27,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * A {@link CategoryAppInfo} with more details about the {@link AddressRecord}.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
+ * @version $Revision: 575 $
  */
 public class AddressAppInfo extends CategoryAppInfo {
 
@@ -39,7 +39,7 @@ public class AddressAppInfo extends CategoryAppInfo {
     /**
      * Gets the label text for a label.
      * 
-     * @param label
+     * @param field
      *            Label to get the label text from
      * @return Label text of that label
      */
@@ -50,7 +50,7 @@ public class AddressAppInfo extends CategoryAppInfo {
      * Gets the country code (as ISO 3166-1-alpha-2 code). {@code null} if the appinfo
      * country code was unknown.
      * 
-     * @see http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html
+     * @see <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">ISO 3166 Code Lists</a>
      */
     public String getCountry()                  { return country; }
     public void setCountry(String country)      { this.country = country; }

@@ -39,7 +39,7 @@ import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
  * any other XML writer.
  * 
  * @author Richard "Shred" Körber
- * @version $Revision: 530 $
+ * @version $Revision: 575 $
  */
 public class XmlHelper {
     
@@ -147,7 +147,7 @@ public class XmlHelper {
      * @param date
      *            Calendar date to be written
      * @return {@code this}
-     * @see http://www.ietf.org/rfc/rfc3339.txt
+     * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">RFC 3339</a>
      */
     public XmlHelper writeDate(String key, Calendar date) throws IOException {
         startElement(key);
