@@ -32,6 +32,18 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <keystore>${basedir}/.keystore</keystore>
+                    <alias>shredzone</alias>
+                    <storepass>secret</storepass>
+                    <dname>cn=shredzone.org, o=shredzone, c=DE</dname>
+                    <validity>3650</validity>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>webstart-maven-plugin</artifactId>
                 <version>1.0-beta-5</version>
                 <executions>
@@ -53,8 +65,11 @@
                         <Trusted-Library>true</Trusted-Library>
                     </updateManifestEntries>
                     <sign>
+                        <!-- Create keystore with mvn keytool:generateKeyPair -->
+                        <keystore>${basedir}/.keystore</keystore>
                         <alias>shredzone</alias>
                         <storepass>secret</storepass>
+                        <verify>true</verify>
                     </sign>
                     <pack200>
                         <enabled>true</enabled>
