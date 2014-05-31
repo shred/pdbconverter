@@ -71,9 +71,6 @@
                         <storepass>secret</storepass>
                         <verify>true</verify>
                     </sign>
-                    <pack200>
-                        <enabled>true</enabled>
-                    </pack200>
                     <gzip>true</gzip>
                     <verbose>false</verbose>
                     <libPath>lib</libPath>
