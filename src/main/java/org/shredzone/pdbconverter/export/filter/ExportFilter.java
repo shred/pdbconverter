@@ -25,17 +25,16 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * A filter tells if a {@link Record} is accepted.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
  */
 public interface ExportFilter<T extends Record> {
 
     /**
      * Checks if the filter accepts the {@link Record}.
-     * 
+     *
      * @param record
      *            {@link Record} that is checked
      * @return {@code true}: Filter accepts this {@link Record}
      */
     boolean accepts(T record);
-    
+
 }

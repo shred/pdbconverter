@@ -24,9 +24,8 @@ import java.util.List;
 
 /**
  * A standard {@link AppInfo} container that contains a list of category names.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision:$
  */
 public class CategoryAppInfo extends AppInfo {
 
@@ -39,7 +38,7 @@ public class CategoryAppInfo extends AppInfo {
 
     /**
      * Finds a {@link Category} by its index.
-     * 
+     *
      * @param index
      *            Category index
      * @return {@link Category} or {@code null}
@@ -47,10 +46,10 @@ public class CategoryAppInfo extends AppInfo {
     public Category getCategoryByIndex(int index) {
         return categories.get(index);
     }
-    
+
     /**
      * Finds a {@link Category} by its key.
-     * 
+     *
      * @param key
      *            Category key
      * @return {@link Category} or {@code null}
@@ -66,7 +65,7 @@ public class CategoryAppInfo extends AppInfo {
 
     /**
      * Finds a {@link Category} index by the category key.
-     * 
+     *
      * @param key
      *            Category key
      * @return Index of that category, or -1 if there was none with that key.
@@ -78,13 +77,13 @@ public class CategoryAppInfo extends AppInfo {
                 return ix;
             }
         }
-        
+
         return -1;
     }
 
     /**
      * Finds a {@link Category} index by the category name.
-     * 
+     *
      * @param name
      *            Category name
      * @return Index of that category, or -1 if there was none with that name.
@@ -96,7 +95,7 @@ public class CategoryAppInfo extends AppInfo {
                 return ix;
             }
         }
-        
+
         return -1;
     }
 
@@ -107,21 +106,21 @@ public class CategoryAppInfo extends AppInfo {
         private final String name;
         private final int key;
         private final boolean renamed;
-        
+
         public Category(String name, int key, boolean renamed) {
             this.name = name;
             this.key = key;
             this.renamed = renamed;
         }
-        
+
         public String getName()                     { return name; }
         public int getKey()                         { return key; }
         public boolean isRenamed()                  { return renamed; }
-        
+
         @Override
         public String toString() {
             return name + " (" + key + ")";
         }
     }
-    
+
 }

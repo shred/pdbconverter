@@ -43,7 +43,6 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Abstract superclass for {@link Category} exporters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
  */
 public abstract class AbstractCategoryExportHandler<T extends Record, U extends CategoryAppInfo>
 implements ExportHandler {
@@ -52,17 +51,17 @@ implements ExportHandler {
     @Override
     public void export(File infile, File outfile, ExportOptions options) throws IOException {
         PdbDatabase<T, U> database = readDatabase(infile);
-        
+
         ExportFilter<T> filter = createExportFilter(database, options);
-        
+
         if (options.isSplit()) {
             Set<String> catnameSet = new HashSet<String>();
-            
+
             List<Category> categories = database.getAppInfo().getCategories();
             for (int ix = 0; ix < categories.size(); ix++) {
                 Category cat = categories.get(ix);
                 if (cat == null) continue;
-                
+
                 ExportFilter<T> catFilter;
                 if (filter != null) {
                     ExportFilter<T>[] filterChain = new ExportFilter[2];
@@ -72,14 +71,14 @@ implements ExportHandler {
                 } else {
                     catFilter = new CategoryExportFilter<T>(ix);
                 }
-                
+
                 File catfile = computeFilename(outfile, cat, catnameSet);
                 writeOutputFile(catfile, database, catFilter);
             }
 
         } else {
             writeOutputFile(outfile, database, filter);
-        
+
         }
     }
 
@@ -91,14 +90,14 @@ implements ExportHandler {
         if (options.getCategory() != null) {
             filterList.add(new CategoryExportFilter<T>(database.getAppInfo(), options.getCategory()));
         }
-        
+
         if (options.getFrom() != null || options.getUntil() != null) {
             // This is a little ugly since DatedExportFilter only accepts DatedRecords.
             // Anyhow this cannot be checked at compile time in this generic class.
             // We will rely on a ClassCastException at runtime.
             filterList.add(new DatedExportFilter(options.getFrom(), options.getUntil()));
         }
-        
+
         if (filterList.isEmpty()) {
             return null;
         } else if (filterList.size() == 1) {
@@ -107,13 +106,13 @@ implements ExportHandler {
             return new ChainedExportFilter<T>(filterList.toArray(new ExportFilter[filterList.size()]));
         }
     }
-    
+
     /**
      * Computes a single file name for the split option. It appends the category name to
      * the file name, after escaping characters that should not occur in file names. If
      * the file name was already used (e.g. for two categories with the same name), the
      * category key is also appended.
-     * 
+     *
      * @param outfile
      *            Base output file name
      * @param category
@@ -125,13 +124,13 @@ implements ExportHandler {
     private File computeFilename(File outfile, Category category, Set<String> catnameSet) {
         File path = outfile.getParentFile();
         String filename = outfile.getName();
-        
+
         String catname = category.getName();
         catname = catname.replaceAll("(\\\\|\\/|\\.|\\:|\\$|\\s)+", "_");
         if (!catnameSet.add(catname)) {
             catname = catname + '-' + category.getKey();
         }
-        
+
         int pos = filename.lastIndexOf('.');
         if (pos >= 0) {
             String suffix = (pos + 1 < filename.length() ? filename.substring(pos + 1) : "");
@@ -139,13 +138,13 @@ implements ExportHandler {
         } else {
             filename = filename + '-' + catname;
         }
-        
+
         return new File(path, filename);
     }
-    
+
     /**
      * Writes the database to the output file.
-     * 
+     *
      * @param outfile
      *            output file to write to
      * @param database
@@ -170,7 +169,7 @@ implements ExportHandler {
 
     /**
      * Reads the PdbDatabase from the given infile.
-     * 
+     *
      * @param infile
      *            Infile
      * @return PdbDatabase that was read
@@ -184,17 +183,17 @@ implements ExportHandler {
             if (pdb != null) pdb.close();
         }
     }
-    
+
     /**
      * Creates the {@link Converter} that converts the database file.
-     * 
+     *
      * @return {@link Converter}
      */
     protected abstract Converter<T, U> createConverter();
-    
+
     /**
      * Creates the {@link Exporter} that writes the output file.
-     * 
+     *
      * @return {@link Exporter}
      */
     protected abstract Exporter<T, U> createExporter();

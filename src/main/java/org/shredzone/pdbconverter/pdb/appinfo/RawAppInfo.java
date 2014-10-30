@@ -21,9 +21,8 @@ package org.shredzone.pdbconverter.pdb.appinfo;
 
 /**
  * {@link AppInfo} implementation that stores the raw appinfo area.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 356 $
  */
 public class RawAppInfo extends AppInfo {
 
@@ -31,7 +30,7 @@ public class RawAppInfo extends AppInfo {
 
     /**
      * Creates a new {@link RawAppInfo}.
-     * 
+     *
      * @param data
      *            raw appinfo data to be stored
      */
@@ -41,7 +40,7 @@ public class RawAppInfo extends AppInfo {
 
     /**
      * Gets the raw appinfo.
-     * 
+     *
      * @return raw appinfo
      */
     public byte[] getRawAppInfo() {

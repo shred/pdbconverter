@@ -25,10 +25,9 @@ import java.util.Calendar;
  * Data transport object for export parameters.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 public class ExportOptions {
-    
+
     private boolean split;
     private String category;
     private Calendar from;
@@ -51,11 +50,11 @@ public class ExportOptions {
      */
     public Calendar getFrom()               { return from; }
     public void setFrom(Calendar from)      { this.from = from; }
-    
+
     /**
      * Date range, ending at (exclusive). {@code null} means there is no date set.
      */
     public Calendar getUntil()              { return until; }
     public void setUntil(Calendar until)    { this.until = until; }
-    
+
 }

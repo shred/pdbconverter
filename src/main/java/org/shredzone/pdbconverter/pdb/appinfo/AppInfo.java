@@ -21,10 +21,9 @@ package org.shredzone.pdbconverter.pdb.appinfo;
 
 /**
  * Superclass for all AppInfo containers.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision:$
  */
 public abstract class AppInfo {
-    
+
 }

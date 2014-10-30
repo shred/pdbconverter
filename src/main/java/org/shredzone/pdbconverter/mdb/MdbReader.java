@@ -30,13 +30,12 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Interface for a reading MDB files.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
  */
 public interface MdbReader<T extends Record, U extends AppInfo> {
 
     /**
      * Opens an MDB database.
-     * 
+     *
      * @param mdbFile
      *            MDB database file to open
      */
@@ -49,9 +48,9 @@ public interface MdbReader<T extends Record, U extends AppInfo> {
 
     /**
      * Reads the MDB database as {@link PdbDatabase}.
-     * 
+     *
      * @return {@link PdbDatabase} that was read.
      */
     PdbDatabase<T, U> read() throws IOException;
-    
+
 }

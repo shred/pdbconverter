@@ -37,23 +37,22 @@ import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
  * <p>
  * This class uses XMLWriter from jshred-util, but can easily be changed to use
  * any other XML writer.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 575 $
  */
 public class XmlHelper {
-    
+
     private final SimpleDateFormat dateFmt;
     private XMLWriter xw;
-    
+
     public XmlHelper() {
         dateFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         dateFmt.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
-    
+
     /**
      * Opens the XML writer for the given output stream. UTF-8 is used.
-     * 
+     *
      * @param out
      *            {@link OutputStream} to write to
      * @param tag
@@ -72,7 +71,7 @@ public class XmlHelper {
 
     /**
      * Starts an element.
-     * 
+     *
      * @param tag
      *            Element name
      * @return {@code this}
@@ -84,7 +83,7 @@ public class XmlHelper {
 
     /**
      * Starts an element with the given attributes.
-     * 
+     *
      * @param tag
      *            Element name
      * @param attr
@@ -102,7 +101,7 @@ public class XmlHelper {
 
     /**
      * Writes the content of an element.
-     * 
+     *
      * @param content
      *            Content to be written
      * @return {@code this}
@@ -114,7 +113,7 @@ public class XmlHelper {
 
     /**
      * Ends the last element on the element stack.
-     * 
+     *
      * @return {@code this}
      */
     public XmlHelper endElement() throws IOException {
@@ -124,7 +123,7 @@ public class XmlHelper {
 
     /**
      * Writes a value as content of a container named key.
-     * 
+     *
      * @param key
      *            Container key
      * @param value
@@ -141,7 +140,7 @@ public class XmlHelper {
     /**
      * Writes a date as content of a container named key. The date and time is
      * properly RFC 3339 formatted.
-     * 
+     *
      * @param key
      *            Container key
      * @param date
@@ -158,7 +157,7 @@ public class XmlHelper {
 
     /**
      * Writes a formatted string as content of a container named key.
-     * 
+     *
      * @param key
      *            Container key
      * @param format
@@ -176,7 +175,7 @@ public class XmlHelper {
 
     /**
      * Writes the informal part of the given database.
-     * 
+     *
      * @param database
      *            Database to be written
      * @return {@code this}
@@ -192,10 +191,10 @@ public class XmlHelper {
         }
         return this;
     }
-    
+
     /**
      * Writes all categories in a {@link CategoryAppInfo}.
-     * 
+     *
      * @param database
      *            Database to be written
      * @return {@code this}
@@ -205,7 +204,7 @@ public class XmlHelper {
         startElement("categories");
 
         CategoryAppInfo cai = database.getAppInfo();
-        
+
         List<Category> categories = cai.getCategories();
         for (int ix = 0; ix < categories.size(); ix++) {
             Category cat = categories.get(ix);
@@ -215,11 +214,11 @@ public class XmlHelper {
                 endElement();
             }
         }
-        
+
         endElement();
         return this;
     }
-    
+
     /**
      * Closes the writer. Note that the {@link OutputStream} will not be closed!
      */

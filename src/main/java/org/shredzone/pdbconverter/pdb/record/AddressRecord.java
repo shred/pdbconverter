@@ -25,22 +25,21 @@ import java.util.EnumMap;
  * A {@link Record} implementation that contains an Address record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public class AddressRecord extends AbstractRecord {
-    
+
     private EnumMap<Field, Label> labels = new EnumMap<Field, Label>(Field.class);
     private EnumMap<Field, String> fields = new EnumMap<Field, String>(Field.class);
     private int displayPhone;
-    
+
     public AddressRecord(int attribute) {
         super(attribute);
     }
-    
+
     /**
      * Gets the value of a field. May be {@code null} when that field was not
      * set.
-     * 
+     *
      * @param field
      *            Field name
      * @return value
@@ -51,7 +50,7 @@ public class AddressRecord extends AbstractRecord {
     /**
      * Gets the label of a field. May be {@code null} when that field was not
      * set.
-     * 
+     *
      * @param field
      *            Field name
      * @return Label of that field
@@ -64,19 +63,19 @@ public class AddressRecord extends AbstractRecord {
      */
     public int getDisplayPhone()                      { return displayPhone; }
     public void setDisplayPhone(int displayPhone )    { this.displayPhone = displayPhone; }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Address:[").append("display=").append(displayPhone);
-        
+
         for (Field field : Field.values()) {
             String value = getField(field);
             if (value != null) {
                 sb.append(' ').append(getLabel(field)).append("='").append(value).append('\'');
             }
         }
-        
+
         sb.append(']');
         return sb.toString();
     }
@@ -99,5 +98,5 @@ public class AddressRecord extends AbstractRecord {
         ADDRESS, CITY, STATE, ZIP, COUNTRY, TITLE, CUSTOM1, CUSTOM2, CUSTOM3, CUSTOM4,
         NOTE, PHONE6, PHONE7, PHONE8,
     }
-    
+
 }

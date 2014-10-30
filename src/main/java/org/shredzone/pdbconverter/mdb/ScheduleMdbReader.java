@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.shredzone.pdbconverter.CalendarFactory;
 
+import org.shredzone.pdbconverter.CalendarFactory;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
@@ -45,44 +45,43 @@ import com.healthmarketscience.jackcess.Table;
  * This class reads a DateBook.mdb file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 568 $
  */
 public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, CategoryAppInfo> {
 
     @Override
     public PdbDatabase<ScheduleRecord, CategoryAppInfo> read() throws IOException {
         PdbDatabase<ScheduleRecord, CategoryAppInfo> result = new PdbDatabase<ScheduleRecord, CategoryAppInfo>();
-        
+
         CategoryAppInfo ai = createAppInfo();
         result.setAppInfo(ai);
-        
+
         Table table = getTable("Main");
         for(Map<String, Object> row : table) {
             result.getRecords().add(createScheduleRecord(row, ai));
         }
-        
+
         return result;
     }
-    
+
     /**
      * Creates an {@link CategoryAppInfo}.
-     * 
+     *
      * @return {@link CategoryAppInfo} that was created.
      */
     private CategoryAppInfo createAppInfo() throws IOException {
         CategoryAppInfo ai = new CategoryAppInfo();
-        
+
         Table table = getTable("Category");
         for(Map<String, Object> row : table) {
             ai.getCategories().add(createCategory(row));
         }
-        
+
         return ai;
     }
 
     /**
      * Creates a {@link Category} from the given database row.
-     * 
+     *
      * @param row
      *            Database row
      * @return {@link Category} that was created
@@ -90,13 +89,13 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
     private Category createCategory(Map<String, Object> row) throws IOException {
         Integer id = getColumnRequired(row, "ID");
         String name = getColumnRequired(row, "Name");
-        
+
         return new Category(name, id.intValue(), false);
     }
-    
+
     /**
      * Creates a {@link ScheduleRecord} from the given database row.
-     * 
+     *
      * @param row
      *            Database row
      * @param ai
@@ -111,24 +110,24 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
 
         int attribute = priv ? AbstractRecord.ATTR_SECRET : 0;
         attribute |= (catIx & 0x0F);
-        
+
         ScheduleRecord record = new ScheduleRecord((byte) attribute);
-        
+
         Category cat = ai.getCategoryByKey(catKey);
         if (cat != null) {
             record.setCategory(cat.getName());
         }
-        
+
         String note = getColumn(row, "Note", null);
         if (note != null && !note.isEmpty()) {
             record.setNote(note);
         }
-        
+
         String summary = getColumn(row, "Summary", null);
         if (summary != null && !summary.isEmpty()) {
             record.setDescription(summary);
         }
-        
+
         String location = getColumn(row, "Location", null);
         if (location != null && !location.isEmpty()) {
             record.setLocation(location);
@@ -137,13 +136,13 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         convertSchedule(row, record);
         convertAlarm(row, record);
         convertRepeat(row, record);
-            
+
         return record;
     }
 
     /**
      * Converts a schedule and sets the ScheduleRecord accordingly.
-     * 
+     *
      * @param row
      *            Database row
      * @param record
@@ -161,18 +160,18 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         Calendar startTime = getDateColumnRequired(row, "Start Time", tz);
         Calendar endTime = getDateColumnRequired(row, "End Time", tz);
         Boolean untimed = getColumnRequired(row, "Untimed");
-        
+
         record.setSchedule(new ShortDate(startTime));
-        
+
         if (!untimed) {
             record.setStartTime(new ShortTime(startTime));
             record.setEndTime(new ShortTime(endTime));
         }
     }
-    
+
     /**
      * Converts an alarm and sets the ScheduleRecord accordingly.
-     * 
+     *
      * @param row
      *            Database row
      * @param record
@@ -191,14 +190,14 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
                 case 2: alarmUnit = Unit.DAYS; break;
                 default: throw new IOException("Unknown alarm unit: " + unit);
             }
-            
+
             record.setAlarm(new Alarm(advance, alarmUnit));
         }
     }
-    
+
     /**
      * Converts a repetition and sets the ScheduleRecord accordingly.
-     * 
+     *
      * @param row
      *            Database row
      * @param record
@@ -209,7 +208,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         if (event == null || event.isEmpty()) {
             return;
         }
-        
+
         RepeatConverter.convert(event, record);
     }
 
@@ -230,10 +229,10 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         private RepeatConverter() {
             // Utility class without constructor
         }
-        
+
         /**
          * Converts a repetition event and sets the {@link ScheduleRecord} accordingly.
-         * 
+         *
          * @param event
          *            Repetition event
          * @param record
@@ -307,17 +306,17 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
 
             record.setRepeat(new Repeat(mode, frequency, until, weeklyDays, monthlyWeek, monthlyDay));
         }
-        
+
         /**
          * Convert a string of weekly days to an appropriate array.
-         * 
+         *
          * @param days
          *            String containing weekly days.
          * @return Array with the bits set accordingly
          */
         public static boolean[] convertWeeklyDays(String days) {
             String daysUc = days.toUpperCase();
-            
+
             boolean[] result = new boolean[7];
             for (int ix = 0; ix < 7; ix++) {
                 result[ix] = daysUc.contains(WEEKDAYS[ix]);
@@ -327,7 +326,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
 
         /**
          * Converts a monthly weekday to its index.
-         * 
+         *
          * @param day
          *            Monthly weekday
          * @return Weekday index
@@ -342,10 +341,10 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
             }
             return -1;
         }
-    
+
         /**
          * Converts a date string to a ShortDate object. Only day, month and year is used.
-         * 
+         *
          * @param date
          *            Date String
          * @return {@link ShortDate} with the given date

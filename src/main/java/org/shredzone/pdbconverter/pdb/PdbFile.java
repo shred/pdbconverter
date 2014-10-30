@@ -36,21 +36,20 @@ import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
  * Opens a PDB file and gives access to its contents.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 575 $
  * @see <a href="http://membres.multimania.fr/microfirst/palm/pdb.html">The Pilot Record Database Format</a>
  */
 public class PdbFile extends RandomAccessFile {
 
     private static final String CHARSET = "iso-8859-1";
     private static final int NUM_CATEGORIES = 16;
-    
+
     private CalendarFactory cf = CalendarFactory.getInstance();
-    
+
     /**
      * Creates a new {@link PdbFile} for the given {@link File}.
-     * 
+     *
      * @param file
      *            {@link File} to be opened
      * @throws FileNotFoundException
@@ -62,7 +61,7 @@ public class PdbFile extends RandomAccessFile {
     /**
      * Reads the entire database file and returns a {@link PdbDatabase}. You usually want
      * to invoke this method, as the other methods are just helpers.
-     * 
+     *
      * @param <T>
      *            {@link Record} subclass the database shall consist of
      * @param converter
@@ -77,7 +76,7 @@ public class PdbFile extends RandomAccessFile {
     public <T extends Record, U extends AppInfo> PdbDatabase<T, U> readDatabase(Converter<T, U> converter)
     throws IOException {
         PdbDatabase<T, U> result = new PdbDatabase<T, U>();
-    
+
         // Read the database header
         seek(0);
         result.setName(readTerminatedFixedString(32));
@@ -94,7 +93,7 @@ public class PdbFile extends RandomAccessFile {
         readInt();                              // Unique ID seed
         readInt();                              // Next index
         int records = readShort();
-        
+
         // Read the entire record list
         int[] offsets = new int[records];
         int[] attributes = new int[records];
@@ -104,12 +103,12 @@ public class PdbFile extends RandomAccessFile {
             readByte();
             readShort();
         }
-        
+
         // Ask converter if it accepts the content
         if (!converter.isAcceptable(result)) {
             throw new IOException("Wrong database format");
         }
-        
+
         // Read appInfo if available
         if (appInfoPos > 0) {
             int endPos = (records > 0) ? offsets[0] : (int) length();
@@ -117,17 +116,17 @@ public class PdbFile extends RandomAccessFile {
                 endPos = sortInfoPos;
             }
             int size = endPos - appInfoPos;
-            
+
             seek(appInfoPos);
             result.setAppInfo(converter.convertAppInfo(this, size, result));
         }
-        
+
         // Read each record
         for (int ix = 0; ix < records; ix++) {
             if (offsets[ix] >= length()) {
                 continue;
             }
-            
+
             int size;
             if (ix < records - 1) {
                 size = offsets[ix + 1] - offsets[ix];
@@ -141,13 +140,13 @@ public class PdbFile extends RandomAccessFile {
                 result.getRecords().add(entry);
             }
         }
-        
+
         return result;
     }
 
     /**
      * Reads a string of a fixed length, not null terminated.
-     * 
+     *
      * @param length
      *            The length of the string
      * @return String that was read
@@ -162,7 +161,7 @@ public class PdbFile extends RandomAccessFile {
      * Reads a string of a fixed length that is null terminated. The given number of bytes
      * are always read, but the everything including and after the terminator character is
      * ignored.
-     * 
+     *
      * @param length
      *            The length of the string
      * @return String that was read
@@ -182,24 +181,24 @@ public class PdbFile extends RandomAccessFile {
 
     /**
      * Reads a string of a variable length that is null terminated.
-     * 
+     *
      * @return String that was read
      */
     public String readTerminatedString() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
+
         while(true) {
             int ch = readByte();
             if (ch == 0) break;
             baos.write(ch);
         }
-        
+
         return convertSpecialChars(baos.toString(CHARSET));
     }
-    
+
     /**
      * Reads an unsigned integer.
-     * 
+     *
      * @return Unsigned integer that was read
      */
     public long readUnsignedInt() throws IOException {
@@ -207,10 +206,10 @@ public class PdbFile extends RandomAccessFile {
         int lsb = readUnsignedShort();
         return ((long) msb) << 16 | lsb;
     }
-    
+
     /**
      * Reads a PalmOS date.
-     * 
+     *
      * @return Calendar that was read. May be {@code null} if no date was set.
      */
     public Calendar readDate() throws IOException {
@@ -246,10 +245,10 @@ public class PdbFile extends RandomAccessFile {
         cal.set(year, month - 1, day);
         return cal;
     }
-    
+
     /**
      * Reads a PalmOS date and time that is stored in seven words.
-     * 
+     *
      * @return Calendar that was read
      */
     public Calendar readDateTimeWords() throws IOException {
@@ -260,7 +259,7 @@ public class PdbFile extends RandomAccessFile {
         int month  = readUnsignedShort();   // 1..12
         int year   = readUnsignedShort();   // 4 digits
         readUnsignedShort();                // day of week, to be ignored...
-        
+
         Calendar cal = cf.create();
         cal.clear();
         cal.set(year, month - 1, day, hour, minute, second);
@@ -271,7 +270,7 @@ public class PdbFile extends RandomAccessFile {
      * Reads the categories from a standard appinfo area and fills them into a
      * {@link CategoryAppInfo} object. After invocation, the file pointer points after the
      * category part, where further application information may be stored.
-     * 
+     *
      * @param appInfo
      *            {@link CategoryAppInfo} where the categories are stored.
      * @return Bytes that were actually read from the appinfo area. The file pointer is
@@ -281,7 +280,7 @@ public class PdbFile extends RandomAccessFile {
     public int readCategories(CategoryAppInfo appInfo)
     throws IOException {
         long startPos = getFilePointer();
-        
+
         // Read the rename flags
         int renamed = readShort();
 
@@ -297,7 +296,7 @@ public class PdbFile extends RandomAccessFile {
         // Read the category keys
         for (int ix = 0; ix < NUM_CATEGORIES; ix++) {
             int key = readByte();
-            
+
             if (catNames[ix] != null) {
                 appInfo.getCategories().add(new Category(
                     catNames[ix],
@@ -311,18 +310,18 @@ public class PdbFile extends RandomAccessFile {
 
         readByte();     // last unique ID
         readByte();     // padding
-        
+
         long endPos = getFilePointer();
-        
+
         return (int) (endPos - startPos);
     }
-    
+
     /**
      * Converts special PalmOS characters into their unicode equivalents. The string
      * methods of {@link PdbFile} will invoke this method by itself, so you usually do not
      * need to invoke it. Note that some very special PalmOS characters cannot be
      * converted (as there are no unicode equivalents) and will be kept unchanged.
-     * 
+     *
      * @param str
      *            String to be converted
      * @return Converted string

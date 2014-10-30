@@ -34,7 +34,6 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
  * {@link ExportHandler} that reads a DateBook.mdb and writes an iCalendar file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
  */
 public class MdbICalendarHandler extends AbstractCategoryExportHandler<ScheduleRecord, CategoryAppInfo> {
 
@@ -47,7 +46,7 @@ public class MdbICalendarHandler extends AbstractCategoryExportHandler<ScheduleR
     public String getDescription() {
         return "DateBook.mdb to iCalendar";
     }
-    
+
     @Override
     protected PdbDatabase<ScheduleRecord, CategoryAppInfo> readDatabase(File infile) throws IOException {
         ScheduleMdbReader reader = new ScheduleMdbReader();
@@ -64,7 +63,7 @@ public class MdbICalendarHandler extends AbstractCategoryExportHandler<ScheduleR
         // Does not use a converter
         return null;
     }
-    
+
     @Override
     protected Exporter<ScheduleRecord, CategoryAppInfo> createExporter() {
         return new ScheduleExporter();

@@ -23,10 +23,9 @@ package org.shredzone.pdbconverter.pdb.record;
  * Represents a single database entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
  */
 public interface Record {
-    
+
     /**
      * Is this entry secret?
      */
@@ -49,9 +48,9 @@ public interface Record {
 
     /**
      * Returns the category index of this entry.
-     * 
+     *
      * @return Category index
      */
     int getCategoryIndex();
-    
+
 }

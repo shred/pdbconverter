@@ -30,7 +30,6 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Represents the contents of a PDB database file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 public class PdbDatabase<T extends Record, U extends AppInfo> {
     public static final int ATTR_RESDB = 0x0001;
@@ -46,7 +45,7 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
     public static final int ATTR_RECYCLABLE = 0x0400;
     public static final int ATTR_BUNDLE = 0x0800;
     public static final int ATTR_OPEN = 0x8000;
-    
+
     private String name;
     private int attributes;
     private int version;
@@ -64,7 +63,7 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
      */
     public String getName()             { return name; }
     public void setName(String name)    { this.name = name; }
-    
+
     /**
      * Gets the attributes of the database. See ATTR constants, which are or'ed.
      */
@@ -95,7 +94,7 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
      */
     public Calendar getBackupTime()     { return backupTime; }
     public void setBackupTime(Calendar backupTime) { this.backupTime = backupTime; }
-    
+
     /**
      * Gets the modification number.
      */
@@ -125,5 +124,5 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
      * Gets all records of this database.
      */
     public List<T> getRecords()         { return records; }
-        
+
 }

@@ -28,15 +28,14 @@ import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
  * Converts a PDB record into an {@link Record} object.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 563 $
  */
 public interface Converter <T extends Record, U extends AppInfo> {
 
     /**
      * Checks if this record converter is able to convert records for the PdbDatabase.
-     * 
+     *
      * @param database
      *            The {@link PdbDatabase} that is currently generated. Note that the
      *            database is still being read. The basic attributes are already read and
@@ -48,7 +47,7 @@ public interface Converter <T extends Record, U extends AppInfo> {
 
     /**
      * Converts raw record data to a {@link Record} object.
-     * 
+     *
      * @param reader
      *            {@link PdbFile} with the file cursor at the beginning of the record
      * @param record
@@ -71,7 +70,7 @@ public interface Converter <T extends Record, U extends AppInfo> {
 
     /**
      * Converts raw application info data to an {@link AppInfo}.
-     * 
+     *
      * @param reader
      *            {@link PdbFile} with the file cursor at the beginning of the appinfo
      *            area
@@ -87,5 +86,5 @@ public interface Converter <T extends Record, U extends AppInfo> {
      */
     U convertAppInfo(PdbFile reader, int size, PdbDatabase<T, U> database)
         throws IOException;
-    
+
 }

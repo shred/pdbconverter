@@ -27,9 +27,8 @@ import java.util.TimeZone;
  * {@link TimeZone}.
  * <p>
  * Instances are thread local, so different threads may have different time zone settings.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 public class CalendarFactory {
 
@@ -51,13 +50,13 @@ public class CalendarFactory {
      * Gets the singleton instance of the factory. The returned singleton is thread local
      * and can only be used by the invoking thread. On the other hand, multiple threads
      * can have individual time zone settings.
-     * 
+     *
      * @return {@link CalendarFactory} instance
      */
     public static CalendarFactory getInstance() {
         return INSTANCES.get();
     }
-    
+
     /**
      * The {@link TimeZone} to be used. Defaults to the system's time zone.
      */
@@ -66,7 +65,7 @@ public class CalendarFactory {
 
     /**
      * Creates a new {@link Calendar} instance with the current time zone.
-     * 
+     *
      * @return {@link Calendar}
      */
     public Calendar create() {
@@ -75,7 +74,7 @@ public class CalendarFactory {
 
     /**
      * Creates a new {@link Calendar} instance with the given time zone.
-     * 
+     *
      * @param tz
      *            {@link TimeZone} to be used
      * @return {@link Calendar}
@@ -86,7 +85,7 @@ public class CalendarFactory {
 
     /**
      * Creates a {@link Calendar} that is set to the PalmOS epoch.
-     * 
+     *
      * @return {@link Calendar} set to the PalmOS epoch.
      */
     public Calendar createPalmEpoch() {

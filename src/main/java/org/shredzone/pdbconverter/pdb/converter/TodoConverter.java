@@ -30,7 +30,6 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * A {@link Converter} that handles todo records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 563 $
  */
 public class TodoConverter implements Converter<TodoRecord, CategoryAppInfo> {
 
@@ -39,7 +38,7 @@ public class TodoConverter implements Converter<TodoRecord, CategoryAppInfo> {
         return "ToDoDB".equals(database.getName())
                 && "todo".equals(database.getCreator());
     }
-    
+
     @Override
     public TodoRecord convert(PdbFile reader, int record, int size, int attribute,
             PdbDatabase<TodoRecord, CategoryAppInfo> database) throws IOException {
@@ -47,23 +46,23 @@ public class TodoConverter implements Converter<TodoRecord, CategoryAppInfo> {
         if (result.isDelete()) {
             return null;
         }
-        
+
         result.setDate(reader.readPackedDate());
 
         int flags = reader.readUnsignedByte();
         result.setCompleted((flags & 0x80) != 0);
         result.setPriority(flags & 0x7F);
-        
+
         result.setDescription(reader.readTerminatedString());
-        
+
         String note = reader.readTerminatedString();
         if (note != null && note.length() > 0) {
             result.setNote(note);
         }
-        
+
         return result;
     }
-    
+
     @Override
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<TodoRecord, CategoryAppInfo> database) throws IOException {

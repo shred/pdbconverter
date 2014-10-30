@@ -33,10 +33,9 @@ import org.shredzone.pdbconverter.handler.ZipHandler;
  * A register of all available {@link ExportHandler}.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 575 $
  */
 public final class ConverterRegister {
-    
+
     private static final ExportHandler[] HANDLERS = {
         new AddressXmlHandler(),
         new ICalendarHandler(),
@@ -47,7 +46,7 @@ public final class ConverterRegister {
         new VCardHandler(),
         new ZipHandler(),
     };
-    
+
     /**
      * Utility class cannot be constructed.
      */
@@ -55,16 +54,16 @@ public final class ConverterRegister {
 
     /**
      * Gets all registered {@link ExportHandler}.
-     * 
+     *
      * @return Array of {@link ExportHandler}
      */
     public static ExportHandler[] getHandlers() {
         return HANDLERS;
     }
-    
+
     /**
      * Finds the {@link ExportHandler} for the given converter name.
-     * 
+     *
      * @param name
      *            Converter name
      * @return {@link ExportHandler} or {@code null} if there is none.

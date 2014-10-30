@@ -35,16 +35,15 @@ import org.shredzone.pdbconverter.pdb.record.RawRecord;
  * Writes a {@link RawRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
  */
 public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
-    
+
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    
+
     static {
         DATE_FMT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
-    
+
     /**
      * Writes a database of {@link RawRecord} to a ZIP file. The zip file contains a file
      * "db-info.xml" with generic database information, and a .bin file for each database
@@ -56,9 +55,9 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
         ZipOutputStream zos = new ZipOutputStream(out);
 
         writeDatabaseInfo(database, zos);
-        
+
         writeAppInfo(database, zos);
-        
+
         List<RawRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             RawRecord record = records.get(ix);
@@ -70,13 +69,13 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
                 zos.closeEntry();
             }
         }
-        
+
         zos.close();
     }
-    
+
     /**
      * Creates the "db-info.xml" file with generic database information.
-     * 
+     *
      * @param database
      *            {@link PdbDatabase} to be written
      * @param zos
@@ -85,7 +84,7 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
     private void writeDatabaseInfo(PdbDatabase<RawRecord, RawAppInfo> database, ZipOutputStream zos)
     throws IOException {
         zos.putNextEntry(new ZipEntry("db-info.xml"));
-        
+
         XmlHelper xh = new XmlHelper();
         xh.openXmlWriter(zos, "dbinfo");
         xh.writeDatabase(database);
@@ -95,7 +94,7 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
         List<RawRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             RawRecord record = records.get(ix);
-            
+
             if (isAccepted(record)) {
                 xh.startElement(
                         "record",
@@ -107,16 +106,16 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
                 xh.endElement();
             }
         }
-        
+
         xh.endElement();
-        
+
         xh.closeXmlWriter();
         zos.closeEntry();
     }
-    
+
     /**
      * Creates the "appinfo.bin" file with a dump of the appinfo area.
-     * 
+     *
      * @param database
      *            {@link PdbDatabase} to be written
      * @param zos
@@ -131,5 +130,5 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
             zos.closeEntry();
         }
     }
-    
+
 }

@@ -40,16 +40,15 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * PdbConverter's main class.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 @SuppressWarnings("static-access")
 public class PdbConverter {
-    
+
     private static final String OPT_CATEGORY = "category";
     private static final String OPT_SPLIT = "split";
     private static final String OPT_FROM = "from";
     private static final String OPT_UNTIL = "until";
-    
+
     private static final DateFormat yearDateFmt = new SimpleDateFormat("yyyy");
     private static final DateFormat monthDateFmt = new SimpleDateFormat("yyyy-MM");
     private static final DateFormat dayDateFmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -58,7 +57,7 @@ public class PdbConverter {
         monthDateFmt.setLenient(true);
         dayDateFmt.setLenient(true);
     }
-    
+
     private static final Options CLI_OPTIONS = new Options();
     static {
         CLI_OPTIONS.addOption(OptionBuilder
@@ -74,7 +73,7 @@ public class PdbConverter {
                 .withDescription("converted output file")
                 .isRequired().hasArg()
                 .create("o"));
-        
+
         CLI_OPTIONS.addOption(OptionBuilder
                 .withArgName("converter")
                 .withLongOpt("converter")
@@ -88,7 +87,7 @@ public class PdbConverter {
                 .withDescription("only output records of this category")
                 .hasArg()
                 .create("t"));
-        
+
         CLI_OPTIONS.addOption(OptionBuilder
                 .withArgName(OPT_SPLIT)
                 .withLongOpt("split")
@@ -127,7 +126,7 @@ public class PdbConverter {
         try {
             CommandLineParser parser = new GnuParser();
             CommandLine cmd = parser.parse(GUI_CLI_OPTIONS, args);
-            
+
             if (cmd.hasOption("gui")) {
                 new PdbConverterGui();
                 return;
@@ -139,34 +138,34 @@ public class PdbConverter {
         try {
             CommandLineParser parser = new GnuParser();
             CommandLine cmd = parser.parse(CLI_OPTIONS, args);
-            
+
             if (cmd.hasOption("gui")) {
                 new PdbConverterGui();
                 return;
             }
-            
+
             String infile = cmd.getOptionValue("input");
             String outfile = cmd.getOptionValue("output");
             String converter = cmd.getOptionValue("converter", "zip");
-            
+
             ExportHandler handler = ConverterRegister.findHandler(converter);
             if (handler == null) {
                 System.err.println("Unknown converter: " + converter);
                 printHelp();
                 System.exit(1);
             }
-            
+
             File in = new File(infile);
             File out = new File(outfile);
-            
+
             ExportOptions options = new ExportOptions();
             options.setSplit(cmd.hasOption(OPT_SPLIT));
             options.setCategory(cmd.getOptionValue(OPT_CATEGORY));
             options.setFrom(parseDate(cmd.getOptionValue(OPT_FROM)));
             options.setUntil(parseDate(cmd.getOptionValue(OPT_UNTIL)));
-            
+
             handler.export(in, out, options);
-            
+
         } catch (IOException ex) {
             System.err.println("Could not convert: " + ex.getMessage());
 
@@ -178,7 +177,7 @@ public class PdbConverter {
 
     /**
      * Parses a date string.
-     * 
+     *
      * @param str
      *            Date string to be parsed. May be {@code null}.
      * @return {@link Calendar} object, or {@code null} if a null was passed in.
@@ -202,12 +201,12 @@ public class PdbConverter {
                 }
             }
         }
-        
+
         Calendar cal = CalendarFactory.getInstance().create();
         cal.setTime(result);
         return cal;
     }
-    
+
     /**
      * Outputs a help page.
      */

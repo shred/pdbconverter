@@ -19,21 +19,18 @@
  */
 package org.shredzone.pdbconverter.pdb.record;
 
-
-
 /**
  * An {@link Record} implementation that just contains the raw database record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public class RawRecord extends AbstractRecord {
-    
+
     private final byte[] data;
 
     /**
      * Creates a new {@link RawRecord} for the given data and attribute.
-     * 
+     *
      * @param data
      *            Record data
      * @param attribute
@@ -46,11 +43,11 @@ public class RawRecord extends AbstractRecord {
 
     /**
      * Gets the raw content of the record.
-     * 
+     *
      * @return Raw content, as byte array
      */
     public byte[] getRaw() {
         return data;
     }
-    
+
 }

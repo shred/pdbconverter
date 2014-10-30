@@ -51,8 +51,8 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
-import org.shredzone.pdbconverter.CalendarFactory;
 
+import org.shredzone.pdbconverter.CalendarFactory;
 import org.shredzone.pdbconverter.pdb.PdbDatabase;
 import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
@@ -72,11 +72,10 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
  * Writes a {@link ScheduleRecord} database as iCalender file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 585 $
  * @see <a href="http://wiki.modularity.net.au/ical4j/">ical4j</a>
  */
 public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryAppInfo> {
-    
+
     private static final WeekDay[] WEEKDAYS = {
         WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA,
     };
@@ -88,7 +87,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
      * Writes the {@link ScheduleRecord} database as iCalendar to the given
      * {@link OutputStream}. iCalendar support is pretty good! It copes with the
      * entire schedule database.
-     * 
+     *
      * @param database
      *            {@link ScheduleRecord} {@link PdbDatabase} to write
      * @param out
@@ -103,7 +102,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         calendar.getProperties().add(new ProdId("-//Shredzone.org/pdbconverter 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
-        
+
         VTimeZone vTimeZone = registry.getTimeZone(cf.getTimeZone().getID()).getVTimeZone();
         calendar.getComponents().add(vTimeZone);
 
@@ -125,7 +124,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Creates a new {@link VEvent} for a single {@link ScheduleRecord}.
-     * 
+     *
      * @param schedule
      *            {@link ScheduleRecord} to be exported
      * @return {@link VEvent} containing the {@link ScheduleRecord}
@@ -136,7 +135,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         if (schedule.getStartTime() == null && schedule.getEndTime() == null) {
             // all-day event
             setAllDaySchedule(result, schedule);
-            
+
         } else {
             // event with starting and ending time
             setSchedule(result, schedule);
@@ -149,14 +148,14 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         setNote(result, schedule);
         setCategory(result, schedule);
         setPrivacy(result, schedule);
-        
+
         return result;
     }
 
     /**
      * Sets the schedule data for a standard calendar entry with definite starting and
      * ending time.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -165,25 +164,25 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
     private void setSchedule(VEvent event, ScheduleRecord schedule) {
         Calendar startDate = convertDateTime(schedule.getSchedule(), schedule.getStartTime());
         Calendar endDate   = convertDateTime(schedule.getSchedule(), schedule.getEndTime());
-        
+
         // If ending time is before starting time, add one day to make it end tomorrow
         if (endDate.before(startDate)) {
             endDate.add(Calendar.DATE, 1);
         }
-        
+
         DateTime startDateTime = new DateTime(startDate.getTime());
         startDateTime.setTimeZone(registry.getTimeZone(cf.getTimeZone().getID()));
-        
+
         DateTime endDateTime = new DateTime(endDate.getTime());
         endDateTime.setTimeZone(registry.getTimeZone(cf.getTimeZone().getID()));
-        
+
         event.getProperties().add(new DtStart(startDateTime));
         event.getProperties().add(new DtEnd(endDateTime));
     }
-    
+
     /**
      * Sets the schedule data for an all-day event.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -198,7 +197,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Sets the alarm data, if given.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -216,7 +215,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
                 case DAYS:    dur = new Dur(before, 0, 0, 0); break;
                 default: throw new IllegalStateException("unknown alarm unit " + alarm.getUnit());
             }
-            
+
             VAlarm valarm = new VAlarm(dur);
             valarm.getProperties().add(Action.DISPLAY);
             valarm.getProperties().add(new Description(schedule.getDescription()));
@@ -226,7 +225,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Sets the repetition data, if given.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -254,7 +253,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
                 case DAILY:
                     recur = new Recur(Recur.DAILY, until);
                     break;
-                    
+
                 case WEEKLY:
                     recur = new Recur(Recur.WEEKLY, until);
                     boolean[] repeatWeekDays = repeat.getWeeklyDays();
@@ -268,7 +267,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
                 case MONTHLY:
                     recur = new Recur(Recur.MONTHLY, until);
                     break;
-                
+
                 case MONTHLY_BY_DAY:
                     recur = new Recur(Recur.MONTHLY, until);
                     WeekDay wd;
@@ -282,11 +281,11 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
                     }
                     recur.getDayList().add(wd);
                     break;
-                    
+
                 case YEARLY:
                     recur = new Recur(Recur.YEARLY, until);
                     break;
-                    
+
                 default:
                     throw new IllegalStateException("unknown repeat mode " + repeat.getMode());
             }
@@ -294,15 +293,15 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
             if (repeat.getFrequency() > 1) {
                 recur.setInterval(repeat.getFrequency());
             }
-            
+
             event.getProperties().add(new RRule(recur));
             setExceptions(event, schedule);
         }
     }
-    
+
     /**
      * Sets exceptions to a repeating event.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -315,10 +314,10 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
             event.getProperties().add(new ExDate(datelist));
         }
     }
-    
+
     /**
      * Sets the description, if given.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -333,7 +332,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Sets the location, if given.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -348,7 +347,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Sets the note, if given.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -363,7 +362,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Sets the category, if given.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -378,7 +377,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Sets the classification to PRIVATE if the schedule is secret.
-     * 
+     *
      * @param event
      *            {@link VEvent} to write to
      * @param schedule
@@ -389,10 +388,10 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
             event.getProperties().add(Clazz.PRIVATE);
         }
     }
-    
+
     /**
      * Converts a {@link ShortDate} to a {@link Calendar} object. Time is set to midnight.
-     * 
+     *
      * @param date
      *            {@link ShortDate} to be converted
      * @return {@link Calendar} containing the date only
@@ -406,7 +405,7 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
 
     /**
      * Converts a {@link ShortDate} and {@link ShortTime} to a {@link Calendar} object.
-     * 
+     *
      * @param date
      *            {@link ShortDate} to be converted
      * @param time
@@ -419,5 +418,5 @@ public class ScheduleExporter extends AbstractExporter<ScheduleRecord, CategoryA
         cal.set(date.getYear(), date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
         return cal;
     }
-    
+
 }

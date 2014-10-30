@@ -30,7 +30,6 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * A {@link Converter} that handles memo records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 563 $
  */
 public class MemoConverter implements Converter<MemoRecord, CategoryAppInfo> {
 
@@ -39,7 +38,7 @@ public class MemoConverter implements Converter<MemoRecord, CategoryAppInfo> {
         return "MemoDB".equals(database.getName())
                 && "memo".equals(database.getCreator());
     }
-    
+
     @Override
     public MemoRecord convert(PdbFile reader, int record, int size, int attribute,
             PdbDatabase<MemoRecord, CategoryAppInfo> database) throws IOException {
@@ -47,11 +46,11 @@ public class MemoConverter implements Converter<MemoRecord, CategoryAppInfo> {
         if (result.isDelete()) {
             return null;
         }
-        
+
         result.setMemo(reader.readTerminatedString());
         return result;
     }
-    
+
     @Override
     public CategoryAppInfo convertAppInfo(PdbFile reader, int size,
             PdbDatabase<MemoRecord, CategoryAppInfo> database) throws IOException {

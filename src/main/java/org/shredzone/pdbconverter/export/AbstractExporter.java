@@ -27,10 +27,9 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * An abstract implementation of {@link Exporter} that handles filtering.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
  */
 public abstract class AbstractExporter<T extends Record, U extends AppInfo> implements Exporter<T, U> {
-    
+
     private ExportFilter<T> filter;
 
     @Override
@@ -40,7 +39,7 @@ public abstract class AbstractExporter<T extends Record, U extends AppInfo> impl
 
     /**
      * Checks if the current filter accepts the given record.
-     * 
+     *
      * @param record
      *            {@link Record} to test
      * @return {@code true} if the record is accepted
@@ -48,5 +47,5 @@ public abstract class AbstractExporter<T extends Record, U extends AppInfo> impl
     protected boolean isAccepted(T record) {
         return (filter == null || filter.accepts(record));
     }
-    
+
 }

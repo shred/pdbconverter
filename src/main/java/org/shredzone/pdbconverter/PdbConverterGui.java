@@ -30,7 +30,6 @@ import org.shredzone.pdbconverter.gui.ConverterPanel;
  * A very simple Swing application for GUI based file conversion.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
  */
 public class PdbConverterGui extends JFrame {
     private static final long serialVersionUID = -3167361308090208721L;
@@ -56,4 +55,5 @@ public class PdbConverterGui extends JFrame {
     public static void main(String[] args) {
         new PdbConverterGui();
     }
+
 }

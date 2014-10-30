@@ -35,16 +35,15 @@ import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
  * Writes a {@link NotepadRecord} database as ZIP file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryAppInfo> {
-    
+
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    
+
     static {
         DATE_FMT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
-    
+
     /**
      * Writes a database of {@link NotepadRecord} to a ZIP file. The zip file contains a
      * file "db-info.xml" with generic database information, and a .png file for each
@@ -56,11 +55,11 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
         ZipOutputStream zos = new ZipOutputStream(out);
 
         writeDatabaseInfo(database, zos);
-        
+
         List<NotepadRecord> records = database.getRecords();
         for (int ix = 0; ix < records.size(); ix++) {
             NotepadRecord record = records.get(ix);
-            
+
             if (isAccepted(record)) {
                 String name = String.format("images/%04d.png", ix);
                 ZipEntry ze = new ZipEntry(name);
@@ -73,13 +72,13 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
                 zos.closeEntry();
             }
         }
-        
+
         zos.close();
     }
-    
+
     /**
      * Creates the "db-info.xml" file with generic database information.
-     * 
+     *
      * @param database
      *            {@link PdbDatabase} to be written
      * @param zos
@@ -88,7 +87,7 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
     private void writeDatabaseInfo(PdbDatabase<NotepadRecord, CategoryAppInfo> database, ZipOutputStream zos)
     throws IOException {
         zos.putNextEntry(new ZipEntry("db-info.xml"));
-        
+
         XmlHelper xh = new XmlHelper();
         xh.openXmlWriter(zos, "dbinfo");
         xh.writeDatabase(database);
@@ -107,7 +106,7 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
                         "category", record.getCategoryIndex(),
                         "secret", record.isSecret()
                 );
-    
+
                 xh.writeDate("created", record.getCreated());
                 if (record.getModified() != null) {
                     xh.writeDate("modified", record.getModified());
@@ -118,17 +117,17 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
                 if (record.getTitle() != null) {
                     xh.writeValue("title", record.getTitle());
                 }
-    
+
                 xh.writeFormatted("file", "images/%04d.png", ix);
-                
+
                 xh.endElement();
             }
         }
-        
+
         xh.endElement();
-        
+
         xh.closeXmlWriter();
         zos.closeEntry();
     }
-    
+
 }

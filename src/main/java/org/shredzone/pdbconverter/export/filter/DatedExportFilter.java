@@ -27,9 +27,8 @@ import org.shredzone.pdbconverter.pdb.record.DatedRecord;
 /**
  * An {@link ExportFilter} that only accepts {@link DatedRecord} within the
  * given time range.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T> {
 
@@ -39,7 +38,7 @@ public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T>
     /**
      * Creates a new {@link DatedExportFilter} for the given time range. Undated
      * records are only accepted if until is set to {@code null}.
-     * 
+     *
      * @param from
      *            Start of date range. {@code null} means that the beginning of
      *            all times.
@@ -54,11 +53,11 @@ public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T>
         if (from == null && until == null) {
             throw new IOException("No date range set");
         }
-        
+
         if (until != null && from != null && until.before(from)) {
             throw new IOException("Date range ends before start");
         }
-        
+
         this.from = from;
         this.until = until;
     }
@@ -66,19 +65,19 @@ public class DatedExportFilter<T extends DatedRecord> implements ExportFilter<T>
     @Override
     public boolean accepts(T record) {
         Calendar date = record.getRecordDate();
-        
+
         if (date == null) {
             return (until == null);
         }
-        
+
         if (from != null && date.before(from)) {
             return false;
         }
-        
+
         if (until != null && !date.before(until)) {
             return false;
         }
-        
+
         return true;
     }
 

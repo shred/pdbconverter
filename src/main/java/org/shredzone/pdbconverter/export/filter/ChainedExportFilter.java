@@ -25,9 +25,8 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * An {@link ExportFilter} that consists of a chain of other
  * {@link ExportFilter}. This filter only accepts a record if all the chained
  * {@link ExportFilter} accepted the record.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 405 $
  */
 public class ChainedExportFilter<T extends Record> implements ExportFilter<T> {
 
@@ -35,14 +34,14 @@ public class ChainedExportFilter<T extends Record> implements ExportFilter<T> {
 
     /**
      * Creates a new {@link ChainedExportFilter}.
-     * 
+     *
      * @param filter
      *            Filter chain
      */
     public ChainedExportFilter(ExportFilter<T>[] filter) {
         this.filterList = filter;
     }
-    
+
     @Override
     public boolean accepts(T record) {
         for (ExportFilter<T> filter : filterList) {
@@ -50,7 +49,7 @@ public class ChainedExportFilter<T extends Record> implements ExportFilter<T> {
                 return false;
             }
         }
-        
+
         return true;
     }
 

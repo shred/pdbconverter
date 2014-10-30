@@ -31,13 +31,12 @@ import org.shredzone.pdbconverter.pdb.record.MemoRecord;
  * Writes a {@link MemoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
  */
 public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInfo> {
 
     /**
      * Writes the {@link MemoRecord} database XML to the given {@link OutputStream}.
-     * 
+     *
      * @param database
      *            {@link MemoRecord} {@link PdbDatabase} to write
      * @param out
@@ -48,7 +47,7 @@ public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInf
     throws IOException {
         XmlHelper xh = new XmlHelper();
         xh.openXmlWriter(out, "memodb");
-        
+
         xh.writeDatabase(database);
         xh.writeCategories(database);
 
@@ -67,8 +66,8 @@ public class MemoXmlExporter extends AbstractExporter<MemoRecord, CategoryAppInf
             }
         }
         xh.endElement();
-        
+
         xh.closeXmlWriter();
     }
-    
+
 }

@@ -30,7 +30,6 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  * A {@link Converter} that reads Address records.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 575 $
  * @see <a href="http://search.cpan.org/~bdfoy/p5-Palm-1.011/lib/Address.pm">Palm::Address</a>
  */
 public class AddressConverter implements Converter<AddressRecord, AddressAppInfo> {
@@ -47,7 +46,7 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
     };
 
     private static final int LABEL_LENGTH = 16;
-    
+
     @Override
     public boolean isAcceptable(
             PdbDatabase<AddressRecord, AddressAppInfo> database) {
@@ -59,16 +58,16 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
     public AddressRecord convert(PdbFile reader, int record, int size, int attribute,
             PdbDatabase<AddressRecord, AddressAppInfo> database)
             throws IOException {
-        
+
         AddressRecord result = new AddressRecord(attribute);
         if (result.isDelete()) {
             return null;
         }
-        
+
         int phoneFlags = reader.readInt();
         int fieldMap = reader.readInt();
         reader.readByte();
-        
+
         AddressRecord.Field[] fields = AddressRecord.Field.values();
         AddressRecord.Label[] labels = AddressRecord.Label.values();
         for (int ix = 0; ix < fields.length; ix++) {
@@ -77,7 +76,7 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
                 result.setField(fields[ix], reader.readTerminatedString());
             }
         }
-        
+
         result.setDisplayPhone((phoneFlags >> 20) & 0x0F);
 
         return result;
@@ -85,7 +84,7 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
 
     /**
      * Maps a phone label to the one selected in the phone flags.
-     * 
+     *
      * @param label
      *            Label to be mapped
      * @param flags
@@ -119,16 +118,16 @@ public class AddressConverter implements Converter<AddressRecord, AddressAppInfo
 
         reader.readShort();
         reader.readInt();
-        
+
         for (AddressRecord.Label label : AddressRecord.Label.values()) {
             result.setLabel(label, reader.readTerminatedFixedString(LABEL_LENGTH));
         }
-        
+
         int country = reader.readByte();
         if (country >= 0 && country < COUNTRIES.length) {
             result.setCountry(COUNTRIES[country]);
         }
-        
+
         reader.readByte();
 
         return result;

@@ -22,13 +22,13 @@ package org.shredzone.pdbconverter.pdb.record;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import org.shredzone.pdbconverter.CalendarFactory;
 
 /**
  * An {@link Record} implementation for the Calendar PDB.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
@@ -46,14 +46,14 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
     /**
      * Creates a new {@link ScheduleRecord} entry.
-     * 
+     *
      * @param attribute
      *            Record's attribute
      */
     public ScheduleRecord(int attribute) {
         super(attribute);
     }
-    
+
     /**
      * Gets the scheduled date.
      */
@@ -128,7 +128,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         }
         return result;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -140,15 +140,15 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         if (endTime != null) {
             sb.append(" end=").append(endTime);
         }
-        
+
         if (alarm != null) {
             sb.append(" alarm=").append(alarm);
         }
-        
+
         if (repeat != null) {
             sb.append(" repeat=").append(repeat);
         }
-        
+
         if (!exceptions.isEmpty()) {
             sb.append(" exceptions={");
             for (ShortDate exc : exceptions) {
@@ -156,15 +156,15 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
             }
             sb.append('}');
         }
-        
+
         if (description != null) {
             sb.append(" description='").append(description).append('\'');
         }
-        
+
         if (note != null) {
             sb.append(" note='").append(note).append('\'');
         }
-        
+
         if (location != null) {
             sb.append(" location='").append(location).append('\'');
         }
@@ -187,7 +187,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
         /**
          * Creates a new {@link ShortDate}.
-         * 
+         *
          * @param year
          *            Year (fully, this is all four digits)
          * @param month
@@ -216,7 +216,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         public int getYear()                { return year; }
         public int getMonth()               { return month; }
         public int getDay()                 { return day; }
-        
+
         @Override
         public String toString() {
             return String.format("%04d-%02d-%02d", year, month, day);
@@ -232,7 +232,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
 
         /**
          * Creates a new {@link ShortTime}.
-         * 
+         *
          * @param hour
          *            Hour (24 hours notation)
          * @param minute
@@ -270,13 +270,13 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         public static enum Unit {
             MINUTES, HOURS, DAYS;
         }
-        
+
         private final int value;
         private final Unit unit;
 
         /**
          * Creates a new {@link Alarm}.
-         * 
+         *
          * @param value
          *            Number of units <em>before</em> the scheduled date.
          * @param unit
@@ -285,18 +285,18 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         public Alarm(int value, Unit unit) {
             this.value = value;
             this.unit = unit;
-            
+
         }
-        
+
         public int getValue()               { return value; }
         public Unit getUnit()               { return unit; }
-        
+
         @Override
         public String toString() {
             return String.format("%02d-%s", value, unit);
         }
     }
-    
+
     /**
      * Defines the repetition of a schedule.
      */
@@ -313,10 +313,10 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
         private final boolean[] weeklyDays;
         private final int monthlyWeek;
         private final int monthlyDay;
-        
+
         /**
          * Creates a new {@link Repeat}.
-         * 
+         *
          * @param mode
          *            Repeat mode
          * @param frequency
@@ -339,7 +339,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
             this.monthlyWeek = monthlyWeek;
             this.monthlyDay = monthlyDay;
         }
-        
+
         public Mode getMode()                   { return mode; }
         public int getFrequency()               { return frequency; }
         public ShortDate getUntil()             { return until; }
@@ -355,22 +355,22 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
          * "last week of month". Valid for Mode.MONTHLY_BY_DAY only.
          */
         public int getMonthlyWeek()             { return monthlyWeek; }
-        
+
         /**
          * Weekday in week where the repetition occurs. 0 = Sunday, and so on.  Valid for
          * Mode.MONTHLY_BY_DAY only.
          */
         public int getMonthlyDay()              { return monthlyDay; }
-        
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append(mode).append('-').append(frequency);
-            
+
             if (until != null) {
                 sb.append("-until:").append(until);
             }
-            
+
             if (mode == Mode.WEEKLY) {
                 sb.append("-on");
                 for (int ix = 0; ix < WEEKDAYS.length; ix++) {
@@ -379,12 +379,12 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
                     }
                 }
             }
-            
+
             if (mode == Mode.MONTHLY_BY_DAY) {
                 sb.append("-week:").append(monthlyWeek);
                 sb.append("-day:").append(WEEKDAYS[monthlyDay]);
             }
-            
+
             return sb.toString();
         }
     }

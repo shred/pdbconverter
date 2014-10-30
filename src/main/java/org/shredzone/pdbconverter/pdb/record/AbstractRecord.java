@@ -22,22 +22,21 @@ package org.shredzone.pdbconverter.pdb.record;
 /**
  * Abstract {@link Record} implementation that represents a single database
  * entry. Subclasses will give detailed methods for reading the entry's content.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public abstract class AbstractRecord implements Record {
-    
+
     public static final int ATTR_SECRET = 0x10;
     public static final int ATTR_BUSY = 0x20;
     public static final int ATTR_DIRTY = 0x40;
     public static final int ATTR_DELETE = 0x80;
-    
+
     private final int attribute;
-    
+
     /**
      * Create a new Entry.
-     * 
+     *
      * @param attribute Entry attributes (see ATTR constants)
      */
     public AbstractRecord(int attribute) {
@@ -68,5 +67,5 @@ public abstract class AbstractRecord implements Record {
     public int getCategoryIndex() {
         return attribute & 0x0F;
     }
-    
+
 }

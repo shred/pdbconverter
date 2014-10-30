@@ -25,7 +25,6 @@ import java.util.Calendar;
  * A {@link Record} implementation that contains a Todo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public class TodoRecord extends AbstractRecord implements DatedRecord {
 
@@ -34,17 +33,17 @@ public class TodoRecord extends AbstractRecord implements DatedRecord {
     private boolean completed;
     private String description;
     private String note;
-    
+
     /**
      * Creates a new {@link MemoRecord}.
-     * 
+     *
      * @param attribute
      *            Record attribute
      */
     public TodoRecord(int attribute) {
         super(attribute);
     }
-    
+
     /**
      * Gets the due date. The time part is always set to midnight local time.
      */
@@ -79,31 +78,31 @@ public class TodoRecord extends AbstractRecord implements DatedRecord {
     public Calendar getRecordDate() {
         return getDate();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Todo:[");
 
         sb.append(completed ? "complete" : "open");
-        
+
         if (date != null) {
             sb.append(" date=").append(date);
         }
-        
+
         sb.append(" priority=").append(priority);
-        
+
         if (description != null) {
             sb.append(" description='").append(description).append('\'');
         }
-        
+
         if (note != null) {
             sb.append(" note='").append(note).append('\'');
         }
 
         sb.append(']');
-        
+
         return sb.toString();
     }
-    
+
 }

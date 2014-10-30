@@ -41,16 +41,15 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * result may be invalid and data is lost.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 575 $
  * @see <a href="http://tools.ietf.org/html/rfc2426">RFC 2426</a>
  */
 public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
 
     private static final int MAX_LINE_LENGTH = 73;
-    
+
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("[^@]+\\@[0-9a-z.-]+", Pattern.CASE_INSENSITIVE);
-    
+
     private static final Pattern URL_PATTERN =
             Pattern.compile("(ftp|https?)\\:\\/\\/.*", Pattern.CASE_INSENSITIVE);
 
@@ -67,7 +66,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
         phoneMap.put(Label.PHONE7, PhoneType.PAGER);
         phoneMap.put(Label.PHONE8, PhoneType.CELL);
     }
-    
+
     /**
      * Sets a regular expression for birthday detection. If a custom field matches this
      * pattern, it is exported as birthday. Group index 1 must be the year, group index
@@ -76,11 +75,11 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
     public void setBirthdayPattern(Pattern bdayPattern) {
         this.bdayPattern = bdayPattern;
     }
-    
+
     /**
      * Sets a custom {@link PhoneType} for the given {@link Label}. If a phone
      * number with this label is exported, the given {@link PhoneType} is set.
-     * 
+     *
      * @param label
      *            {@link Label}, must be one of PHONE, others are ignored
      * @param type
@@ -94,11 +93,11 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
             phoneMap.remove(label);
         }
     }
-    
+
     /**
      * Writes the {@link AddressRecord} database as vCard to the given
      * {@link OutputStream}.
-     * 
+     *
      * @param database
      *            {@link AddressRecord} {@link PdbDatabase} to write
      * @param out
@@ -110,19 +109,19 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
         AddressAppInfo appInfo = database.getAppInfo();
 
         PrintStream ps = new PrintStream(out, false, "UTF-8");
-        
+
         for (AddressRecord address : database.getRecords()) {
             if (isAccepted(address)) {
                 writeVCard(address, appInfo, ps);
             }
         }
-        
+
         ps.flush();
     }
-    
+
     /**
      * Writes a single VCard block.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param appInfo
@@ -134,7 +133,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
         ps.print("BEGIN:VCARD\r\n");
         ps.print("VERSION:3.0\r\n");
 //        ps.print("PRODID:-//Shredzone.org/pdbconverter 1.0//EN\r\n");
-        
+
         if (address.isSecret()) {
             ps.print("CLASS:CONFIDENTIAL\r\n");
         }
@@ -144,28 +143,28 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
         writeAdr(address, ps);
 
         int pref = address.getDisplayPhone();
-        
+
         writePhone(address.getField(Field.PHONE1), address.getLabel(Field.PHONE1), pref == 0, ps);
         writePhone(address.getField(Field.PHONE2), address.getLabel(Field.PHONE2), pref == 1, ps);
         writePhone(address.getField(Field.PHONE3), address.getLabel(Field.PHONE3), pref == 2, ps);
         writePhone(address.getField(Field.PHONE4), address.getLabel(Field.PHONE4), pref == 3, ps);
         writePhone(address.getField(Field.PHONE5), address.getLabel(Field.PHONE5), pref == 4, ps);
-        
+
         writeCustom(address.getField(Field.CUSTOM1), ps);
         writeCustom(address.getField(Field.CUSTOM2), ps);
         writeCustom(address.getField(Field.CUSTOM3), ps);
         writeCustom(address.getField(Field.CUSTOM4), ps);
-        
+
         writeCategory(address, appInfo, ps);
         writeNote(address, ps);
-        
+
         ps.print("END:VCARD\r\n");
     }
 
     /**
      * Writes the VCard name lines. This are 'N' and 'FN'. These lines must be written,
      * so there is some guesswork in case the respective fields were not set.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param ps
@@ -188,7 +187,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
                 name = "?";
             }
         }
-        
+
         if (first != null) {
             writeLine(ps, "N", null, name, first);
             writeLine(ps, "FN", null, first + " " + name);
@@ -200,7 +199,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
 
     /**
      * Writes the VCard organisation.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param ps
@@ -211,7 +210,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
         if (org != null) {
             writeLine(ps, "ORG", null, org);
         }
-        
+
         String title = address.getField(Field.TITLE);
         if (title != null) {
             writeLine(ps, "TITLE", null, title);
@@ -220,7 +219,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
 
     /**
      * Writes the VCard address.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param ps
@@ -232,7 +231,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
         String state = address.getField(Field.STATE);
         String zip = address.getField(Field.ZIP);
         String country = address.getField(Field.COUNTRY);
-        
+
         if (addr != null || city != null || state != null || zip != null || country != null) {
             writeLine(ps, "ADR", null, null, null, addr, city, state, zip, country);
         }
@@ -240,7 +239,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
 
     /**
      * Writes a phone number.
-     * 
+     *
      * @param value
      *            Phone number to be written. Nothing is written if this is
      *            {@code null}.
@@ -253,7 +252,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
      */
     private void writePhone(String value, Label label, boolean pref, PrintStream ps) {
         if (value == null) return;
-        
+
         if (EMAIL_PATTERN.matcher(value).matches()) {
             writeLine(
                 ps,
@@ -261,10 +260,10 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
                 "TYPE=INTERNET" + (pref ? ",PREF" : ""),
                 value
             );
-            
+
         } else if (URL_PATTERN.matcher(value).matches()) {
             writeLine(ps, "URL", null, value);
-            
+
         } else {
             String type = "";
             PhoneType pt = phoneMap.get(label);
@@ -274,7 +273,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
             if (pref) {
                 if (type.length() > 0) type += ',';
                 type += "PREF";
-                
+
             }
             if (type.length() > 0) {
                 writeLine(ps, "TEL", "TYPE=" + type, value);
@@ -288,7 +287,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
      * Writes a custom field. EMAIL, URL or BDAY is written if the respective patterns
      * were recognized. Otherwise a NOTE is written, which could lead to a vCard having
      * more than one NOTE.
-     * 
+     *
      * @param value
      *            Custom valur to be written. Nothing is written if this is
      *            {@code null}.
@@ -297,29 +296,29 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
      */
     private void writeCustom(String value, PrintStream ps) {
         if (value == null) return;
-        
+
         Matcher m;
-        
+
         if (EMAIL_PATTERN.matcher(value).matches()) {
             writeLine(ps, "EMAIL", "TYPE=INTERNET", value);
-            
+
         } else if (URL_PATTERN.matcher(value).matches()) {
             writeLine(ps, "URL", null, value);
-            
+
         } else if (bdayPattern != null && (m = bdayPattern.matcher(value)).matches()) {
             int year  = Integer.parseInt(m.group(1));
             int month = Integer.parseInt(m.group(2));
             int day   = Integer.parseInt(m.group(3));
             writeLine(ps, "BDAY", null, String.format("%04d-%02d-%02d", year, month, day));
-            
+
         } else {
             writeLine(ps, "NOTE", null, value);
         }
     }
-    
+
     /**
      * Writes the Category.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param appInfo
@@ -337,7 +336,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
 
     /**
      * Writes the Note.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param ps
@@ -352,7 +351,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
 
     /**
      * Writes a single vCard line. Cares for proper line breaks and escaping.
-     * 
+     *
      * @param ps
      *            {@link PrintStream} to write to
      * @param property
@@ -375,7 +374,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
                 sb.append(escape(values[ix]));
             }
         }
-        
+
         int pos = MAX_LINE_LENGTH;
         while (pos < sb.length()) {
             sb.insert(pos-1, "\r\n ");
@@ -388,7 +387,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
 
     /**
      * Escapes all characters that need to be escaped.
-     * 
+     *
      * @param str
      *            String to escape
      * @return Escaped string
@@ -399,7 +398,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
                   .replace(";", "\\;")
                   .replace("\n", "\\n");
     }
-    
+
     /**
      * Types of vCard phones.
      */

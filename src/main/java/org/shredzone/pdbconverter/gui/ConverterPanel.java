@@ -56,13 +56,12 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  * along with the input and output file, and offers a button to convert the choice.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 529 $
  */
 public class ConverterPanel extends JPanel {
     private static final long serialVersionUID = 779442646747161290L;
 
     private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("messages");
-    
+
     private CalendarFactory cf = CalendarFactory.getInstance();
     private JComboBox jcbMode;
     private JTextField jtInfile;
@@ -72,7 +71,7 @@ public class ConverterPanel extends JPanel {
     private JXDatePicker jxdpThru;
     private JButton jbConvert;
     private Set<JLabel> labels = new HashSet<JLabel>();
- 
+
     /**
      * Creates a new {@link ConverterPanel}.
      */
@@ -86,7 +85,7 @@ public class ConverterPanel extends JPanel {
     private void build() {
         setLayout(new GridLayout(0, 1, 0, 2));
         setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-        
+
         jcbMode = buildModeSelector(this, RESOURCE.getString("label.converter"));
         jtInfile = buildFileSelector(this, RESOURCE.getString("label.infile"), false);
         jtOutfile = buildFileSelector(this, RESOURCE.getString("label.outfile"), true);
@@ -96,19 +95,19 @@ public class ConverterPanel extends JPanel {
             JLabel jlSplit = new JLabel(" ");
             jpSplit.add(jlSplit, BorderLayout.LINE_START);
             labels.add(jlSplit);
-            
+
             jcSplit = new JCheckBox(RESOURCE.getString("label.split"));
             jcSplit.setToolTipText(RESOURCE.getString("label.split.tt"));
             jpSplit.add(jcSplit, BorderLayout.CENTER);
         }
         add(jpSplit);
-        
+
         JPanel jpFrom = new JPanel(new BorderLayout());
         {
             JLabel jlFrom = new JLabel(RESOURCE.getString("label.from"));
             jpFrom.add(jlFrom, BorderLayout.LINE_START);
             labels.add(jlFrom);
-            
+
             jxdpFrom = new JXDatePicker();
             jxdpFrom.setToolTipText(RESOURCE.getString("label.from.tt"));
             jpFrom.add(jxdpFrom, BorderLayout.CENTER);
@@ -120,7 +119,7 @@ public class ConverterPanel extends JPanel {
             JLabel jlThru = new JLabel(RESOURCE.getString("label.thru"));
             jpThru.add(jlThru, BorderLayout.LINE_START);
             labels.add(jlThru);
-            
+
             jxdpThru = new JXDatePicker();
             jxdpThru.setToolTipText(RESOURCE.getString("label.thru.tt"));
             jpThru.add(jxdpThru, BorderLayout.CENTER);
@@ -130,14 +129,14 @@ public class ConverterPanel extends JPanel {
         jbConvert = new JButton(RESOURCE.getString("label.convert"));
         jbConvert.addActionListener(new ConvertActionListener());
         add(jbConvert);
-        
+
         arrangeLabels();
     }
 
     /**
      * Builds a mode selector. It is a {@link JComboBox} that shows all
      * registered {@link ExportHandler}.
-     * 
+     *
      * @param parent
      *            parent component to add the selector to
      * @param label
@@ -156,16 +155,16 @@ public class ConverterPanel extends JPanel {
         jpOuter.add(jcbComboBox, BorderLayout.CENTER);
 
         parent.add(jpOuter);
-        
+
         jlLabel.setLabelFor(jcbComboBox);
 
         return jcbComboBox;
     }
-    
+
     /**
      * Builds a file selector. It is a text field and a button that opens a file
      * chooser.
-     * 
+     *
      * @param parent
      *            parent component to add the selector to
      * @param label
@@ -181,22 +180,22 @@ public class ConverterPanel extends JPanel {
         JLabel jlLabel = new JLabel(label);
         jpOuter.add(jlLabel, BorderLayout.LINE_START);
         labels.add(jlLabel);
-        
+
         JTextField jtFileName = new JTextField();
         jpOuter.add(jtFileName, BorderLayout.CENTER);
-        
+
         JButton jbSelect = new JButton("<");
         jbSelect.setMargin(new Insets(0, 2, 0, 2));
         jbSelect.addActionListener(new FileSelectActionListener(jtFileName, saveMode));
         jpOuter.add(jbSelect, BorderLayout.LINE_END);
-        
+
         parent.add(jpOuter);
 
         jlLabel.setLabelFor(jbSelect);
 
         return jtFileName;
     }
-    
+
     /**
      * Arranges all labels so they consume the same width.
      */
@@ -214,7 +213,7 @@ public class ConverterPanel extends JPanel {
             label.invalidate();
         }
     }
-    
+
     /**
      * Listener for the convert button. It invokes the selected {@link ExportHandler}
      * and informs the user about the result.
@@ -237,7 +236,7 @@ public class ConverterPanel extends JPanel {
                         fromCal.setTime(jxdpFrom.getDate());
                         options.setFrom(fromCal);
                     }
-                    
+
                     if (jxdpThru.getDate() != null) {
                         // Option value is exclusive, so add 1 day!
                         Calendar thruCal = cf.create();
@@ -247,9 +246,9 @@ public class ConverterPanel extends JPanel {
                     } else {
                         options.setUntil(null);
                     }
-                    
+
                     handler.export(infile, outfile, options);
-                    
+
                     JOptionPane.showMessageDialog(
                             ConverterPanel.this,
                             RESOURCE.getString("convert.success"));
@@ -276,7 +275,7 @@ public class ConverterPanel extends JPanel {
 
         /**
          * Creates a new {@link FileSelectActionListener}.
-         * 
+         *
          * @param target
          *            Target {@link JTextField} where the selected file name is
          *            set
@@ -291,7 +290,7 @@ public class ConverterPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             Component src = (Component) e.getSource();
-            
+
             JFileChooser jChooser = new JFileChooser(currentDir);
             jChooser.setMultiSelectionEnabled(false);
 
@@ -302,7 +301,7 @@ public class ConverterPanel extends JPanel {
                     public String getDescription() {
                         return RESOURCE.getString("pdbfilter");
                     }
-                    
+
                     @Override
                     public boolean accept(File f) {
                         if (f.isHidden()) return false;
@@ -313,7 +312,7 @@ public class ConverterPanel extends JPanel {
                     }
                 });
             }
-            
+
             int choice = (saveMode ? jChooser.showSaveDialog(src) : jChooser.showOpenDialog(src));
             if (choice == JFileChooser.APPROVE_OPTION) {
                 currentDir = jChooser.getCurrentDirectory();
@@ -321,7 +320,7 @@ public class ConverterPanel extends JPanel {
             }
         }
     }
-    
+
     /**
      * A {@link DefaultListCellRenderer} that shows the name and description of a
      * {@link ExportHandler}.
@@ -336,9 +335,9 @@ public class ConverterPanel extends JPanel {
             sb.append("<html>").append(handler.getName())
                 .append("<font size=\"-2\" color=\"#707070\"> - ")
                 .append(handler.getDescription());
-            
+
             return super.getListCellRendererComponent(list, sb.toString(), index, isSelected, cellHasFocus);
         }
     }
-    
+
 }

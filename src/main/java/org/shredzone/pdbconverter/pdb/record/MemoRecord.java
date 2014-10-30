@@ -23,15 +23,14 @@ package org.shredzone.pdbconverter.pdb.record;
  * A {@link Record} implementation that contains a Memo record.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public class MemoRecord extends AbstractRecord {
 
     private String memo;
-    
+
     /**
      * Creates a new {@link MemoRecord}.
-     * 
+     *
      * @param attribute
      *            Record attribute
      */
@@ -44,12 +43,12 @@ public class MemoRecord extends AbstractRecord {
      */
     public String getMemo()                     { return memo; }
     public void setMemo(String memo)            { this.memo = memo; }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Memo:[").append(memo).append(']');
         return sb.toString();
     }
-    
+
 }

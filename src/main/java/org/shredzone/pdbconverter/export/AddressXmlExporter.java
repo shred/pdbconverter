@@ -33,13 +33,12 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
  * Writes a {@link AddressRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 490 $
  */
 public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressAppInfo> {
 
     /**
      * Writes the {@link AddressRecord} database XML to the given {@link OutputStream}.
-     * 
+     *
      * @param database
      *            {@link AddressRecord} {@link PdbDatabase} to write
      * @param out
@@ -50,11 +49,11 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
     throws IOException {
         XmlHelper xh = new XmlHelper();
         xh.openXmlWriter(out, "addressdb");
-        
+
         xh.writeDatabase(database);
         xh.writeValue("country", database.getAppInfo().getCountry());
         xh.writeCategories(database);
-        
+
         writeLabelNames(database.getAppInfo(), xh);
 
         xh.startElement("addresses");
@@ -72,13 +71,13 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
             }
         }
         xh.endElement();
-        
+
         xh.closeXmlWriter();
     }
 
     /**
      * Writes an {@link AddressRecord}.
-     * 
+     *
      * @param address
      *            {@link AddressRecord} to be written
      * @param xh
@@ -86,11 +85,11 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
      */
     private void writeAddress(AddressRecord address, XmlHelper xh) throws IOException {
         int pref = address.getDisplayPhone();
-        
+
         for (Field field : Field.values()) {
             String value = address.getField(field);
             Label label = address.getLabel(field);
-            
+
             boolean preferred = false;
             if (   label == Label.PHONE1 || label == Label.PHONE2 || label == Label.PHONE3
                 || label == Label.PHONE4 || label == Label.PHONE5 || label == Label.PHONE6
@@ -98,7 +97,7 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
                 preferred = (pref == 0);
                 pref--;
             }
-            
+
             if (value != null) {
                 if (preferred) {
                     xh.startElement(
@@ -123,7 +122,7 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
 
     /**
      * Writes the label names.
-     * 
+     *
      * @param appinfo
      *            {@link AddressAppInfo} with the label definitions
      * @param xh
@@ -138,5 +137,5 @@ public class AddressXmlExporter extends AbstractExporter<AddressRecord, AddressA
         }
         xh.endElement();
     }
-    
+
 }

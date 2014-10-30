@@ -25,7 +25,6 @@ import java.util.Calendar;
  * An {@link Record} implementation that contains a Notepad entry.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 559 $
  */
 public class NotepadRecord extends AbstractRecord implements DatedRecord {
 
@@ -34,10 +33,10 @@ public class NotepadRecord extends AbstractRecord implements DatedRecord {
     private Calendar modified;
     private Calendar alarm;
     private byte[] imagePng;
-    
+
     /**
      * Creates a new {@link NotepadRecord}.
-     * 
+     *
      * @param attribute
      *            Record attribute
      */
@@ -68,18 +67,18 @@ public class NotepadRecord extends AbstractRecord implements DatedRecord {
      */
     public Calendar getAlarm()                  { return alarm; }
     public void setAlarm(Calendar alarm)        { this.alarm = alarm; }
-    
+
     /**
      * Gets the image data. This is a PNG file.
      */
     public byte[] getImagePng()                 { return imagePng; }
     public void setImagePng(byte[] imagePng)    { this.imagePng = imagePng; }
-    
+
     @Override
     public Calendar getRecordDate() {
         return getModified();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -97,5 +96,5 @@ public class NotepadRecord extends AbstractRecord implements DatedRecord {
         sb.append(" image-png=").append(imagePng.length).append(" bytes]");
         return sb.toString();
     }
-    
+
 }

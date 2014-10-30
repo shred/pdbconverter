@@ -31,20 +31,19 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * Generic interface for a database exporter.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
  */
 public interface Exporter<T extends Record, U extends AppInfo> {
-    
+
     /**
      * Sets a filter to only export certain records.
-     * 
+     *
      * @param filter ExportFilter to be used. {@code null} means to use no filter.
      */
     void setFilter(ExportFilter<T> filter);
 
     /**
      * Exports the database to the given stream.
-     * 
+     *
      * @param database
      *            {@link PdbDatabase} to be exported
      * @param out

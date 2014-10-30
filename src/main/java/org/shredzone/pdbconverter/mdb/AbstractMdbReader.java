@@ -34,28 +34,27 @@ import com.healthmarketscience.jackcess.Table;
 
 /**
  * An abstract implementation for reading MDB databases files.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 531 $
  */
 public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> implements MdbReader<T, U> {
 
     private CalendarFactory cf = CalendarFactory.getInstance();
     private Database db;
-    
+
     @Override
     public void open(File mdbFile) throws IOException {
         db = Database.open(mdbFile);
     }
-    
+
     @Override
     public void close() throws IOException {
         db.close();
     }
-    
+
     /**
      * Reads a {@link Table} from the database.
-     * 
+     *
      * @param table
      *            Table name
      * @return {@link Table}
@@ -66,7 +65,7 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
 
     /**
      * Gets the value of a row's column.
-     * 
+     *
      * @param <C>
      *            expected column type
      * @param row
@@ -89,14 +88,14 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
             value = (C) row.get(column);
         } catch (ClassCastException ex) {
             throw new IOException("Column " + column + ": unexpected type");
-        }        
-        
+        }
+
         return value;
     }
 
     /**
      * Gets the value of a row's column. Throws an exception if the column did not exist.
-     * 
+     *
      * @param <C>
      *            expected column type
      * @param row
@@ -110,14 +109,14 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
         if (!row.containsKey(column)) {
             throw new IOException("Column " + column + ": undefined");
         }
-        
+
         return getColumn(row, column, null);
     }
 
     /**
      * Reads a column as {@link Calendar}. Throws an exception if the column did not
      * exist.
-     * 
+     *
      * @param row
      *            Row that was read
      * @param column
@@ -129,7 +128,7 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
     protected Calendar getDateColumnRequired(Map<String, Object> row, String column, TimeZone tz)
     throws IOException {
         String value = getColumnRequired(row, column);
-        
+
         Calendar cal = cf.createWithTimeZone(tz);
         cal.setTimeInMillis(Long.parseLong(value) * 1000L);
         return cal;

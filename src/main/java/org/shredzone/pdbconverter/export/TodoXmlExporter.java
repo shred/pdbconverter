@@ -31,13 +31,12 @@ import org.shredzone.pdbconverter.pdb.record.TodoRecord;
  * Writes a {@link TodoRecord} database as a single XML file.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 523 $
  */
 public class TodoXmlExporter extends AbstractExporter<TodoRecord, CategoryAppInfo> {
 
     /**
      * Writes the {@link TodoRecord} database XML to the given {@link OutputStream}.
-     * 
+     *
      * @param database
      *            {@link TodoRecord} {@link PdbDatabase} to write
      * @param out
@@ -48,7 +47,7 @@ public class TodoXmlExporter extends AbstractExporter<TodoRecord, CategoryAppInf
     throws IOException {
         XmlHelper xh = new XmlHelper();
         xh.openXmlWriter(out, "tododb");
-        
+
         xh.writeDatabase(database);
         xh.writeCategories(database);
 
@@ -62,30 +61,30 @@ public class TodoXmlExporter extends AbstractExporter<TodoRecord, CategoryAppInf
                         "category", record.getCategoryIndex(),
                         "secret", record.isSecret()
                 );
-    
+
                 if (record.isCompleted()) {
                     xh.startElement("completed");
                     xh.endElement();
                 }
-                
+
                 xh.writeValue("priority", record.getPriority());
-    
+
                 if (record.getDate() != null) {
                     xh.writeDate("date", record.getDate());
                 }
-                
+
                 xh.writeValue("description", record.getDescription());
-    
+
                 if (record.getNote() != null) {
                     xh.writeValue("note", record.getNote());
                 }
-                
+
                 xh.endElement();
             }
         }
         xh.endElement();
-        
+
         xh.closeXmlWriter();
     }
-    
+
 }

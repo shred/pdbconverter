@@ -27,12 +27,11 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortDate;
 
 /**
  * Unit tests for the ScheduleMdbReader.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
  */
 public class ScheduleMdbReaderTest {
-    
+
     @Test
     public void convertTest() {
         ScheduleRecord record;
@@ -52,11 +51,11 @@ public class ScheduleMdbReaderTest {
         record = new ScheduleRecord(0);
         RepeatConverter.convert("W1 TH 20051208T000000Z", record);
         Assert.assertEquals("Schedule:[null repeat=WEEKLY-1-until:2005-12-08-on:Th]", record.toString());
-        
+
         record = new ScheduleRecord(0);
         RepeatConverter.convert("W1 TU WE TH FR 20090807T070000Z", record);
         Assert.assertEquals("Schedule:[null repeat=WEEKLY-1-until:2009-08-07-on:Tu:We:Th:Fr]", record.toString());
-        
+
         record = new ScheduleRecord(0);
         RepeatConverter.convert("W1 TU TH 20090730T070000Z", record);
         Assert.assertEquals("Schedule:[null repeat=WEEKLY-1-until:2009-07-30-on:Tu:Th]", record.toString());
@@ -64,7 +63,7 @@ public class ScheduleMdbReaderTest {
         record = new ScheduleRecord(0);
         RepeatConverter.convert("M1 20060211T000000Z", record);
         Assert.assertEquals("Schedule:[null repeat=MONTHLY-1-until:2006-02-11]", record.toString());
-        
+
         record = new ScheduleRecord(0);
         RepeatConverter.convert("MD3 24 20040723T000000Z", record);
         Assert.assertEquals("Schedule:[null repeat=MONTHLY-3-until:2004-07-23]", record.toString());
@@ -85,14 +84,14 @@ public class ScheduleMdbReaderTest {
         RepeatConverter.convert("YM1 12 #0", record);
         Assert.assertEquals("Schedule:[null repeat=YEARLY-1]", record.toString());
     }
-    
+
     @Test
     public void convertWeeklyDaysTest() {
         boolean[] result;
-        
+
         result = RepeatConverter.convertWeeklyDays("SU");
         assertBooleanArrayEquals(new boolean[] { true, false, false, false, false, false, false }, result);
-        
+
         result = RepeatConverter.convertWeeklyDays("WE");
         assertBooleanArrayEquals(new boolean[] { false, false, false, true, false, false, false }, result);
 
@@ -124,7 +123,7 @@ public class ScheduleMdbReaderTest {
     @Test
     public void convertMonthlyDayTest() {
         int result;
-        
+
         result = RepeatConverter.convertMonthlyDay("SU");
         Assert.assertEquals(0, result);
 
@@ -133,7 +132,7 @@ public class ScheduleMdbReaderTest {
 
         result = RepeatConverter.convertMonthlyDay("th");
         Assert.assertEquals(4, result);
-        
+
         result = RepeatConverter.convertMonthlyDay("SA");
         Assert.assertEquals(6, result);
 
@@ -149,17 +148,17 @@ public class ScheduleMdbReaderTest {
         result = RepeatConverter.convertMonthlyDay("WE FR");
         Assert.assertEquals(-1, result);
     }
-    
+
     @Test
     public void convertDateTest() {
         ShortDate result;
-        
+
         result = RepeatConverter.convertDate("20090730T070000Z");
         assertShortDateEquals(2009, 07, 30, result);
-        
+
         result = RepeatConverter.convertDate("19991121T000000Z");
         assertShortDateEquals(1999, 11, 21, result);
-        
+
         result = RepeatConverter.convertDate("19991121T");
         Assert.assertNull(result);
 
@@ -176,12 +175,12 @@ public class ScheduleMdbReaderTest {
             Assert.assertEquals("index " + ix, expected[ix], actual[ix]);
         }
     }
-    
+
     private void assertShortDateEquals(int year, int month, int day, ShortDate date) {
         Assert.assertNotNull(date);
         Assert.assertEquals("year", year, date.getYear());
         Assert.assertEquals("month", month, date.getMonth());
         Assert.assertEquals("day", day, date.getDay());
     }
-    
+
 }

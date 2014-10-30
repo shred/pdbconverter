@@ -28,15 +28,14 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  * An {@link ExportFilter} that only accepts {@link Record} from the given category.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 399 $
  */
 public class CategoryExportFilter<T extends Record> implements ExportFilter<T> {
 
     private int categoryIndex;
-    
+
     /**
      * Creates a new {@link CategoryExportFilter} for the given category name.
-     * 
+     *
      * @param appinfo
      *            {@link CategoryAppInfo} with the categories
      * @param categoryName
@@ -55,14 +54,14 @@ public class CategoryExportFilter<T extends Record> implements ExportFilter<T> {
 
     /**
      * Creates a new {@link CategoryExportFilter} for the given category index.
-     * 
+     *
      * @param categoryIndex
      *            Category index that is filtered
      */
     public CategoryExportFilter(int categoryIndex) {
         this.categoryIndex = categoryIndex;
     }
-    
+
     @Override
     public boolean accepts(T record) {
         return (record.getCategoryIndex() == categoryIndex);

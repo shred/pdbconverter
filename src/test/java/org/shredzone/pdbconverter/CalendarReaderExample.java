@@ -31,15 +31,14 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
 
 /**
  * An example for reading calendar PDBs.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 369 $
  */
 public class CalendarReaderExample {
 
     /**
      * Reads a Calendar PDB and outputs its content to stdout.
-     * 
+     *
      * @param args
      *            First argument must be the name of the calendar PDB file
      */

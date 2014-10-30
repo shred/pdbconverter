@@ -24,16 +24,15 @@ import java.util.Calendar;
 /**
  * This interface marks records that contain a date. Record classes must
  * implement this interface if they want to be filtered by date range.
- * 
+ *
  * @author Richard "Shred" Körber
- * @version $Revision: 524 $
  */
 public interface DatedRecord extends Record {
 
     /**
      * Gets the date of this record. Usually this is the creation date. For
      * schedules this is the date of the schedule.
-     * 
+     *
      * @return {@link Calendar}, or {@code null} if this record has no date set.
      */
     Calendar getRecordDate();

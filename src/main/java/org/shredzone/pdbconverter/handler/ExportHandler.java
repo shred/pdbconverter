@@ -26,7 +26,6 @@ import java.io.IOException;
  * Interface for a handler that takes care for reading and exporting.
  *
  * @author Richard "Shred" Körber
- * @version $Revision: 401 $
  */
 public interface ExportHandler {
 
@@ -42,7 +41,7 @@ public interface ExportHandler {
 
     /**
      * Exports the given infile to the outfile.
-     * 
+     *
      * @param infile
      *            input pdb file
      * @param outfile
