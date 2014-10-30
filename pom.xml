@@ -1,51 +1,69 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.shredzone</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0.0</version>
-    </parent>
     <groupId>org.shredzone.pdbconverter</groupId>
     <artifactId>pdbconverter</artifactId>
-    <name>PDB Converter</name>
     <version>1.11-SNAPSHOT</version>
+    <name>PDB Converter</name>
     <description>Converts PalmOS PDB files into more common file formats</description>
+    <url>http://pdbconverter.shredzone.org</url>
     <inceptionYear>2009</inceptionYear>
     <licenses>
         <license>
             <name>GNU General Public License Version 3</name>
-            <url>LICENSE.txt</url>
+            <url>LICENSE-GPL.txt</url>
         </license>
     </licenses>
+    <scm>
+        <url>scm:git:git@github.com:shred/pdbconverter.git</url>
+        <connection>scm:git:git@github.com:shred/pdbconverter.git</connection>
+        <developerConnection>scm:git:git@github.com:shred/pdbconverter.git</developerConnection>
+    </scm>
+    <issueManagement>
+        <system>Redmine</system>
+        <url>http://www.shredzone.org/projects/pdbconverter/issues</url>
+    </issueManagement>
+    <developers>
+        <developer>
+            <id>shred</id>
+            <name>Richard Körber</name>
+        </developer>
+    </developers>
+    <properties>
+        <commons-cli.version>1.2</commons-cli.version>
+        <ical4j.version>1.0.6</ical4j.version>
+        <jackcess.version>1.2.14.2</jackcess.version>
+        <jshred.version>19</jshred.version>
+        <swingx.version>1.6.5-1</swingx.version>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+    </properties>
     <build>
         <plugins>
             <plugin>
-                <groupId>com.google.code.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>1.9.0</version>
-                <configuration>
-                    <excludes>
-                        <exclude>*.txt</exclude>
-                        <exclude>src/main/resources/**</exclude>
-                    </excludes>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>pdbconverter</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.shredzone.pdbconverter.PdbConverter</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>keytool-maven-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <keystore>${basedir}/.keystore</keystore>
-                    <alias>shredzone</alias>
-                    <storepass>secret</storepass>
-                    <dname>cn=shredzone.org, o=shredzone, c=DE</dname>
-                    <validity>3650</validity>
-                </configuration>
-            </plugin>
-            <plugin>
+                <!-- 1.0-beta-7-SNAPSHOT: https://jira.codehaus.org/browse/MWEBSTART-269 -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>webstart-maven-plugin</artifactId>
-                <version>1.0-beta-5</version>
+                <version>1.0-beta-7-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>install</phase>
@@ -78,18 +96,34 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <keystore>${basedir}/.keystore</keystore>
+                    <alias>shredzone</alias>
+                    <storepass>secret</storepass>
+                    <dname>cn=shredzone.org, o=shredzone, c=DE</dname>
+                    <validity>3650</validity>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
+                    <excludes>
+                        <exclude>**/.gitignore</exclude>
+                    </excludes>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
                         <manifestEntries>
@@ -104,65 +138,106 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.7.1</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>pdbconverter</finalName>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.shredzone.pdbconverter.PdbConverter</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <outputEncoding>UTF-8</outputEncoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <pushChanges>false</pushChanges>
+                    <localCheckout>true</localCheckout>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>modularity-releases</id>
-            <name>Modularity Releases Repository</name>
-            <url>http://m2.modularity.net.au/releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>summary</report>
+                            <report>project-team</report>
+                            <report>scm</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.17</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <links>
+                        <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                    </links>
+                    <charset>UTF-8</charset>
+                    <linksource>true</linksource>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <dependencies>
         <dependency>
             <groupId>org.shredzone.jshred</groupId>
             <artifactId>jshred-util</artifactId>
-            <version>18</version>
+            <version>${jshred.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>1.0.4</version>
+            <version>${ical4j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
-            <version>1.2</version>
+            <version>${commons-cli.version}</version>
         </dependency>
         <dependency>
             <groupId>org.swinglabs.swingx</groupId>
             <artifactId>swingx-core</artifactId>
-            <version>1.6.3</version>
+            <version>${swingx.version}</version>
         </dependency>
         <dependency>
             <groupId>com.healthmarketscience.jackcess</groupId>
             <artifactId>jackcess</artifactId>
-            <version>1.2.9</version>
+            <version>${jackcess.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>[4,)</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Codehaus Snapshots</id>
+            <url>http://nexus.codehaus.org/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>  <!-- Workaround for MNG-2974, see note below -->
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

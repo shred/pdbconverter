@@ -1,3 +1,4 @@
 .classpath
+.keystore
 .settings
 target
