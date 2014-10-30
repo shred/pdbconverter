@@ -63,7 +63,7 @@ public class ConverterPanel extends JPanel {
     private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("messages");
 
     private CalendarFactory cf = CalendarFactory.getInstance();
-    private JComboBox jcbMode;
+    private JComboBox<ExportHandler> jcbMode;
     private JTextField jtInfile;
     private JTextField jtOutfile;
     private JCheckBox jcSplit;
@@ -143,14 +143,14 @@ public class ConverterPanel extends JPanel {
      *            Label text
      * @return {@link JComboBox} that was created
      */
-    private JComboBox buildModeSelector(JPanel parent, String label) {
+    private JComboBox<ExportHandler> buildModeSelector(JPanel parent, String label) {
         JPanel jpOuter = new JPanel(new BorderLayout());
 
         JLabel jlLabel = new JLabel(label);
         jpOuter.add(jlLabel, BorderLayout.LINE_START);
         labels.add(jlLabel);
 
-        JComboBox jcbComboBox = new JComboBox(ConverterRegister.getHandlers());
+        JComboBox<ExportHandler> jcbComboBox = new JComboBox<ExportHandler>(ConverterRegister.getHandlers());
         jcbComboBox.setRenderer(new ModeListCellRenderer());
         jpOuter.add(jcbComboBox, BorderLayout.CENTER);
 
@@ -329,7 +329,7 @@ public class ConverterPanel extends JPanel {
         private static final long serialVersionUID = 7351366482641122918L;
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             ExportHandler handler = (ExportHandler) value;
             StringBuilder sb = new StringBuilder();
             sb.append("<html>").append(handler.getName())
