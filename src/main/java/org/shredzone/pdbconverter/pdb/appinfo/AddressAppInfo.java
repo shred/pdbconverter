@@ -30,8 +30,7 @@ import org.shredzone.pdbconverter.pdb.record.AddressRecord;
  */
 public class AddressAppInfo extends CategoryAppInfo {
 
-    private EnumMap<AddressRecord.Label, String> labels =
-            new EnumMap<AddressRecord.Label, String>(AddressRecord.Label.class);
+    private EnumMap<AddressRecord.Label, String> labels = new EnumMap<>(AddressRecord.Label.class);
 
     private String country;
 

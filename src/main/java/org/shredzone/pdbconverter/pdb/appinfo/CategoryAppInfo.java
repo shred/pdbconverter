@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class CategoryAppInfo extends AppInfo {
 
-    private List<Category> categories = new ArrayList<Category>();
+    private List<Category> categories = new ArrayList<>();
 
     /**
      * Gets a list of category names.

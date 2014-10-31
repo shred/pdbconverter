@@ -31,7 +31,7 @@ import org.shredzone.pdbconverter.pdb.record.Record;
  *
  * @author Richard "Shred" Körber
  */
-public interface MdbReader<T extends Record, U extends AppInfo> {
+public interface MdbReader<T extends Record, U extends AppInfo> extends AutoCloseable {
 
     /**
      * Opens an MDB database.
@@ -44,6 +44,7 @@ public interface MdbReader<T extends Record, U extends AppInfo> {
     /**
      * Closes a MDB database.
      */
+    @Override
     void close() throws IOException;
 
     /**

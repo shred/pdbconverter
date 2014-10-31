@@ -54,7 +54,7 @@ public class VCardExporter extends AbstractExporter<AddressRecord, AddressAppInf
             Pattern.compile("(ftp|https?)\\:\\/\\/.*", Pattern.CASE_INSENSITIVE);
 
     private Pattern bdayPattern = null;
-    private EnumMap<Label, PhoneType> phoneMap = new EnumMap<Label, PhoneType>(Label.class);
+    private EnumMap<Label, PhoneType> phoneMap = new EnumMap<>(Label.class);
 
     /**
      * Creates a new {@link VCardExporter} with common settings.

@@ -75,7 +75,7 @@ public class PdbFile extends RandomAccessFile {
      */
     public <T extends Record, U extends AppInfo> PdbDatabase<T, U> readDatabase(Converter<T, U> converter)
     throws IOException {
-        PdbDatabase<T, U> result = new PdbDatabase<T, U>();
+        PdbDatabase<T, U> result = new PdbDatabase<>();
 
         // Read the database header
         seek(0);

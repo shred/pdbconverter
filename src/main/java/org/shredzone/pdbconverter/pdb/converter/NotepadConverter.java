@@ -137,20 +137,19 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
      * @return Uncompressed raw bitmap
      */
     private byte[] uncompressRle(byte[] rle) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            for (int ix = 0; ix < rle.length; ix += 2) {
+                int cnt = rle[ix] & 0xFF;
+                if (cnt == 0x00) break;
 
-        for (int ix = 0; ix < rle.length; ix += 2) {
-            int cnt = rle[ix] & 0xFF;
-            if (cnt == 0x00) break;
-
-            byte data = rle[ix+1];
-            while (cnt-- > 0) {
-                baos.write(data);
+                byte data = rle[ix+1];
+                while (cnt-- > 0) {
+                    baos.write(data);
+                }
             }
-        }
 
-        baos.close();
-        return baos.toByteArray();
+            return baos.toByteArray();
+        }
     }
 
     /**
@@ -180,11 +179,10 @@ public class NotepadConverter implements Converter<NotepadRecord, CategoryAppInf
             }
         }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "PNG", baos);
-        baos.close();
-
-        return baos.toByteArray();
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "PNG", baos);
+            return baos.toByteArray();
+        }
     }
 
 }

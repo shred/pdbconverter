@@ -28,8 +28,8 @@ import java.util.EnumMap;
  */
 public class AddressRecord extends AbstractRecord {
 
-    private EnumMap<Field, Label> labels = new EnumMap<Field, Label>(Field.class);
-    private EnumMap<Field, String> fields = new EnumMap<Field, String>(Field.class);
+    private EnumMap<Field, Label> labels = new EnumMap<>(Field.class);
+    private EnumMap<Field, String> fields = new EnumMap<>(Field.class);
     private int displayPhone;
 
     public AddressRecord(int attribute) {

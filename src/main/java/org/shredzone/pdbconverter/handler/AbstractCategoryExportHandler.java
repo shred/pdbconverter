@@ -85,7 +85,7 @@ implements ExportHandler {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private ExportFilter<T> createExportFilter(PdbDatabase<T, U> database, ExportOptions options)
     throws IOException {
-        List<ExportFilter<T>> filterList = new ArrayList<ExportFilter<T>>();
+        List<ExportFilter<T>> filterList = new ArrayList<>();
 
         if (options.getCategory() != null) {
             filterList.add(new CategoryExportFilter<T>(database.getAppInfo(), options.getCategory()));
@@ -156,14 +156,10 @@ implements ExportHandler {
      */
     private void writeOutputFile(File outfile, PdbDatabase<T, U> database, ExportFilter<T> filter)
     throws IOException {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outfile);
+        try (FileOutputStream fos = new FileOutputStream(outfile)) {
             Exporter<T, U> exporter = createExporter();
             exporter.setFilter(filter);
             exporter.export(database, fos);
-        } finally {
-            if (fos != null) fos.close();
         }
     }
 
@@ -175,12 +171,8 @@ implements ExportHandler {
      * @return PdbDatabase that was read
      */
     protected PdbDatabase<T, U> readDatabase(File infile) throws IOException {
-        PdbFile pdb = null;
-        try {
-            pdb = new PdbFile(infile);
+        try (PdbFile pdb = new PdbFile(infile)) {
             return pdb.readDatabase(createConverter());
-        } finally {
-            if (pdb != null) pdb.close();
         }
     }
 

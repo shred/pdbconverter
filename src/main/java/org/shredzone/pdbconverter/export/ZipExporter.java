@@ -52,25 +52,23 @@ public class ZipExporter extends AbstractExporter<RawRecord, RawAppInfo> {
     @Override
     public void export(PdbDatabase<RawRecord, RawAppInfo> database, OutputStream out)
     throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(out);
+        try (ZipOutputStream zos = new ZipOutputStream(out)) {
+            writeDatabaseInfo(database, zos);
 
-        writeDatabaseInfo(database, zos);
+            writeAppInfo(database, zos);
 
-        writeAppInfo(database, zos);
-
-        List<RawRecord> records = database.getRecords();
-        for (int ix = 0; ix < records.size(); ix++) {
-            RawRecord record = records.get(ix);
-            if (isAccepted(record)) {
-                String name = String.format("records/%04d.bin", ix);
-                zos.putNextEntry(new ZipEntry(name));
-                zos.write(record.getRaw());
-                zos.flush();
-                zos.closeEntry();
+            List<RawRecord> records = database.getRecords();
+            for (int ix = 0; ix < records.size(); ix++) {
+                RawRecord record = records.get(ix);
+                if (isAccepted(record)) {
+                    String name = String.format("records/%04d.bin", ix);
+                    zos.putNextEntry(new ZipEntry(name));
+                    zos.write(record.getRaw());
+                    zos.flush();
+                    zos.closeEntry();
+                }
             }
         }
-
-        zos.close();
     }
 
     /**

@@ -70,7 +70,7 @@ public class ConverterPanel extends JPanel {
     private JXDatePicker jxdpFrom;
     private JXDatePicker jxdpThru;
     private JButton jbConvert;
-    private Set<JLabel> labels = new HashSet<JLabel>();
+    private Set<JLabel> labels = new HashSet<>();
 
     /**
      * Creates a new {@link ConverterPanel}.
@@ -150,7 +150,7 @@ public class ConverterPanel extends JPanel {
         jpOuter.add(jlLabel, BorderLayout.LINE_START);
         labels.add(jlLabel);
 
-        JComboBox<ExportHandler> jcbComboBox = new JComboBox<ExportHandler>(ConverterRegister.getHandlers());
+        JComboBox<ExportHandler> jcbComboBox = new JComboBox<>(ConverterRegister.getHandlers());
         jcbComboBox.setRenderer(new ModeListCellRenderer());
         jpOuter.add(jcbComboBox, BorderLayout.CENTER);
 

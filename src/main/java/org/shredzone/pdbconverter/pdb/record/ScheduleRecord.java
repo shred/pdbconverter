@@ -38,7 +38,7 @@ public class ScheduleRecord extends AbstractRecord implements DatedRecord {
     private ShortTime endTime;
     private Alarm alarm;
     private Repeat repeat;
-    private List<ShortDate> exceptions = new ArrayList<ShortDate>();
+    private List<ShortDate> exceptions = new ArrayList<>();
     private String description;
     private String note;
     private String location;

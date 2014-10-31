@@ -56,7 +56,7 @@ public class PdbDatabase<T extends Record, U extends AppInfo> {
     private String type;
     private String creator;
     private U appInfo;
-    private List<T> records = new ArrayList<T>();
+    private List<T> records = new ArrayList<>();
 
     /**
      * Gets the database name (for example "CalendarDB-PDat").

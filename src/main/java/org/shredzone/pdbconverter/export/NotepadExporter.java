@@ -52,28 +52,26 @@ public class NotepadExporter extends AbstractExporter<NotepadRecord, CategoryApp
     @Override
     public void export(PdbDatabase<NotepadRecord, CategoryAppInfo> database, OutputStream out)
     throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(out);
+        try (ZipOutputStream zos = new ZipOutputStream(out)) {
+            writeDatabaseInfo(database, zos);
 
-        writeDatabaseInfo(database, zos);
+            List<NotepadRecord> records = database.getRecords();
+            for (int ix = 0; ix < records.size(); ix++) {
+                NotepadRecord record = records.get(ix);
 
-        List<NotepadRecord> records = database.getRecords();
-        for (int ix = 0; ix < records.size(); ix++) {
-            NotepadRecord record = records.get(ix);
-
-            if (isAccepted(record)) {
-                String name = String.format("images/%04d.png", ix);
-                ZipEntry ze = new ZipEntry(name);
-                if (record.getModified() != null) {
-                    ze.setTime(record.getModified().getTimeInMillis());
+                if (isAccepted(record)) {
+                    String name = String.format("images/%04d.png", ix);
+                    ZipEntry ze = new ZipEntry(name);
+                    if (record.getModified() != null) {
+                        ze.setTime(record.getModified().getTimeInMillis());
+                    }
+                    zos.putNextEntry(ze);
+                    zos.write(record.getImagePng());
+                    zos.flush();
+                    zos.closeEntry();
                 }
-                zos.putNextEntry(ze);
-                zos.write(record.getImagePng());
-                zos.flush();
-                zos.closeEntry();
             }
         }
-
-        zos.close();
     }
 
     /**

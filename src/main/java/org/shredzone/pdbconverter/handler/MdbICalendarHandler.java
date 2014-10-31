@@ -49,12 +49,9 @@ public class MdbICalendarHandler extends AbstractCategoryExportHandler<ScheduleR
 
     @Override
     protected PdbDatabase<ScheduleRecord, CategoryAppInfo> readDatabase(File infile) throws IOException {
-        ScheduleMdbReader reader = new ScheduleMdbReader();
-        try {
+        try (ScheduleMdbReader reader = new ScheduleMdbReader()) {
             reader.open(infile);
             return reader.read();
-        } finally {
-            reader.close();
         }
     }
 

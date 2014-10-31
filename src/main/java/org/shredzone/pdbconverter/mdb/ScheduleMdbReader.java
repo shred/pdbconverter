@@ -50,7 +50,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
 
     @Override
     public PdbDatabase<ScheduleRecord, CategoryAppInfo> read() throws IOException {
-        PdbDatabase<ScheduleRecord, CategoryAppInfo> result = new PdbDatabase<ScheduleRecord, CategoryAppInfo>();
+        PdbDatabase<ScheduleRecord, CategoryAppInfo> result = new PdbDatabase<>();
 
         CategoryAppInfo ai = createAppInfo();
         result.setAppInfo(ai);
