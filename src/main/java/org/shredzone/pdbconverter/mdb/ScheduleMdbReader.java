@@ -21,7 +21,6 @@ package org.shredzone.pdbconverter.mdb;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +38,7 @@ import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat.Mode;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortDate;
 import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
 
+import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
 /**
@@ -56,7 +56,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         result.setAppInfo(ai);
 
         Table table = getTable("Main");
-        for(Map<String, Object> row : table) {
+        for(Row row : table) {
             result.getRecords().add(createScheduleRecord(row, ai));
         }
 
@@ -72,7 +72,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
         CategoryAppInfo ai = new CategoryAppInfo();
 
         Table table = getTable("Category");
-        for(Map<String, Object> row : table) {
+        for(Row row : table) {
             ai.getCategories().add(createCategory(row));
         }
 
@@ -86,7 +86,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      *            Database row
      * @return {@link Category} that was created
      */
-    private Category createCategory(Map<String, Object> row) throws IOException {
+    private Category createCategory(Row row) throws IOException {
         Integer id = getColumnRequired(row, "ID");
         String name = getColumnRequired(row, "Name");
 
@@ -102,7 +102,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      *            {@link CategoryAppInfo}
      * @return {@link ScheduleRecord} that was created
      */
-    private ScheduleRecord createScheduleRecord(Map<String, Object> row, CategoryAppInfo ai)
+    private ScheduleRecord createScheduleRecord(Row row, CategoryAppInfo ai)
     throws IOException {
         Boolean priv = getColumn(row, "Private", Boolean.FALSE);
         int catKey = Integer.parseInt((String) getColumnRequired(row, "Category"));
@@ -148,7 +148,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      * @param record
      *            {@link ScheduleRecord} to be filled
      */
-    private void convertSchedule(Map<String, Object> row, ScheduleRecord record) throws IOException {
+    private void convertSchedule(Row row, ScheduleRecord record) throws IOException {
         TimeZone tz;
         String timeZone = getColumn(row, "Time Zone", null);
         if (timeZone != null) {
@@ -177,7 +177,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      * @param record
      *            {@link ScheduleRecord} to be filled
      */
-    private void convertAlarm(Map<String, Object> row, ScheduleRecord record) throws IOException {
+    private void convertAlarm(Row row, ScheduleRecord record) throws IOException {
         Boolean alarm = getColumn(row, "Alarm", Boolean.FALSE);
         if (alarm) {
             Integer advance = getColumnRequired(row, "Alarm Advance");
@@ -203,7 +203,7 @@ public class ScheduleMdbReader extends AbstractMdbReader<ScheduleRecord, Categor
      * @param record
      *            {@link ScheduleRecord} to be filled
      */
-    private void convertRepeat(Map<String, Object> row, ScheduleRecord record) throws IOException {
+    private void convertRepeat(Row row, ScheduleRecord record) throws IOException {
         String event = getColumn(row, "Repeated Event", null);
         if (event == null || event.isEmpty()) {
             return;

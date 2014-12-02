@@ -22,7 +22,6 @@ package org.shredzone.pdbconverter.mdb;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Map;
 import java.util.TimeZone;
 
 import org.shredzone.pdbconverter.CalendarFactory;
@@ -30,6 +29,8 @@ import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
 import org.shredzone.pdbconverter.pdb.record.Record;
 
 import com.healthmarketscience.jackcess.Database;
+import com.healthmarketscience.jackcess.DatabaseBuilder;
+import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
 /**
@@ -44,7 +45,7 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
 
     @Override
     public void open(File mdbFile) throws IOException {
-        db = Database.open(mdbFile);
+        db = new DatabaseBuilder(mdbFile).setReadOnly(true).open();
     }
 
     @Override
@@ -77,7 +78,7 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
      * @return Column value
      */
     @SuppressWarnings("unchecked")
-    protected <C> C getColumn(Map<String, Object> row, String column, C def)
+    protected <C> C getColumn(Row row, String column, C def)
     throws IOException {
         if (!row.containsKey(column)) {
             return def;
@@ -104,7 +105,7 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
      *            Column name
      * @return Column value
      */
-    protected <C> C getColumnRequired(Map<String, Object> row, String column)
+    protected <C> C getColumnRequired(Row row, String column)
     throws IOException {
         if (!row.containsKey(column)) {
             throw new IOException("Column " + column + ": undefined");
@@ -125,7 +126,7 @@ public abstract class AbstractMdbReader<T extends Record, U extends AppInfo> imp
      *            {@link TimeZone} to be used
      * @return {@link Calendar} that was read
      */
-    protected Calendar getDateColumnRequired(Map<String, Object> row, String column, TimeZone tz)
+    protected Calendar getDateColumnRequired(Row row, String column, TimeZone tz)
     throws IOException {
         String value = getColumnRequired(row, column);
 
