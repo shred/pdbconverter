@@ -1,0 +1,32 @@
+pdbconverter
+============
+
+_PdbConverter_ is a too for converting PalmOS PDB files into more common file formats.
+
+![Screenshot](./img/screenshot.png)
+
+The source code can be found at [GitHub](https://github.com/shred/pdbconverter) and is distributed under the terms of [GNU General Public License Version 3](http://www.gnu.org/licenses/gpl-3.0.html).
+
+Usage
+-----
+
+Just run the compiled jar file:
+
+```
+java -jar target/pdbconverter.jar --gui
+```
+
+There is also a command line interface. You will get help if you omit the `--gui` option.
+
+Installation
+------------
+
+_pdbconverter_ is not just a conversion tool, but also serves as a library for reading PalmOS pdb files. To use it your project, just add this to your `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
