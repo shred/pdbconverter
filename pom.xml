@@ -14,13 +14,13 @@
         </license>
     </licenses>
     <scm>
-        <url>scm:git:git@github.com:shred/pdbconverter.git</url>
+        <url>https://github.com/shred/pdbconverter/</url>
         <connection>scm:git:git@github.com:shred/pdbconverter.git</connection>
         <developerConnection>scm:git:git@github.com:shred/pdbconverter.git</developerConnection>
     </scm>
     <issueManagement>
-        <system>Redmine</system>
-        <url>http://www.shredzone.org/projects/pdbconverter/issues</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/shred/pdbconverter/issues</url>
     </issueManagement>
     <developers>
         <developer>
