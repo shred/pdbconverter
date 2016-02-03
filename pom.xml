@@ -60,54 +60,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- 1.0-beta-7-SNAPSHOT: https://jira.codehaus.org/browse/MWEBSTART-269 -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>webstart-maven-plugin</artifactId>
-                <version>1.0-beta-7-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>jnlp</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jnlp>
-                        <outputFile>pdbconverter.jnlp</outputFile>
-                        <mainClass>org.shredzone.pdbconverter.PdbConverterGui</mainClass>
-                    </jnlp>
-                    <updateManifestEntries>
-                        <Codebase>*</Codebase>
-                        <Permissions>all-permissions</Permissions>
-                        <Trusted-Library>true</Trusted-Library>
-                    </updateManifestEntries>
-                    <sign>
-                        <!-- Create keystore with mvn keytool:generateKeyPair -->
-                        <keystore>${basedir}/.keystore</keystore>
-                        <alias>shredzone</alias>
-                        <storepass>secret</storepass>
-                        <verify>true</verify>
-                    </sign>
-                    <gzip>true</gzip>
-                    <verbose>false</verbose>
-                    <libPath>lib</libPath>
-                    <filenameMapping>simple</filenameMapping>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>keytool-maven-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <keystore>${basedir}/.keystore</keystore>
-                    <alias>shredzone</alias>
-                    <storepass>secret</storepass>
-                    <dname>cn=shredzone.org, o=shredzone, c=DE</dname>
-                    <validity>3650</validity>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -124,24 +76,6 @@
                     <excludes>
                         <exclude>**/.gitignore</exclude>
                     </excludes>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifestEntries>
-                            <Application-Name>PdbConverter</Application-Name>
-                        </manifestEntries>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <outputEncoding>UTF-8</outputEncoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -228,16 +162,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>Codehaus Snapshots</id>
-            <url>http://nexus.codehaus.org/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>  <!-- Workaround for MNG-2974, see note below -->
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
