@@ -1,6 +1,6 @@
 # PdbConverter
 
-_PdbConverter_ is a too for converting PalmOS PDB files into more common file formats.
+_PdbConverter_ is a tool for converting PalmOS PDB files into more common file formats.
 
 ![Screenshot](./src/site/resources/img/screenshot.png)
 
@@ -17,15 +17,13 @@ _PdbConverter_ is a too for converting PalmOS PDB files into more common file fo
 
 ## Usage
 
-Just run the compiled jar file:
+Please install [Java](http://java.com), then download the latest precompiled jar from [GitHub](https://github.com/shred/pdbconverter/releases/) and run it:
 
 ```
-java -jar target/pdbconverter.jar --gui
+java -jar pdbconverter.jar --gui
 ```
 
 See the [online documentation](http://www.shredzone.org/maven/pdbconverter/) for further details.
-
-I have been providing a WebStart version and also a converter web site for some years. These sites have been closed because even though there were hundreds of visitors every month, not a single one felt obliged to give a small donation for it.
 
 ## License
 
