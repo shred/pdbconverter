@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.shredzone.pdbconverter</groupId>
     <artifactId>pdbconverter</artifactId>
-    <version>1.11</version>
+    <version>1.12-SNAPSHOT</version>
     <name>PDB Converter</name>
     <description>Converts PalmOS PDB files into more common file formats</description>
     <url>http://pdbconverter.shredzone.org</url>
@@ -17,7 +17,7 @@
         <url>https://github.com/shred/pdbconverter/</url>
         <connection>scm:git:git@github.com:shred/pdbconverter.git</connection>
         <developerConnection>scm:git:git@github.com:shred/pdbconverter.git</developerConnection>
-      <tag>v1.11</tag>
+      <tag>HEAD</tag>
   </scm>
     <issueManagement>
         <system>GitHub Issues</system>
