@@ -19,7 +19,7 @@
  */
 package org.shredzone.pdbconverter.export.filter;
 
-import org.shredzone.pdbconverter.pdb.record.Record;
+import org.shredzone.commons.pdb.record.Record;
 
 /**
  * A filter tells if a {@link Record} is accepted.

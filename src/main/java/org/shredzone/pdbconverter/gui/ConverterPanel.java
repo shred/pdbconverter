@@ -46,7 +46,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 import org.jdesktop.swingx.JXDatePicker;
-import org.shredzone.pdbconverter.CalendarFactory;
+import org.shredzone.commons.pdb.CalendarFactory;
 import org.shredzone.pdbconverter.ConverterRegister;
 import org.shredzone.pdbconverter.handler.ExportHandler;
 import org.shredzone.pdbconverter.handler.ExportOptions;

@@ -21,9 +21,9 @@ package org.shredzone.pdbconverter.mdb;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.shredzone.commons.pdb.record.ScheduleRecord;
+import org.shredzone.commons.pdb.record.ScheduleRecord.ShortDate;
 import org.shredzone.pdbconverter.mdb.ScheduleMdbReader.RepeatConverter;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortDate;
 
 /**
  * Unit tests for the ScheduleMdbReader.

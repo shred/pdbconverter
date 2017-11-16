@@ -26,12 +26,12 @@ import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.AddressAppInfo;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord.Field;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.AddressAppInfo;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo.Category;
+import org.shredzone.commons.pdb.record.AddressRecord;
+import org.shredzone.commons.pdb.record.AddressRecord.Field;
+import org.shredzone.commons.pdb.record.AddressRecord.Label;
 
 /**
  * Writes an {@link AddressRecord} database as vCard file.

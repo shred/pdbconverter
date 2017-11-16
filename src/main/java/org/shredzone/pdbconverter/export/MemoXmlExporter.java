@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.MemoRecord;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.record.MemoRecord;
 
 /**
  * Writes a {@link MemoRecord} database as a single XML file.

@@ -22,13 +22,13 @@ package org.shredzone.pdbconverter.handler;
 import java.io.File;
 import java.io.IOException;
 
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.record.ScheduleRecord;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.ScheduleExporter;
 import org.shredzone.pdbconverter.mdb.ScheduleMdbReader;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
 
 /**
  * {@link ExportHandler} that reads a DateBook.mdb and writes an iCalendar file.

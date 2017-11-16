@@ -19,12 +19,12 @@
  */
 package org.shredzone.pdbconverter.handler;
 
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.converter.ScheduleConverter;
+import org.shredzone.commons.pdb.record.ScheduleRecord;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.ScheduleExporter;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.converter.ScheduleConverter;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
 
 /**
  * {@link ExportHandler} that reads Calendar pdb and writes an iCalendar file.

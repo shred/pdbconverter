@@ -19,12 +19,12 @@
  */
 package org.shredzone.pdbconverter.handler;
 
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.converter.TodoConverter;
+import org.shredzone.commons.pdb.record.TodoRecord;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.TodoXmlExporter;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.converter.TodoConverter;
-import org.shredzone.pdbconverter.pdb.record.TodoRecord;
 
 /**
  * {@link ExportHandler} that reads a Todo pdb file and writes an XML file.

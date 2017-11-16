@@ -23,6 +23,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
 
+import org.shredzone.commons.pdb.CalendarFactory;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.record.ScheduleRecord;
+import org.shredzone.commons.pdb.record.ScheduleRecord.Alarm;
+import org.shredzone.commons.pdb.record.ScheduleRecord.Repeat;
+import org.shredzone.commons.pdb.record.ScheduleRecord.ShortDate;
+import org.shredzone.commons.pdb.record.ScheduleRecord.ShortTime;
+
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
@@ -51,15 +60,6 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
-
-import org.shredzone.pdbconverter.CalendarFactory;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Alarm;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.Repeat;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortDate;
-import org.shredzone.pdbconverter.pdb.record.ScheduleRecord.ShortTime;
 
 /*
  * NOTE TO THE READER:

@@ -19,12 +19,12 @@
  */
 package org.shredzone.pdbconverter.handler;
 
+import org.shredzone.commons.pdb.appinfo.AddressAppInfo;
+import org.shredzone.commons.pdb.converter.AddressConverter;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.record.AddressRecord;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.VCardExporter;
-import org.shredzone.pdbconverter.pdb.appinfo.AddressAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.AddressConverter;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord;
 
 /**
  * {@link ExportHandler} that reads Address pdb and writes a vCard file.

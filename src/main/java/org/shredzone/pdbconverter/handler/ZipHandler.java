@@ -23,12 +23,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.PdbFile;
+import org.shredzone.commons.pdb.appinfo.RawAppInfo;
+import org.shredzone.commons.pdb.converter.RawConverter;
+import org.shredzone.commons.pdb.record.RawRecord;
 import org.shredzone.pdbconverter.export.ZipExporter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
-import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.RawConverter;
-import org.shredzone.pdbconverter.pdb.record.RawRecord;
 
 /**
  * {@link ExportHandler} that reads any pdb file and writes a ZIP file containing a

@@ -19,9 +19,9 @@
  */
 package org.shredzone.pdbconverter.export;
 
+import org.shredzone.commons.pdb.appinfo.AppInfo;
+import org.shredzone.commons.pdb.record.Record;
 import org.shredzone.pdbconverter.export.filter.ExportFilter;
-import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
-import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
  * An abstract implementation of {@link Exporter} that handles filtering.

@@ -27,9 +27,9 @@ import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.record.NotepadRecord;
 
 /**
  * Writes a {@link NotepadRecord} database as ZIP file.

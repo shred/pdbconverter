@@ -19,12 +19,12 @@
  */
 package org.shredzone.pdbconverter.handler;
 
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.converter.NotepadConverter;
+import org.shredzone.commons.pdb.record.NotepadRecord;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.NotepadExporter;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.converter.NotepadConverter;
-import org.shredzone.pdbconverter.pdb.record.NotepadRecord;
 
 /**
  * {@link ExportHandler} that reads a Notepad pdb file and writes a ZIP file containing a

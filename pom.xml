@@ -33,6 +33,7 @@
         <ical4j.version>1.0.7</ical4j.version>
         <jackcess.version>2.1.9</jackcess.version>
         <jshred.version>19</jshred.version>
+        <pdb.version>1.0</pdb.version>
         <swingx.version>1.6.5-1</swingx.version>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     </properties>
@@ -134,6 +135,11 @@
             <groupId>org.shredzone.jshred</groupId>
             <artifactId>jshred-util</artifactId>
             <version>${jshred.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.shredzone.commons</groupId>
+            <artifactId>commons-pdb</artifactId>
+            <version>${pdb.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mnode.ical4j</groupId>

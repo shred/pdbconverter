@@ -26,11 +26,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import net.shredzone.jshred.io.XMLWriter;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo.Category;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
+import net.shredzone.jshred.io.XMLWriter;
 
 /**
  * A helper class for writing XML content to the given output stream.

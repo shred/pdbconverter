@@ -23,11 +23,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.AddressAppInfo;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord.Field;
-import org.shredzone.pdbconverter.pdb.record.AddressRecord.Label;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.AddressAppInfo;
+import org.shredzone.commons.pdb.record.AddressRecord;
+import org.shredzone.commons.pdb.record.AddressRecord.Field;
+import org.shredzone.commons.pdb.record.AddressRecord.Label;
 
 /**
  * Writes a {@link AddressRecord} database as a single XML file.

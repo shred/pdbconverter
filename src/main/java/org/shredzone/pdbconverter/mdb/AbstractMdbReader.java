@@ -24,9 +24,9 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.shredzone.pdbconverter.CalendarFactory;
-import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
-import org.shredzone.pdbconverter.pdb.record.Record;
+import org.shredzone.commons.pdb.CalendarFactory;
+import org.shredzone.commons.pdb.appinfo.AppInfo;
+import org.shredzone.commons.pdb.record.Record;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;

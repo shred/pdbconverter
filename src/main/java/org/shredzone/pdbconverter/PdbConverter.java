@@ -33,6 +33,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.shredzone.commons.pdb.CalendarFactory;
 import org.shredzone.pdbconverter.handler.ExportHandler;
 import org.shredzone.pdbconverter.handler.ExportOptions;
 

@@ -21,8 +21,8 @@ package org.shredzone.pdbconverter.export.filter;
 
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.record.Record;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.record.Record;
 
 /**
  * An {@link ExportFilter} that only accepts {@link Record} from the given category.

@@ -27,9 +27,9 @@ import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.RawAppInfo;
-import org.shredzone.pdbconverter.pdb.record.RawRecord;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.RawAppInfo;
+import org.shredzone.commons.pdb.record.RawRecord;
 
 /**
  * Writes a {@link RawRecord} database as ZIP file.

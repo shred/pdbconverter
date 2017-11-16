@@ -22,7 +22,7 @@ package org.shredzone.pdbconverter.export.filter;
 import java.io.IOException;
 import java.util.Calendar;
 
-import org.shredzone.pdbconverter.pdb.record.DatedRecord;
+import org.shredzone.commons.pdb.record.DatedRecord;
 
 /**
  * An {@link ExportFilter} that only accepts {@link DatedRecord} within the

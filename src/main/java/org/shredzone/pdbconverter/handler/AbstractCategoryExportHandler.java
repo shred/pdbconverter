@@ -27,17 +27,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.PdbFile;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo.Category;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.record.Record;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.filter.CategoryExportFilter;
 import org.shredzone.pdbconverter.export.filter.ChainedExportFilter;
 import org.shredzone.pdbconverter.export.filter.DatedExportFilter;
 import org.shredzone.pdbconverter.export.filter.ExportFilter;
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.PdbFile;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo.Category;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.record.Record;
 
 /**
  * Abstract superclass for {@link Category} exporters.
@@ -55,7 +55,7 @@ implements ExportHandler {
         ExportFilter<T> filter = createExportFilter(database, options);
 
         if (options.isSplit()) {
-            Set<String> catnameSet = new HashSet<String>();
+            Set<String> catnameSet = new HashSet<>();
 
             List<Category> categories = database.getAppInfo().getCategories();
             for (int ix = 0; ix < categories.size(); ix++) {
@@ -65,11 +65,11 @@ implements ExportHandler {
                 ExportFilter<T> catFilter;
                 if (filter != null) {
                     ExportFilter<T>[] filterChain = new ExportFilter[2];
-                    filterChain[0] = new CategoryExportFilter<T>(ix);
+                    filterChain[0] = new CategoryExportFilter<>(ix);
                     filterChain[1] = filter;
-                    catFilter = new ChainedExportFilter<T>(filterChain);
+                    catFilter = new ChainedExportFilter<>(filterChain);
                 } else {
-                    catFilter = new CategoryExportFilter<T>(ix);
+                    catFilter = new CategoryExportFilter<>(ix);
                 }
 
                 File catfile = computeFilename(outfile, cat, catnameSet);
@@ -103,7 +103,7 @@ implements ExportHandler {
         } else if (filterList.size() == 1) {
             return filterList.get(0);
         } else {
-            return new ChainedExportFilter<T>(filterList.toArray(new ExportFilter[filterList.size()]));
+            return new ChainedExportFilter<>(filterList.toArray(new ExportFilter[filterList.size()]));
         }
     }
 

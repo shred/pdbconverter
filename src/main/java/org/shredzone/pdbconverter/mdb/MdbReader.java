@@ -22,9 +22,9 @@ package org.shredzone.pdbconverter.mdb;
 import java.io.File;
 import java.io.IOException;
 
-import org.shredzone.pdbconverter.pdb.PdbDatabase;
-import org.shredzone.pdbconverter.pdb.appinfo.AppInfo;
-import org.shredzone.pdbconverter.pdb.record.Record;
+import org.shredzone.commons.pdb.PdbDatabase;
+import org.shredzone.commons.pdb.appinfo.AppInfo;
+import org.shredzone.commons.pdb.record.Record;
 
 /**
  * Interface for a reading MDB files.

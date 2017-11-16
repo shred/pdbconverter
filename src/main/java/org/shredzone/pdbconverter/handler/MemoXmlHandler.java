@@ -19,12 +19,12 @@
  */
 package org.shredzone.pdbconverter.handler;
 
+import org.shredzone.commons.pdb.appinfo.CategoryAppInfo;
+import org.shredzone.commons.pdb.converter.Converter;
+import org.shredzone.commons.pdb.converter.MemoConverter;
+import org.shredzone.commons.pdb.record.MemoRecord;
 import org.shredzone.pdbconverter.export.Exporter;
 import org.shredzone.pdbconverter.export.MemoXmlExporter;
-import org.shredzone.pdbconverter.pdb.appinfo.CategoryAppInfo;
-import org.shredzone.pdbconverter.pdb.converter.Converter;
-import org.shredzone.pdbconverter.pdb.converter.MemoConverter;
-import org.shredzone.pdbconverter.pdb.record.MemoRecord;
 
 /**
  * {@link ExportHandler} that reads a Memo pdb file and writes an XML file.
