@@ -28,9 +28,9 @@ import java.util.Date;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.shredzone.pdbconverter.handler.ExportHandler;
@@ -41,13 +41,13 @@ import org.shredzone.pdbconverter.handler.ExportOptions;
  *
  * @author Richard "Shred" Körber
  */
-@SuppressWarnings("static-access")
 public class PdbConverter {
 
     private static final String OPT_CATEGORY = "category";
     private static final String OPT_SPLIT = "split";
     private static final String OPT_FROM = "from";
     private static final String OPT_UNTIL = "until";
+    private static final String OPT_HELP = "help";
 
     private static final DateFormat yearDateFmt = new SimpleDateFormat("yyyy");
     private static final DateFormat monthDateFmt = new SimpleDateFormat("yyyy-MM");
@@ -60,63 +60,68 @@ public class PdbConverter {
 
     private static final Options CLI_OPTIONS = new Options();
     static {
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName("input")
-                .withLongOpt("input")
-                .withDescription("input pdb/mdb file")
-                .isRequired().hasArg()
-                .create("i"));
-
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName("output")
-                .withLongOpt("output")
-                .withDescription("converted output file")
-                .isRequired().hasArg()
-                .create("o"));
-
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName("converter")
-                .withLongOpt("converter")
-                .withDescription("converter to be used")
+        CLI_OPTIONS.addOption(Option.builder("i")
+                .longOpt("input")
+                .argName("file")
+                .desc("input pdb/mdb file")
+                .required()
                 .hasArg()
-                .create("c"));
+                .build());
 
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName(OPT_CATEGORY)
-                .withLongOpt("category")
-                .withDescription("only output records of this category")
+        CLI_OPTIONS.addOption(Option.builder("o")
+                .longOpt("output")
+                .argName("file")
+                .desc("converted output file")
+                .required()
                 .hasArg()
-                .create("t"));
+                .build());
 
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName(OPT_SPLIT)
-                .withLongOpt("split")
-                .withDescription("write each category into a separate file")
-                .create("s"));
-
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName(OPT_FROM)
-                .withLongOpt("from")
-                .withDescription("only output records starting from this date")
+        CLI_OPTIONS.addOption(Option.builder("c")
+                .longOpt("converter")
+                .argName("converter")
+                .desc("converter to be used")
                 .hasArg()
-                .create("f"));
+                .build());
 
-        CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName(OPT_UNTIL)
-                .withLongOpt("until")
-                .withDescription("only output records until this date (exclusive)")
+        CLI_OPTIONS.addOption(Option.builder("t")
+                .longOpt(OPT_CATEGORY)
+                .argName("category")
+                .desc("only output records of this category")
                 .hasArg()
-                .create("u"));
+                .build());
+
+        CLI_OPTIONS.addOption(Option.builder("s")
+                .longOpt(OPT_SPLIT)
+                .desc("write each category into a separate file")
+                .build());
+
+        CLI_OPTIONS.addOption(Option.builder("f")
+                .longOpt(OPT_FROM)
+                .argName("date")
+                .desc("only output records starting from this date")
+                .hasArg()
+                .build());
+
+        CLI_OPTIONS.addOption(Option.builder("u")
+                .longOpt(OPT_UNTIL)
+                .argName("date")
+                .desc("only output records until this date (exclusive)")
+                .hasArg()
+                .build());
+
+        CLI_OPTIONS.addOption(Option.builder("?")
+                .longOpt(OPT_HELP)
+                .desc("show this help and exit")
+                .build());
     }
 
     private static final Options GUI_CLI_OPTIONS = new Options();
     static {
-        GUI_CLI_OPTIONS.addOption(OptionBuilder
-                .withArgName("gui")
-                .withLongOpt("gui")
-                .withDescription("open the GUI")
-                .isRequired()
-                .create());
+        GUI_CLI_OPTIONS.addOption(Option.builder()
+                .longOpt("gui")
+                .desc("open the GUI")
+                .required()
+                .build());
     }
 
     /**
@@ -124,7 +129,7 @@ public class PdbConverter {
      */
     public static void main(String[] args) {
         try {
-            CommandLineParser parser = new GnuParser();
+            CommandLineParser parser = new DefaultParser();
             CommandLine cmd = parser.parse(GUI_CLI_OPTIONS, args);
 
             if (cmd.hasOption("gui")) {
@@ -136,8 +141,13 @@ public class PdbConverter {
         }
 
         try {
-            CommandLineParser parser = new GnuParser();
+            CommandLineParser parser = new DefaultParser();
             CommandLine cmd = parser.parse(CLI_OPTIONS, args);
+
+            if (cmd.hasOption(OPT_HELP)) {
+                printHelp();
+                System.exit(0);
+            }
 
             if (cmd.hasOption("gui")) {
                 new PdbConverterGui();
