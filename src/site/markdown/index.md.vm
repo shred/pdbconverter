@@ -10,13 +10,13 @@ The source code can be found at [GitHub](https://github.com/shred/pdbconverter) 
 Usage
 -----
 
-Please install Java, then download the latest precompiled jar from [GitHub](https://github.com/shred/pdbconverter/releases/) and run it:
+Please install Java, then download the latest precompiled jar from [GitHub](https://github.com/shred/pdbconverter/releases/) and just run it:
 
 ```
-java -jar pdbconverter.jar --gui
+java -jar pdbconverter.jar
 ```
 
-There is also a command line interface. You will get help if you omit the `--gui` option.
+There is also a command line interface. You will get help by passing `--help` as argument.
 
 Installation
 ------------

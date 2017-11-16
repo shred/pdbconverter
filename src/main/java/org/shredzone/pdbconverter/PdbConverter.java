@@ -128,6 +128,12 @@ public class PdbConverter {
      * Main invocation.
      */
     public static void main(String[] args) {
+        if (args.length == 0) {
+            // Open GUI directly if there is no argument
+            new PdbConverterGui();
+            return;
+        }
+
         try {
             CommandLineParser parser = new DefaultParser();
             CommandLine cmd = parser.parse(GUI_CLI_OPTIONS, args);
