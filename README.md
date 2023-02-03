@@ -4,6 +4,12 @@ _PdbConverter_ is a tool for converting PalmOS PDB files into more common file f
 
 ![Screenshot](./src/site/resources/img/screenshot.png)
 
+## DISCONTINUED
+
+I will not make updates or bugfixes to this project anymore. It is still functional, so if you need to convert old PalmOS PDB files, you can download the latest release and run it (see [Usage](#usage) section below).
+
+For you Retro Developers out there, there is a separate Java library called [commons-pdb](https://github.com/shred/commons-pdb) that enables you to read different kind of PDB files. This library is still maintained by me, and even supports Android.
+
 ## Features
 
 * Calender can be converted to iCalendar and imported into most calendar applications.
