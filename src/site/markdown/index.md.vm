@@ -5,12 +5,12 @@ _PdbConverter_ is a tool for converting PalmOS PDB files into more common file f
 
 ![Screenshot](./img/screenshot.png)
 
-The source code can be found at [GitHub](https://github.com/shred/pdbconverter) and is distributed under the terms of [GNU General Public License Version 3](http://www.gnu.org/licenses/gpl-3.0.html).
+The source code can be found at [Codeberg](https://codeberg.org/shred/pdbconverter) and is distributed under the terms of [GNU General Public License Version 3](http://www.gnu.org/licenses/gpl-3.0.html).
 
 Usage
 -----
 
-Please install Java, then download the latest precompiled jar from [GitHub](https://github.com/shred/pdbconverter/releases/) and just run it:
+Please install Java, then download the latest precompiled jar from [Codeberg](https://codeberg.org/shred/pdbconverter/releases/) and just run it:
 
 ```
 java -jar pdbconverter.jar

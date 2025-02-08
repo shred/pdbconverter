@@ -14,14 +14,14 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/shred/pdbconverter/</url>
-        <connection>scm:git:git@github.com:shred/pdbconverter.git</connection>
-        <developerConnection>scm:git:git@github.com:shred/pdbconverter.git</developerConnection>
+        <url>https://codeberg.org/shred/pdbconverter/</url>
+        <connection>scm:git:git@codeberg.org:shred/pdbconverter.git</connection>
+        <developerConnection>scm:git:git@codeberg.org:shred/pdbconverter.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/shred/pdbconverter/issues</url>
+        <system>Codeberg Issues</system>
+        <url>https://codeberg.org/shred/pdbconverter/issues</url>
     </issueManagement>
     <developers>
         <developer>
